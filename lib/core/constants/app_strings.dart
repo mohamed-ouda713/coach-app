@@ -1,9 +1,3 @@
-/// نصوص الواجهة — مستخرجة من الشاشات F0 → F12 في ملفي التصميم.
-/// اتشالت منها: تعليقات التصميم بالإنجليزي (زي "Hero app bar"، "Section")،
-/// وقيم mock (الساعة 9:41، أرقام تجريبية زي 72 كغ)، لأنها مش نصوص ثابتة.
-///
-/// كل حاجة هنا static const عشان تتستخدم مباشرة، وبانت داخل كلاسات فرعية
-/// حسب الشاشة، حتى لو فاضية دلوقتي (placeholders) عشان الأساس يبقى موجود.
 class AppStrings {
   AppStrings._();
 
@@ -36,156 +30,112 @@ class AppStrings {
   static const String statusActive = 'نشط';
   static const String statusExpiringSoon = 'ينتهي قريباً';
   static const String statusExpired = 'منتهي';
-}
 
-/// F1 — قائمة العملاء
-class ClientsListStrings {
-  ClientsListStrings._();
+  // ── F1 — قائمة العملاء ─────────────────────────────────────
+  static const String clientsGreeting = 'مرحباً';
+  static const String clientsSearchHint = 'ابحث عن عميل...';
+  static const String clientsFilterAll = 'الكل';
+  static const String clientsStatTotal = 'إجمالي';
+  static const String clientsStatActive = 'نشط';
+  static const String clientsStatExpiring = 'ينتهي';
 
-  static const String greeting = 'مرحباً';
-  static const String searchHint = 'ابحث عن عميل...';
-  static const String filterAll = 'الكل';
-  static const String statTotal = 'إجمالي';
-  static const String statActive = 'نشط';
-  static const String statExpiring = 'ينتهي';
-}
-
-/// F2 — ملف العميل
-class ClientProfileStrings {
-  ClientProfileStrings._();
-
-  static const String screenTitle = 'ملف العميل';
-  static const String age = 'العمر';
-  static const String weight = 'الوزن';
-  static const String height = 'الطول';
+  // ── F2 — ملف العميل ────────────────────────────────────────
+  static const String clientProfileScreenTitle = 'ملف العميل';
+  static const String clientAge = 'العمر';
+  static const String clientWeight = 'الوزن';
+  static const String clientHeight = 'الطول';
   static const String unitKg = 'كغ';
   static const String unitCm = 'سم';
   static const String subscriptionDetails = 'تفاصيل الاشتراك';
-  static const String startDate = 'تاريخ البدء';
-  static const String endDate = 'تاريخ الانتهاء';
+  static const String subscriptionStartDate = 'تاريخ البدء';
+  static const String subscriptionEndDate = 'تاريخ الانتهاء';
   static const String subscriptionAmount = 'مبلغ الاشتراك';
   static const String addMeasurementCta = 'إضافة قياس';
-}
 
-/// F3 — القياسات والتقدم
-class MeasurementsStrings {
-  MeasurementsStrings._();
+  // ── F3 — القياسات والتقدم ──────────────────────────────────
+  static const String measurementsOverallProgress3Months = 'التقدم الإجمالي — 3 أشهر';
+  static const String measurementsWeightLabel = 'الوزن (كغ)';
+  static const String measurementsWaistLabel = 'الخصر (سم)';
+  static const String measurementsBellyLabel = 'البطن (سم)';
+  static const String measurementsMonthlyLog = 'السجل الشهري';
+  static const String measurementsPhotoBefore = 'صورة قبل';
+  static const String measurementsPhotoAfter = 'صورة بعد';
 
-  static const String overallProgress3Months = 'التقدم الإجمالي — 3 أشهر';
-  static const String weightLabel = 'الوزن (كغ)';
-  static const String waistLabel = 'الخصر (سم)';
-  static const String bellyLabel = 'البطن (سم)';
-  static const String monthlyLog = 'السجل الشهري';
-  static const String photoBefore = 'صورة قبل';
-  static const String photoAfter = 'صورة بعد';
-}
-
-/// F4 — الإشعارات
-class NotificationsStrings {
-  NotificationsStrings._();
-
-  static const String markAllRead = 'قراءة الكل';
+  // ── F4 — الإشعارات ─────────────────────────────────────────
+  static const String notificationsMarkAllRead = 'قراءة الكل';
   // أمثلة نصوص إشعارات فعلية (تبقى Templates بتتبني ديناميك من الباك إند)
-  static const String subscriptionEndingTemplate = 'اشتراك {name} ينتهي خلال {days} أيام';
-  static const String missingMeasurementTemplate = '{name} لم تسجل قياساتها هذا الشهر';
-  static const String needsNewProgramTemplate = '{name} تحتاج برنامجاً جديداً';
-  static const String greatProgressTemplate = '{name}: تقدم ممتاز هذا الشهر';
+  static const String notificationSubscriptionEndingTemplate = 'اشتراك {name} ينتهي خلال {days} أيام';
+  static const String notificationMissingMeasurementTemplate = '{name} لم تسجل قياساتها هذا الشهر';
+  static const String notificationNeedsNewProgramTemplate = '{name} تحتاج برنامجاً جديداً';
+  static const String notificationGreatProgressTemplate = '{name}: تقدم ممتاز هذا الشهر';
   static const String timeAgoHour = 'منذ ساعة';
   static const String timeAgoDay = 'منذ يوم';
   static const String timeAgoDays3 = 'منذ 3 أيام';
   static const String timeAgoWeek = 'منذ أسبوع';
-}
 
-/// F5 — المالية
-class FinancesStrings {
-  FinancesStrings._();
+  // ── F5 — المالية ───────────────────────────────────────────
+  static const String financeIncome = 'الدخل';
+  static const String financeExpenses = 'المصروفات';
+  static const String financeNetProfit = 'صافي الربح';
+  static const String financeCurrency = 'ريال';
+  static const String financeProfitSplit = 'قسمة الربح';
+  static const String financeWithdraw = 'سحب';
+  static const String financeBalance = 'الرصيد:';
+  static const String financeAddNewPartner = 'إضافة طرف جديد';
 
-  static const String income = 'الدخل';
-  static const String expenses = 'المصروفات';
-  static const String netProfit = 'صافي الربح';
-  static const String currency = 'ريال';
-  static const String profitSplit = 'قسمة الربح';
-  static const String withdraw = 'سحب';
-  static const String balance = 'الرصيد:';
-  static const String addNewPartner = 'إضافة طرف جديد';
-}
-
-/// F6 — تسجيل الدخول
-class LoginStrings {
-  LoginStrings._();
-
-  static const String welcomeBack = 'مرحباً بعودتك';
-  static const String signInToContinue = 'سجّلي دخولك للمتابعة';
-  static const String emailLabel = 'البريد الإلكتروني';
-  static const String passwordLabel = 'كلمة المرور';
-  static const String forgotPassword = 'نسيت كلمة المرور؟';
+  // ── F6 — تسجيل الدخول ──────────────────────────────────────
+  static const String loginWelcomeBack = 'مرحباً بعودتك';
+  static const String loginSignInToContinue = 'سجّلي دخولك للمتابعة';
+  static const String loginEmailLabel = 'البريد الإلكتروني';
+  static const String loginPasswordLabel = 'كلمة المرور';
+  static const String loginForgotPassword = 'نسيت كلمة المرور؟';
   static const String loginCta = 'تسجيل الدخول';
-  static const String noAccount = 'ليس لديك حساب؟';
-  static const String contactUs = 'تواصلي معنا';
-}
+  static const String loginNoAccount = 'ليس لديك حساب؟';
+  static const String loginContactUs = 'تواصلي معنا';
 
-/// F7 — إضافة عميلة جديدة
-class AddClientStrings {
-  AddClientStrings._();
+  // ── F7 — إضافة عميلة جديدة ─────────────────────────────────
+  static const String addClientScreenTitle = 'عميلة جديدة';
+  static const String addClientFullNameLabel = 'الاسم الكامل';
+  static const String addClientFullNameHint = 'اسم العميلة...';
+  static const String addClientPhysicalDataSection = 'البيانات الجسمانية';
+  static const String addClientGoalSection = 'الهدف';
+  static const String addClientProgramSection = 'البرنامج';
+  static const String addClientSubscriptionSection = 'الاشتراك';
+  static const String addClientAmountLabel = 'المبلغ (ريال)';
+  static const String addClientNoteLabel = 'ملاحظة';
+  static const String addClientNoteHintExample = 'مثال: دفعتين...';
+  static const String addClientDateHint = 'dd / mm / yyyy';
 
-  static const String screenTitle = 'عميلة جديدة';
-  static const String fullNameLabel = 'الاسم الكامل';
-  static const String fullNameHint = 'اسم العميلة...';
-  static const String physicalDataSection = 'البيانات الجسمانية';
-  static const String goalSection = 'الهدف';
-  static const String programSection = 'البرنامج';
-  static const String subscriptionSection = 'الاشتراك';
-  static const String amountLabel = 'المبلغ (ريال)';
-  static const String noteLabel = 'ملاحظة';
-  static const String noteHintExample = 'مثال: دفعتين...';
-  static const String dateHint = 'dd / mm / yyyy';
-}
-
-/// F8 — قياس جديد
-class AddMeasurementStrings {
-  AddMeasurementStrings._();
-
-  static const String screenTitle = 'قياس جديد';
+  // ── F8 — قياس جديد ─────────────────────────────────────────
+  static const String addMeasurementScreenTitle = 'قياس جديد';
   static const String addMonthlyMeasurement = 'إضافة قياس شهري';
-  static const String monthLabel = 'الشهر';
-  static const String photosLabel = 'الصور';
+  static const String addMeasurementMonthLabel = 'الشهر';
+  static const String addMeasurementPhotosLabel = 'الصور';
   static const String saveMeasurementCta = 'حفظ القياس';
-}
 
-/// F9 — تعديل ملف العميل
-class EditClientStrings {
-  EditClientStrings._();
+  // ── F9 — تعديل ملف العميل ──────────────────────────────────
+  static const String editClientScreenTitle = 'تعديل ملف العميل';
+  static const String editClientSaveChangesCta = 'حفظ التعديلات';
+  static const String editClientDeleteClient = 'حذف العميلة';
 
-  static const String screenTitle = 'تعديل ملف العميل';
-  static const String saveChangesCta = 'حفظ التعديلات';
-  static const String deleteClient = 'حذف العميلة';
-}
-
-/// F10 — إنشاء حساب جديد
-class SignUpStrings {
-  SignUpStrings._();
-
-  static const String welcomeLetsStart = 'أهلاً بك، لنبدأ معاً';
-  static const String screenTitle = 'إنشاء حساب جديد';
-  static const String enterDataToStart = 'أدخلي بياناتك للبدء';
+  // ── F10 — إنشاء حساب جديد ──────────────────────────────────
+  static const String signUpWelcomeLetsStart = 'أهلاً بك، لنبدأ معاً';
+  static const String signUpScreenTitle = 'إنشاء حساب جديد';
+  static const String signUpEnterDataToStart = 'أدخلي بياناتك للبدء';
   static const String createAccountCta = 'إنشاء الحساب';
-  static const String alreadyHaveAccount = 'لديك حساب بالفعل؟';
-}
+  static const String signUpAlreadyHaveAccount = 'لديك حساب بالفعل؟';
 
-/// F11 / F12 — نسيت كلمة المرور
-class ForgotPasswordStrings {
-  ForgotPasswordStrings._();
-
-  static const String recoverPassword = 'استعادة كلمة المرور';
+  // ── F11 / F12 — نسيت كلمة المرور ───────────────────────────
+  static const String forgotPasswordRecoverPassword = 'استعادة كلمة المرور';
   static const String forgotPasswordTitle = 'نسيت كلمة المرور؟';
-  static const String enterEmailInstructions = 'أدخلي بريدك الإلكتروني وسنرسل لك رابط الاستعادة';
-  static const String sendResetLinkCta = 'إرسال رابط الاستعادة';
-  static const String backToLogin = 'العودة لتسجيل الدخول';
+  static const String forgotPasswordEnterEmailInstructions = 'أدخلي بريدك الإلكتروني وسنرسل لك رابط الاستعادة';
+  static const String forgotPasswordSendResetLinkCta = 'إرسال رابط الاستعادة';
+  static const String forgotPasswordBackToLogin = 'العودة لتسجيل الدخول';
 
-  static const String linkSentTitle = 'تم الإرسال بنجاح';
-  static const String emailSentHeading = 'تم الإرسال!';
-  static const String checkEmailInstructions = 'تحقّقي من بريدك الإلكتروني واتّبعي الرابط لإعادة التعيين';
-  static const String openEmailCta = 'فتح البريد الإلكتروني';
-  static const String didNotReceiveEmail = 'لم تصلك الرسالة؟';
-  static const String resend = 'إعادة الإرسال';
+  static const String forgotPasswordLinkSentTitle = 'تم الإرسال بنجاح';
+  static const String forgotPasswordEmailSentHeading = 'تم الإرسال!';
+  static const String forgotPasswordCheckEmailInstructions = 'تحقّقي من بريدك الإلكتروني واتّبعي الرابط لإعادة التعيين';
+  static const String forgotPasswordOpenEmailCta = 'فتح البريد الإلكتروني';
+  static const String forgotPasswordDidNotReceiveEmail = 'لم تصلك الرسالة؟';
+  static const String forgotPasswordResend = 'إعادة الإرسال';
 }
