@@ -17,6 +17,7 @@ class AppSizes {
   static const double buttonHeightSm = 46;
   static const double buttonHeightMd = 52;
   static const double buttonHeightLg = 54;
+  static const double bottomNavHeight = 78;
 
   // أيقونات
   static const double iconXxs = 12; // نادر (مرتين)
