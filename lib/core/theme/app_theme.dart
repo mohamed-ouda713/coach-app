@@ -3,6 +3,7 @@ import '../constants/app_borders.dart';
 import '../constants/app_radius.dart';
 import '../constants/app_sizes.dart';
 import 'app_colors.dart';
+import 'app_colors_extension.dart';
 import 'app_text_styles.dart';
 
 class AppTheme {
@@ -17,6 +18,7 @@ class AppTheme {
     textPrimary: AppColorsLight.textPrimary,
     textSecondary: AppColorsLight.textSecondary,
     danger: AppColorsLight.danger,
+    extension: AppColorsExtension.light,
   );
 
   static ThemeData get dark => _build(
@@ -28,6 +30,7 @@ class AppTheme {
     textPrimary: AppColorsDark.textPrimary,
     textSecondary: AppColorsDark.textSecondary,
     danger: AppColorsDark.danger,
+    extension: AppColorsExtension.dark,
   );
 
   static ThemeData _build({
@@ -39,6 +42,7 @@ class AppTheme {
     required Color textPrimary,
     required Color textSecondary,
     required Color danger,
+    required AppColorsExtension extension,
   }) {
     return ThemeData(
       useMaterial3: true,
@@ -58,6 +62,10 @@ class AppTheme {
         surface: bgCard,
         onSurface: textPrimary,
       ),
+      // Custom colors that don't have a standard ColorScheme role
+      // (success/warning/info, borders, soft backgrounds, ...).
+      // Access via `context.appColors` (see extensions/context_extensions.dart).
+      extensions: [extension],
       textTheme: TextTheme(
         displayLarge: AppTextStyles.displayXL.copyWith(color: textPrimary),
         headlineLarge: AppTextStyles.h1.copyWith(color: textPrimary),
