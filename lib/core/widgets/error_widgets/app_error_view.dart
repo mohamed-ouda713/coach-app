@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:glow_up/core/constants/app_strings.dart';
+import 'package:glow_up/core/theme/context_extensions.dart';
 
 import '../../constants/app_radius.dart';
 import '../../constants/app_sizes.dart';
 import '../../constants/app_spacing.dart';
-import '../../theme/app_colors.dart';
 import '../../theme/app_text_styles.dart';
 
 class AppErrorView extends StatelessWidget {
@@ -11,15 +12,13 @@ class AppErrorView extends StatelessWidget {
     super.key,
     required this.message,
     this.onRetry,
-    this.retryLabel = 'إعادة المحاولة',
+    this.retryLabel = AppStrings.errorViewRetry,
     this.icon = Icons.error_outline_rounded,
   });
 
-  /// رسالة الخطأ الجاهزة للعرض.
+ 
   final String message;
 
-  /// دالة تُستدعى عند الضغط على زر إعادة المحاولة.
-  /// لو تُترك null، الزر ما بيظهر (مثلاً لخطأ نهائي بدون إعادة محاولة).
   final VoidCallback? onRetry;
 
   final String retryLabel;
@@ -27,14 +26,8 @@ class AppErrorView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final danger = isDark ? AppColorsDark.danger : AppColorsLight.danger;
-    final dangerBg = isDark ? AppColorsDark.dangerBg : AppColorsLight.dangerBg;
-    final textPrimary = isDark ? AppColorsDark.textPrimary : AppColorsLight.textPrimary;
-    final primarySoftBg = isDark ? AppColorsDark.primarySoftBg : AppColorsLight.primarySoftBg;
-    
-    // ✅ تحسين التباين: تحديد لون النص والأيقونة بداخل الزر ديناميكياً لتفادي اختفائه في الـ Dark Mode
-    final buttonContentColor = isDark ? Colors.white : AppColors.primaryDark;
+    final colorScheme = Theme.of(context).colorScheme;
+    final appColors = context.appColors;
 
     return Center(
       child: Padding(
@@ -44,40 +37,37 @@ class AppErrorView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // الأيقونة التنبيهية الكبيرة للواجهة
             Container(
               width: AppSizes.avatarLogo,
               height: AppSizes.avatarLogo,
               decoration: BoxDecoration(
-                color: dangerBg,
+                color: appColors.dangerBg,
                 borderRadius: BorderRadius.circular(AppRadius.iconCircleXl),
               ),
-              child: Icon(icon, size: AppSizes.iconDisplay, color: danger),
+              child: Icon(icon, size: AppSizes.iconDisplay, color: colorScheme.error),
             ),
             const SizedBox(height: AppSpacing.xl),
             
-            // رسالة الخطأ
             Text(
               message,
               textAlign: TextAlign.center,
-              style: AppTextStyles.h4.copyWith(color: textPrimary),
+              style: AppTextStyles.h4.copyWith(color: colorScheme.onSurface),
             ),
             
             if (onRetry != null) ...[
               const SizedBox(height: AppSpacing.xxl),
-              // ✅ تحسين الحجم: وضع ConstrainedBox لضمان أبعاد متناسقة ومتوازنة للزر دائماً
               ConstrainedBox(
                 constraints: const BoxConstraints(
-                  minWidth: 160, // حد أدنى لشكل أنيق
-                  maxWidth: 240, // حد أقصى لمنع تمدده المشوه على شاشات التابلت
+                  minWidth: 160, 
+                  maxWidth: 240, 
                 ),
                 child: SizedBox(
                   height: AppSizes.buttonHeightSm,
                   child: ElevatedButton.icon(
                     onPressed: onRetry,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: primarySoftBg,
-                      foregroundColor: buttonContentColor, // استخدام المتغير الديناميكي هنا
+                      backgroundColor: appColors.primarySoftBg,
+                      foregroundColor: appColors.onPrimarySoftBg,
                       elevation: 0,
                       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
                       shape: RoundedRectangleBorder(
