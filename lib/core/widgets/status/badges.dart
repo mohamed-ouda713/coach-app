@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:glow_up/core/constants/app_spacing.dart'; // تأكد من صحة المسار لمشروعك
+import 'package:glow_up/core/constants/app_spacing.dart';
+import 'package:glow_up/core/theme/context_extensions.dart'; 
 import '../../constants/app_enums.dart';
 import '../../constants/app_radius.dart';
 import '../../constants/app_strings.dart';
-import '../../theme/app_colors.dart';
 import '../../theme/app_text_styles.dart';
 
 /// حاوية بصرية موحدة لكل "الشارات الصغيرة الملوّنة" بالتطبيق —
@@ -13,7 +13,7 @@ class _Badge extends StatelessWidget {
     required this.label, 
     required this.background, 
     required this.foreground,
-    this.textStyle, // إمكانية تمرير ستايل مخصص للشارات الاستثنائية
+    this.textStyle, 
   });
 
   final String label;
@@ -24,9 +24,8 @@ class _Badge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // تنظيف: استبدال الأرقام الثابتة بالاعتماد على قيم الـ Spacing لتناسق الشاشات
       padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.md, // تم تغيير الـ 9 و 10 الثابتة إلى الـ System Spacing
+        horizontal: AppSpacing.md, 
         vertical: AppSpacing.xs / 2, 
       ),
       decoration: BoxDecoration(
@@ -52,22 +51,23 @@ class StatusBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
+    final appColors = context.appColors;
 
     final (Color bg, Color fg, String label) = switch (status) {
       SubscriptionStatus.active => (
-          isDark ? AppColorsDark.successBg : AppColorsLight.successBg,
-          isDark ? AppColorsDark.success : AppColorsLight.success,
+          appColors.successBg,
+          appColors.success,
           AppStrings.statusActive,
         ),
       SubscriptionStatus.expiringSoon => (
-          isDark ? AppColorsDark.warningBg : AppColorsLight.warningBg,
-          isDark ? AppColorsDark.warning : AppColorsLight.warning,
+          appColors.warningBg,
+          appColors.warning,
           AppStrings.statusExpiringSoon,
         ),
       SubscriptionStatus.expired => (
-          isDark ? AppColorsDark.dangerBg : AppColorsLight.dangerBg,
-          isDark ? AppColorsDark.danger : AppColorsLight.danger,
+          appColors.dangerBg,
+          colorScheme.error,
           AppStrings.statusExpired,
         ),
     };
@@ -84,17 +84,17 @@ class ProgramBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final appColors = context.appColors;
 
     final (Color bg, Color fg, String label) = switch (program) {
       ProgramType.gym => (
-          isDark ? AppColorsDark.infoBg : AppColorsLight.infoBg,
-          isDark ? AppColorsDark.info : AppColorsLight.info,
+          appColors.infoBg,
+          appColors.info,
           AppStrings.programGym,
         ),
       ProgramType.home => (
-          isDark ? AppColorsDark.infoBg : AppColorsLight.infoBg,
-          isDark ? AppColorsDark.info : AppColorsLight.info,
+          appColors.infoBg,
+          appColors.info,
           AppStrings.programHome,
         ),
     };
@@ -111,27 +111,27 @@ class GoalBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final appColors = context.appColors;
 
     final (Color bg, Color fg, String label) = switch (goal) {
       FitnessGoal.weightLoss => (
-          isDark ? AppColorsDark.primarySoftBg : AppColorsLight.primarySoftBg,
-          isDark ? AppColors.primary : AppColors.primaryDark,
+          appColors.primarySoftBg,
+          appColors.primaryOnSoftBg,
           AppStrings.goalWeightLoss,
         ),
       FitnessGoal.generalFitness => (
-          isDark ? AppColorsDark.primarySoftBg : AppColorsLight.primarySoftBg,
-          isDark ? AppColors.primary : AppColors.primaryDark,
+          appColors.primarySoftBg,
+          appColors.primaryOnSoftBg,
           AppStrings.goalGeneralFitness,
         ),
       FitnessGoal.muscleGain => (
-          isDark ? AppColorsDark.infoBg : AppColorsLight.infoBg,
-          isDark ? AppColorsDark.info : AppColorsLight.info,
+          appColors.infoBg,
+          appColors.info,
           AppStrings.goalMuscleGain,
         ),
       FitnessGoal.recovery => (
-          isDark ? AppColorsDark.warningBg : AppColorsLight.warningBg,
-          isDark ? AppColorsDark.warning : AppColorsLight.warning,
+          appColors.warningBg,
+          appColors.warning,
           AppStrings.goalRecovery,
         ),
     };
@@ -149,21 +149,16 @@ class MeasurementDeltaBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
+    final appColors = context.appColors;
     final isImprovement = value <= 0;
 
-    final Color bg = isImprovement
-        ? (isDark ? AppColorsDark.successBg : AppColorsLight.successBg)
-        : (isDark ? AppColorsDark.dangerBg : AppColorsLight.dangerBg);
-    final Color fg = isImprovement
-        ? (isDark ? AppColorsDark.success : AppColorsLight.success)
-        : (isDark ? AppColorsDark.danger : AppColorsLight.danger);
+    final Color bg = isImprovement ? appColors.successBg : appColors.dangerBg;
+    final Color fg = isImprovement ? appColors.success : colorScheme.error;
 
-    // تنظيف: طريقة أدق لحساب الإشارة والتعامل مع الأرقام السالبة والموجبة لمنع تداخل الرموز
     final sign = value > 0 ? '+' : (value < 0 ? '−' : '');
     final label = '$sign${value.abs().toStringAsFixed(0)} $unit';
 
-    // تنظيف: إعادة استخدام الـ _Badge الموحدة وتمرير الـ TextStyle المخصص لها
     return _Badge(
       label: label,
       background: bg,

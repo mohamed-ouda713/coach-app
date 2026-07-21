@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:glow_up/core/constants/app_spacing.dart'; // تأكد من مسار الـ Spacing الصحيح في مشروعك
+import 'package:glow_up/core/constants/app_spacing.dart';
+import 'package:glow_up/core/theme/context_extensions.dart'; 
 import '../../constants/app_borders.dart';
 import '../../constants/app_radius.dart';
-import '../../theme/app_colors.dart';
 import '../../theme/app_text_styles.dart';
 
 /// شريحة اختيار (Selectable Chip) — تُستخدم لاختيار الهدف، البرنامج،
@@ -21,13 +21,12 @@ class SelectableChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
+    final appColors = context.appColors;
 
-    // TODO: نستبدل هالسطرين بـ Theme.of(context).colorScheme.outline و
-    // onSurfaceVariant لما تنضاف هالحقول لـ AppTheme.
-    final Color borderColor = isDark ? AppColorsDark.border : AppColorsLight.border;
-    final Color textColor = isDark ? AppColorsDark.textSecondary : AppColorsLight.textSecondary;
-    final Color surfaceColor = isDark ? AppColorsDark.bgCard : AppColorsLight.bgCard;
+    final Color borderColor = appColors.border;
+    final Color textColor = appColors.textSecondary;
+    final Color surfaceColor = colorScheme.surface;
 
     return GestureDetector(
       onTap: onTap,
@@ -38,7 +37,7 @@ class SelectableChip extends StatelessWidget {
           vertical: AppSpacing.sm,
         ),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primary : surfaceColor,
+          color: isSelected ? colorScheme.primary : surfaceColor,
           borderRadius: BorderRadius.circular(AppRadius.badge),
           border: isSelected
               ? null

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:glow_up/core/constants/app_spacing.dart'; // تأكد من المسار الصحيح للـ Spacing
+import 'package:glow_up/core/constants/app_spacing.dart';
+import 'package:glow_up/core/theme/context_extensions.dart'; 
 import '../../constants/app_enums.dart';
 import '../../constants/app_radius.dart';
-import '../../theme/app_colors.dart';
 import '../../theme/app_text_styles.dart';
 
 /// عنصر إشعار واحد بقائمة الإشعارات — أيقونة، لون، ونقطة صغيرة
@@ -26,41 +26,40 @@ class NotificationTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
+    final appColors = context.appColors;
 
-    // TODO: نستبدلهم بـ Theme.of(context).colorScheme.surface لما تنضاف الحقول الناقصة لـ AppTheme.
-    final Color cardBg = isDark ? AppColorsDark.bgCard : AppColorsLight.bgCard;
-    final Color textPrimary = isDark ? AppColorsDark.textPrimary : AppColorsLight.textPrimary;
-    final Color textSecondary = isDark ? AppColorsDark.textSecondary : AppColorsLight.textSecondary;
+    final Color cardBg = colorScheme.surface;
+    final Color textPrimary = colorScheme.onSurface;
+    final Color textSecondary = appColors.textSecondary;
 
     final (icon, iconColor, iconBg) = switch (type) {
       NotificationType.subscriptionExpiry => (
           Icons.notifications,
-          AppColors.primary,
-          isDark ? AppColorsDark.primarySoftBg : AppColorsLight.primarySoftBg,
+          colorScheme.primary,
+          appColors.primarySoftBg,
         ),
       NotificationType.overdueMeasurement => (
           Icons.show_chart,
-          isDark ? AppColorsDark.warning : AppColorsLight.warning,
-          isDark ? AppColorsDark.warningBg : AppColorsLight.warningBg,
+          appColors.warning,
+          appColors.warningBg,
         ),
       NotificationType.newProgramNeeded => (
           Icons.account_box,
-          isDark ? AppColorsDark.info : AppColorsLight.info,
-          isDark ? AppColorsDark.infoBg : AppColorsLight.infoBg,
+          appColors.info,
+          appColors.infoBg,
         ),
       NotificationType.progressUpdate => (
           Icons.check,
-          isDark ? AppColorsDark.success : AppColorsLight.success,
-          isDark ? AppColorsDark.successBg : AppColorsLight.successBg,
+          appColors.success,
+          appColors.successBg,
         ),
     };
 
-    // تحسين الأداء: تطبيق الشفافية على الألوان بدلاً من استخدام ويدجت Opacity المكلفة برمجياً
     final double currentOpacity = isRead ? 0.55 : 1.0;
 
     return Container(
-      padding: const EdgeInsets.all(AppSpacing.md), // تنظيف: استخدام نظام المسافات بدلاً من 16
+      padding: const EdgeInsets.all(AppSpacing.md), 
       decoration: BoxDecoration(
         color: cardBg.withOpacity(currentOpacity),
         borderRadius: BorderRadius.circular(AppRadius.clientCard),
@@ -88,7 +87,7 @@ class NotificationTile extends StatelessWidget {
               color: iconColor.withOpacity(currentOpacity),
             ),
           ),
-          const SizedBox(width: AppSpacing.md), // تنظيف: استبدال الـ 12 بـ md
+          const SizedBox(width: AppSpacing.md), 
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -99,7 +98,7 @@ class NotificationTile extends StatelessWidget {
                     color: textPrimary.withOpacity(currentOpacity),
                   ),
                 ),
-                const SizedBox(height: AppSpacing.xs), // تنظيف: استبدال الـ 5 بـ xs
+                const SizedBox(height: AppSpacing.xs), 
                 Text(
                   timeAgo,
                   style: AppTextStyles.caption.copyWith(
@@ -110,11 +109,11 @@ class NotificationTile extends StatelessWidget {
             ),
           ),
           if (!isRead) ...[
-            const SizedBox(width: AppSpacing.md), // تنظيف: استبدال الـ 12 بـ md
+            const SizedBox(width: AppSpacing.md), 
             Container(
               width: 8,
               height: 8,
-              margin: const EdgeInsets.only(top: AppSpacing.xs / 2), // تنظيف: استبدال الرقم السحري 3 بمسافة نسبية
+              margin: const EdgeInsets.only(top: AppSpacing.xs / 2), 
               decoration: BoxDecoration(
                 color: iconColor, 
                 shape: BoxShape.circle,

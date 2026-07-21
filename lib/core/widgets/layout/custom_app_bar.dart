@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:glow_up/core/constants/app_sizes.dart';
 import 'package:glow_up/core/constants/app_spacing.dart';
-import '../../theme/app_colors.dart';
+import 'package:glow_up/core/theme/context_extensions.dart';
 import '../../theme/app_text_styles.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -22,14 +22,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
+    final appColors = context.appColors;
 
-    // TODO: نستبدلهم بألوان الـ Theme لما تنضاف الحقول الناقصة لـ AppTheme.
-    final Color bg = isDark ? AppColorsDark.bgCard : AppColorsLight.bgCard;
-    final Color textPrimary =
-        isDark ? AppColorsDark.textPrimary : AppColorsLight.textPrimary;
-    final Color textTertiary =
-        isDark ? AppColorsDark.textTertiary : AppColorsLight.textTertiary;
+    final Color bg = colorScheme.surface;
+    final Color textPrimary = colorScheme.onSurface;
+    final Color textTertiary = appColors.textTertiary;
 
     final titleWidget = subtitle == null
         ? Text(
@@ -136,7 +134,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                         minWidth: 0,
                         maxWidth: maxWidth,
                       ),
-                      // ✅ الحل الصحيح: استخدام Align مع centerEnd للتثبيت على الحافة والتوسيط العمودي فقط
                       child: actions != null
                           ? Align(
                               alignment: AlignmentDirectional.centerEnd,
