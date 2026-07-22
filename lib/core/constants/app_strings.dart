@@ -16,6 +16,13 @@ class AppStrings {
   static const String actionBack = 'رجوع';
   static const String dividerOr = 'أو';
 
+  // 🆕 نصوص مضافة للـ Dialogs والـ SnackBars والـ Views العامة
+  static const String dialogConfirmOk = 'حسناً';
+  static const String dialogCancel = 'إلغاء';
+  static const String errorViewRetry = 'إعادة المحاولة';
+  static const String defaultErrorTitle = 'تنبيه';
+  static const String defaultErrorMessage = 'حدث خطأ ما، يرجى المحاولة مرة أخرى.';
+
   // Goals (تظهر في أكتر من شاشة: F0, F7, F9)
   static const String goalWeightLoss = 'خسارة وزن';
   static const String goalMuscleGain = 'زيادة كتلة';
@@ -63,7 +70,7 @@ class AppStrings {
 
   // ── F4 — الإشعارات ─────────────────────────────────────────
   static const String notificationsMarkAllRead = 'قراءة الكل';
-  // أمثلة نصوص إشعارات فعلية (تبقى Templates بتتبني ديناميك من الباك إند)
+    // أمثلة نصوص إشعارات فعلية (تبقى Templates بتتبني ديناميك من الباك إند)
   static const String notificationSubscriptionEndingTemplate = 'اشتراك {name} ينتهي خلال {days} أيام';
   static const String notificationMissingMeasurementTemplate = '{name} لم تسجل قياساتها هذا الشهر';
   static const String notificationNeedsNewProgramTemplate = '{name} تحتاج برنامجاً جديداً';
