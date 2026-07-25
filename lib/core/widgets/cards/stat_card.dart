@@ -46,7 +46,7 @@ class StatCard extends StatelessWidget {
             value,
             style: numberStyle.copyWith(color: valueColor ?? colorScheme.onSurface),
           ),
-          const SizedBox(height: 2),
+          const SizedBox(height: AppSpacing.xs / 2),
           Text(label, style: AppTextStyles.tiny.copyWith(color: appColors.textSecondary)),
         ],
       ),

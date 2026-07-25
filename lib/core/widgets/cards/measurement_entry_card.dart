@@ -60,7 +60,7 @@ class MeasurementEntryCard extends StatelessWidget {
       child: Column(
         children: [
           Text(value, style: AppTextStyles.bodyM.copyWith(fontWeight: FontWeight.w600, color: textPrimary)),
-          const SizedBox(height: 2),
+          const SizedBox(height: AppSpacing.xs / 2),
           Text(label, style: AppTextStyles.tiny.copyWith(color: textSecondary)),
         ],
       ),

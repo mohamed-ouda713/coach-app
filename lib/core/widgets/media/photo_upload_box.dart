@@ -1,7 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import '../../constants/app_borders.dart';
 import '../../constants/app_radius.dart';
+import '../../constants/app_sizes.dart';
+import '../../constants/app_spacing.dart';
 import '../../theme/app_text_styles.dart';
 import '../../theme/context_extensions.dart';
 
@@ -30,7 +33,7 @@ class PhotoUploadBox extends StatelessWidget {
           decoration: BoxDecoration(
             color: appColors.bgSubtle,
             borderRadius: BorderRadius.circular(AppRadius.card),
-            border: Border.all(color: appColors.border, width: 1.5),
+            border: Border.all(color: appColors.border, width: AppBorders.regular),
             image: imageFile != null
                 ? DecorationImage(image: FileImage(imageFile!), fit: BoxFit.cover)
                 : null,
@@ -43,9 +46,9 @@ class PhotoUploadBox extends StatelessWidget {
                     Icon(
                       Icons.add_a_photo_outlined,
                       color: appColors.textSecondary,
-                      size: 22,
+                      size: AppSizes.icon,
                     ),
-                    const SizedBox(height: 6),
+                    const SizedBox(height: AppSpacing.sm),
                     Text(
                       label,
                       style: AppTextStyles.caption.copyWith(color: appColors.textSecondary),

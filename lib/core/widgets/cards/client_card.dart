@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../constants/app_enums.dart';
 import '../../constants/app_radius.dart';
+import '../../constants/app_sizes.dart';
 import '../../constants/app_spacing.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_text_styles.dart';
@@ -59,18 +60,18 @@ class ClientCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(name, style: AppTextStyles.h5.copyWith(color: colorScheme.onSurface)),
-                  const SizedBox(height: 5),
+                  const SizedBox(height: AppSpacing.xs),
                   Row(
                     children: [
                       GoalBadge(goal: goal),
-                      const SizedBox(width: 5),
+                      const SizedBox(width: AppSpacing.xs),
                       StatusBadge(status: status),
                     ],
                   ),
                 ],
               ),
             ),
-            Icon(Icons.chevron_left, size: 16, color: appColors.textDisabled),
+            Icon(Icons.chevron_left, size: AppSizes.iconMd, color: appColors.textDisabled),
           ],
         ),
       ),
