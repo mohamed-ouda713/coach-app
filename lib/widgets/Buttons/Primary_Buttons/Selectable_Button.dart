@@ -23,25 +23,31 @@ class SelectedButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final effectiveBorderColor = borderColor ?? AppColors.primary;
-    final effectiveTextColor = textColor ?? AppColors.primary;
-    final  effectiveBackgroundColor = backgroundColor ?? AppColorsDark.bgCard;
+    final theme = Theme.of(context);
+    final effectiveBorderColor = borderColor ?? theme.colorScheme.primary;
+    final effectiveTextColor = textColor ?? theme.colorScheme.primary;
+    final effectiveBackgroundColor =
+        backgroundColor ?? theme.colorScheme.surfaceContainerHigh;
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxl, vertical: AppSpacing.lg),
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.xxl,
+          vertical: AppSpacing.lg,
+        ),
         decoration: BoxDecoration(
           color: effectiveBackgroundColor,
           borderRadius: BorderRadius.circular(AppRadius.card),
-          border: Border.all(color: effectiveBorderColor, width:AppBorders.regular),
+          border: Border.all(
+            color: effectiveBorderColor,
+            width: AppBorders.regular,
+          ),
         ),
         child: Text(
-            title,
-            textAlign: TextAlign.center,
-            style: AppTextStyles.buttonM.copyWith(
-              color: effectiveTextColor, 
-            ),
-          ),
+          title,
+          textAlign: TextAlign.center,
+          style: AppTextStyles.buttonM.copyWith(color: effectiveTextColor),
+        ),
       ),
     );
   }

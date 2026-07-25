@@ -8,16 +8,19 @@ class SaveButton extends StatelessWidget {
   const SaveButton({
     super.key,
     required this.title,
-    required this.backgroundColor,
+     this.backgroundColor,
     this.onTap,
-    required this.textColor,
+     this.textColor,
   });
   final String title;
-  final Color backgroundColor;
+  final Color? backgroundColor;
   final void Function()? onTap;
-  final Color textColor;
+  final Color? textColor;
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final effectiveBackgroundColor = backgroundColor ?? theme.colorScheme.primary;
+    final effectiveTextColor = textColor ?? theme.colorScheme.onPrimary;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -26,13 +29,13 @@ class SaveButton extends StatelessWidget {
           horizontal: AppSpacing.xl,
         ),
         decoration: BoxDecoration(
-          color: backgroundColor,
+          color: effectiveBackgroundColor,
           borderRadius: BorderRadius.circular(AppRadius.md),
         ),
         child: Text(
           title,
           textAlign: TextAlign.center,
-          style: AppTextStyles.buttonM.copyWith(color: textColor),
+          style: AppTextStyles.buttonM.copyWith(color: effectiveTextColor),
         ),
       ),
     );

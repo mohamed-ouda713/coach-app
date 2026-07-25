@@ -8,25 +8,28 @@ class CustomIconButton extends StatelessWidget {
     super.key,
     required this.icon,
     this.onPressed,
-    required this.color,
-    required this.iconColor,
+     this.color,
+     this.iconColor,
   });
   final IconData icon;
   final void Function()? onPressed;
-  final Color color;
-  final Color iconColor;
+  final Color? color;
+  final Color? iconColor;
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final effectiveColor = color ?? theme.colorScheme.surfaceContainerHigh;
+    final effectiveIconColor = iconColor ?? theme.colorScheme.onSurface;
     return Ink(
       decoration: BoxDecoration(
-        color: color,
+        color: effectiveColor,
         borderRadius: BorderRadius.circular(AppRadius.md),
       ),
       child: IconButton(
         padding: const EdgeInsets.all(AppSpacing.md),
         constraints: const BoxConstraints(),
         onPressed: onPressed,
-        icon: Icon(icon, color: iconColor),
+        icon: Icon(icon, color: effectiveIconColor),
       ),
     );
   }

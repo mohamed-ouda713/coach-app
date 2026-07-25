@@ -9,16 +9,16 @@ class PrimaryButton extends StatelessWidget {
     super.key,
     required this.title,
     this.onTap,
-    required this.backgroundColor,
+     this.backgroundColor,
     this.icon,
-    this.textColor = Colors.white, 
+    this.textColor , 
     this.height = AppSizes.buttonHeightMd,
   });
   final String title;
   final void Function()? onTap;
-  final Color backgroundColor;
+  final Color? backgroundColor;
   final IconData? icon;
-  final Color textColor;
+  final Color? textColor;
   final double height;
   @override
   Widget build(BuildContext context) {

@@ -22,13 +22,20 @@ class MeasurementCard extends StatelessWidget {
   final bool isSelected;
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
+    final theme = Theme.of(context);
+    final appColors = context.appColors;
+    final cardBackgroundColor =
+        isSelected ? appColors.primarySoftBg : appColors.bgSubtle;
+    final borderColor =
+        isSelected ? theme.colorScheme.primary : appColors.border;
+    final titleColor =
+        isSelected ? appColors.primaryOnSoftBg : theme.colorScheme.onSurface;
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Text(
           labelText,
-          style: AppTextStyles.h4.copyWith(color: colors.textSecondary),
+          style: AppTextStyles.h4.copyWith(color: appColors.textSecondary),
         ),
         const SizedBox(height: AppSpacing.xs),
         Container(
@@ -46,14 +53,12 @@ class MeasurementCard extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: AppTextStyles.h1.copyWith(
-                      
-                    )
+                  style: AppTextStyles.h1.copyWith(color: titleColor),
                 ),
                 Text(
                   subTitle,
                   style: AppTextStyles.bodyM.copyWith(
-                    color: colors.textSecondary,
+                    color: appColors.textSecondary,
                   ),
                 ),
               ],

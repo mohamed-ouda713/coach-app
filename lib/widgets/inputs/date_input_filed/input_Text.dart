@@ -9,11 +9,11 @@ import 'package:glow_up/core/theme/context_extensions.dart';
 class AddDate extends StatelessWidget {
   const AddDate({
     super.key,
-    required this.titel,
+    required this.title,
     required this.label,
     this.icon,
   });
-  final String titel;
+  final String title;
   final String label;
   final IconData? icon;
   @override
@@ -26,7 +26,7 @@ class AddDate extends StatelessWidget {
         Text(
           label,
           style: AppTextStyles.bodyM.copyWith(
-            color: Theme.of(context).colorScheme.primary,
+            color: primaryColor,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -35,10 +35,7 @@ class AddDate extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(AppRadius.cardLg),
             color: colors.bgSubtle,
-            border: Border.all(
-              color: Theme.of(context).colorScheme.primary,
-              width: AppBorders.regular,
-            ),
+            border: Border.all(color: primaryColor, width: AppBorders.regular),
           ),
           child: Padding(
             padding: EdgeInsets.symmetric(
@@ -50,13 +47,11 @@ class AddDate extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Text(
-                  titel,
-                  style: AppTextStyles.bodyM.copyWith(
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
+                  title,
+                  style: AppTextStyles.bodyM.copyWith(color: primaryColor),
                 ),
                 const SizedBox(height: AppSpacing.smMd),
-                Icon(icon, color: Theme.of(context).colorScheme.primary),
+                Icon(icon, color: primaryColor),
               ],
             ),
           ),
