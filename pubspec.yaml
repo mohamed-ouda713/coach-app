@@ -39,7 +39,7 @@ dependencies:
   # ملاحظة: flutter_localizations بتفرض نسخة intl متوافقة معها تلقائيًا،
   # فما بنحدد رقم نسخة ضيق هون عشان نتجنب تعارض تلقائي وقت pub get.
   intl: any
-  go_router: ^17.3.0
+  go_router: ^16.3.0
   flutter_dotenv: ^6.0.1
 dev_dependencies:
   flutter_test:
@@ -47,6 +47,8 @@ dev_dependencies:
   flutter_lints: ^5.0.0
 flutter:
   uses-material-design: true
+  assets:
+    - .env
   fonts:
     - family: IBMPlexSansArabic
       fonts:
