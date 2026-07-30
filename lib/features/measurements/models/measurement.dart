@@ -40,6 +40,20 @@ class Measurement {
     );
   }
 
+  Measurement copyWith({String? photoBeforeUrl, String? photoAfterUrl}) {
+    return Measurement(
+      id: id,
+      subscriberId: subscriberId,
+      measurementMonth: measurementMonth,
+      weight: weight,
+      waistSize: waistSize,
+      abdomenSize: abdomenSize,
+      photoBeforeUrl: photoBeforeUrl ?? this.photoBeforeUrl,
+      photoAfterUrl: photoAfterUrl ?? this.photoAfterUrl,
+      createdAt: createdAt,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       SupabaseColumns.subscriberId: subscriberId,
