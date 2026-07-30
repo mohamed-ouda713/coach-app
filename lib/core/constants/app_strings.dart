@@ -67,6 +67,8 @@ class AppStrings {
   static const String measurementsMonthlyLog = 'السجل الشهري';
   static const String measurementsPhotoBefore = 'صورة قبل';
   static const String measurementsPhotoAfter = 'صورة بعد';
+  static const String measurementsEmptyHistory = 'لا يوجد قياسات مسجلة بعد';
+  static const String measurementsNotEnoughForProgress = 'لا توجد بيانات كافية لعرض التقدم';
 
   // ── F4 — الإشعارات ─────────────────────────────────────────
   static const String notificationsMarkAllRead = 'قراءة الكل';
