@@ -1,15 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-/// مثال توضيحي  — مسار واحد لشاشة تسجيل الدخول .
-/// كل feature لاحقًا بتضيف مساراتها هون بنفس الطريقة.
+import '../features/measurements/cubit/measurements_cubit.dart';
+import '../features/measurements/data/measurement_repository.dart';
+import '../features/measurements/screens/add_measurement_screen.dart';
+import '../features/measurements/screens/measurement_history_screen.dart';
+import '../features/measurements/screens/overall_progress_screen.dart';
+
+/// كل feature بتضيف مساراتها هون بنفس الطريقة.
 class AppRoutes {
   AppRoutes._();
 
   static const login = '/login';
   // static const clientsList = '/clients';
   // static const clientProfile = '/clients/:id';
+  static const addMeasurement = '/subscribers/:subscriberId/measurements/add';
+  static const measurementHistory = '/subscribers/:subscriberId/measurements';
+  static const overallProgress = '/subscribers/:subscriberId/measurements/progress';
 }
+
+MeasurementsCubit _measurementsCubit() =>
+    MeasurementsCubit(MeasurementRepository(Supabase.instance.client));
 
 final GoRouter appRouter = GoRouter(
   initialLocation: AppRoutes.login,
@@ -29,6 +42,27 @@ final GoRouter appRouter = GoRouter(
     //     return ClientProfileScreen(clientId: clientId);
     //   },
     // ),
+    GoRoute(
+      path: AppRoutes.addMeasurement,
+      builder: (context, state) => BlocProvider(
+        create: (_) => _measurementsCubit(),
+        child: AddMeasurementScreen(subscriberId: state.pathParameters['subscriberId']!),
+      ),
+    ),
+    GoRoute(
+      path: AppRoutes.measurementHistory,
+      builder: (context, state) => BlocProvider(
+        create: (_) => _measurementsCubit(),
+        child: MeasurementHistoryScreen(subscriberId: state.pathParameters['subscriberId']!),
+      ),
+    ),
+    GoRoute(
+      path: AppRoutes.overallProgress,
+      builder: (context, state) => BlocProvider(
+        create: (_) => _measurementsCubit(),
+        child: OverallProgressScreen(subscriberId: state.pathParameters['subscriberId']!),
+      ),
+    ),
   ],
 );
 
