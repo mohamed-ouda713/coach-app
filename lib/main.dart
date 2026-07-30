@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:glow_up/features/auth/cubit/auth_cubit.dart';
+import 'package:glow_up/features/auth/data/auth_repository.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'core/constants/supabase_constants.dart';
 
@@ -13,7 +16,14 @@ Future<void> main() async {
     anonKey: SupabaseConfig.anonKey,
   );
 
-  runApp(const MyApp());
+  runApp(
+    // 1️⃣ حطي الـ BlocProvider فوق التطبيق كلو
+    BlocProvider(
+      create: (context) => AuthCubit(
+        AuthRepository(Supabase.instance.client),
+      ),
+      child: const MyApp(),
+    ));
 }
 
 class MyApp extends StatelessWidget {
@@ -59,7 +69,18 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text('You have pushed the button this many times:'),
+            ElevatedButton(
+              onPressed: () {
+                // استدعاء دالة الإنشاء للتجربة
+                context.read<AuthCubit>().signUp(
+                  email: 'test333345@gmail.com',
+                  password: 'Password123!',
+                  fullName: 'آية أحمد',
+                );
+              },
+              child: Text('تجربة إنشاء حساب'),
+            ),
+            Text('You have pushed the button this many times:'),
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
