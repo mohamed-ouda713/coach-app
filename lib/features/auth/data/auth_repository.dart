@@ -1,0 +1,47 @@
+// lib/features/auth/data/auth_repository.dart
+
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+class AuthRepository {
+  AuthRepository(this._client);
+
+  final SupabaseClient _client;
+
+  User? get currentUser => _client.auth.currentUser;
+
+  bool get isSignedIn => currentUser != null;
+
+  /// بث حالة الجلسة — الـ Cubit بيسمعله عشان يعرف لحظة بلحظة
+  /// لو المستخدم سجّل دخول أو خرج (مفيد كمان لو انتهت صلاحية التوكن).
+  Stream<AuthState> get authStateChanges => _client.auth.onAuthStateChange;
+
+  Future<void> signIn({
+    required String email,
+    required String password,
+  }) async {
+    await _client.auth.signInWithPassword(email: email, password: password);
+  }
+
+  /// [fullName] بينحفظ بـ user metadata، والـ trigger يلي عملناه
+  /// بقاعدة البيانات (on_auth_user_created) بيستخدمه تلقائيًا
+  /// لتعبئة جدول trainers.
+  Future<void> signUp({
+    required String email,
+    required String password,
+    required String fullName,
+  }) async {
+    await _client.auth.signUp(
+      email: email,
+      password: password,
+      data: {'full_name': fullName},
+    );
+  }
+
+  Future<void> signOut() async {
+    await _client.auth.signOut();
+  }
+
+  Future<void> resetPasswordForEmail(String email) async {
+    await _client.auth.resetPasswordForEmail(email);
+  }
+}
