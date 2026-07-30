@@ -9,9 +9,9 @@ class PrimaryButton extends StatelessWidget {
     super.key,
     required this.title,
     this.onTap,
-     this.backgroundColor,
+    this.backgroundColor,
     this.icon,
-    this.textColor , 
+    this.textColor,
     this.height = AppSizes.buttonHeightMd,
   });
   final String title;
@@ -26,6 +26,7 @@ class PrimaryButton extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: MediaQuery.of(context).size.width,
+        height: height,
         padding: const EdgeInsets.symmetric(
           vertical: AppSpacing.md,
           horizontal: AppSpacing.xl,
@@ -39,14 +40,12 @@ class PrimaryButton extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               if (icon != null) ...[
-                Icon(icon),
+                Icon(icon, color: textColor, size: AppSizes.icon),
                 const SizedBox(width: AppSpacing.smMd),
               ],
               Text(
                 title,
-                style: AppTextStyles.buttonL.copyWith(
-                  color: textColor,
-                ),
+                style: AppTextStyles.buttonL.copyWith(color: textColor),
               ),
             ],
           ),

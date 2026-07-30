@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:glow_up/core/constants/app_borders.dart';
 import 'package:glow_up/core/constants/app_radius.dart';
 import 'package:glow_up/core/constants/app_spacing.dart';
+import 'package:glow_up/core/theme/app_colors.dart';
 import 'package:glow_up/core/theme/app_text_styles.dart';
 
 class CustomTextFormField extends StatelessWidget {
@@ -12,6 +13,7 @@ class CustomTextFormField extends StatelessWidget {
     this.prefixIcon,
     this.suffixIcon,
     required this.hintText,
+    this.fillColor,
   });
 
   final String title;
@@ -19,14 +21,13 @@ class CustomTextFormField extends StatelessWidget {
   final String? label;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
+  final Color? fillColor;
 
   @override
   Widget build(BuildContext context) {
-    // جلب الألوان بأمان من ثيم النظام مباشرة لتجنب أخطاء الـ Null
-    final theme = Theme.of(context);
-    final borderColor = theme.dividerColor;
-    final primaryColor = theme.colorScheme.primary;
-    final textSecondaryColor = theme.hintColor;
+    const borderColor = AppColorsDark.border;
+    const primaryColor = AppColors.primary;
+    const textSecondaryColor = AppColorsDark.textSecondary;
 
     return Column(
       children: [
@@ -43,6 +44,9 @@ class CustomTextFormField extends StatelessWidget {
         TextFormField(
           textAlign: TextAlign.right,
           decoration: InputDecoration(
+            hintStyle: AppTextStyles.bodyM.copyWith(color: textSecondaryColor),
+            filled: true, // 👈 تفعيل ملء الخلفية
+            fillColor: fillColor ?? AppColorsDark.bgCard,
             contentPadding: const EdgeInsets.symmetric(
               horizontal: AppSpacing.mdLg,
               vertical: AppSpacing.xl,
