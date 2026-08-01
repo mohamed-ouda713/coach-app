@@ -131,6 +131,12 @@ class AppStrings {
   static const String signUpEnterDataToStart = 'أدخلي بياناتك للبدء';
   static const String createAccountCta = 'إنشاء الحساب';
   static const String signUpAlreadyHaveAccount = 'لديك حساب بالفعل؟';
+  //  نصوص التحقق من الصحة (Validation)
+  static const String nameRequired = 'يرجى إدخال الاسم الكامل';
+  static const String emailRequired = 'يرجى إدخال البريد الإلكتروني';
+  static const String invalidEmail = 'يرجى إدخال بريد إلكتروني صحيح';
+  static const String passwordRequired = 'يرجى إدخال كلمة المرور';
+  static const String passwordTooShort = 'كلمة المرور يجب أن لا تقل عن 6 أحرف';
 
   // ── F11 / F12 — نسيت كلمة المرور ───────────────────────────
   static const String forgotPasswordRecoverPassword = 'استعادة كلمة المرور';

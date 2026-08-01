@@ -31,6 +31,7 @@ class CustomTextLink extends StatelessWidget {
     final effectiveTextColor = textColor ?? defaultColor;
     final effectiveIconColor = iconColor ?? defaultColor;
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: onPressed,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,

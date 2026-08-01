@@ -46,7 +46,11 @@ class AuthCubit extends Cubit<AuthState> {
   }) async {
     emit(const AuthLoading());
     try {
-      await _repository.signUp(email: email, password: password, fullName: fullName);
+      await _repository.signUp(
+        email: email,
+        password: password,
+        fullName: fullName,
+      );
     } catch (e) {
       emit(AuthError(ExceptionMapper.mapToMessage(e)));
     }

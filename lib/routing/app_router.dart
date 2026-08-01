@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:glow_up/core/screens/home_page.dart';
+import 'package:glow_up/features/auth/screens/login/login_screen.dart';
+import 'package:glow_up/features/auth/screens/signUp/signUp_screen.dart';
 import 'package:go_router/go_router.dart';
 
 /// مثال توضيحي  — مسار واحد لشاشة تسجيل الدخول .
 /// كل feature لاحقًا بتضيف مساراتها هون بنفس الطريقة.
 class AppRoutes {
   AppRoutes._();
-
+  static const signup = '/signup';
   static const login = '/login';
+  static const String home = '/home';
   // static const clientsList = '/clients';
   // static const clientProfile = '/clients/:id';
 }
@@ -16,7 +20,15 @@ final GoRouter appRouter = GoRouter(
   routes: [
     GoRoute(
       path: AppRoutes.login,
-      builder: (context, state) => const _LoginScreenPlaceholder(),
+      builder: (context, state) => const LoginScreen(), // 👈 شاشة تسجيل الدخول
+    ),
+    GoRoute(
+      path: AppRoutes.signup,
+      builder: (context, state) => const SignupScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.home,
+      builder: (context, state) => const HomePage(),
     ),
     // GoRoute(
     //   path: AppRoutes.clientsList,

@@ -14,6 +14,10 @@ class CustomTextFormField extends StatelessWidget {
     this.suffixIcon,
     required this.hintText,
     this.fillColor,
+    this.controller, // 👈 أضفنا الكنترولر
+    this.obscureText = false, // 👈 أضفنا خيار إخفاء النص (كلمة المرور)
+    this.keyboardType, // 👈 أضفنا نوع الكيبورد
+    this.validator, this.formKey, // 👈 أضفنا الـ validator لو حابب تفعل الـ Validation
   });
 
   final String title;
@@ -22,6 +26,11 @@ class CustomTextFormField extends StatelessWidget {
   final Widget? prefixIcon;
   final Widget? suffixIcon;
   final Color? fillColor;
+  final TextEditingController? controller;
+  final bool obscureText;
+  final TextInputType? keyboardType;
+  final String? Function(String?)? validator;
+  final GlobalKey<FormState>? formKey;
 
   @override
   Widget build(BuildContext context) {
@@ -29,50 +38,57 @@ class CustomTextFormField extends StatelessWidget {
     const primaryColor = AppColors.primary;
     const textSecondaryColor = AppColorsDark.textSecondary;
 
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Text(
-              title,
-              style: AppTextStyles.bodyM.copyWith(color: textSecondaryColor),
-            ),
-          ],
-        ),
-        const SizedBox(height: AppSpacing.xs),
-        TextFormField(
-          textAlign: TextAlign.right,
-          decoration: InputDecoration(
-            hintStyle: AppTextStyles.bodyM.copyWith(color: textSecondaryColor),
-            filled: true, // 👈 تفعيل ملء الخلفية
-            fillColor: fillColor ?? AppColorsDark.bgCard,
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.mdLg,
-              vertical: AppSpacing.xl,
-            ),
-            suffixIcon: suffixIcon,
-            prefixIcon: prefixIcon,
-            labelText: label,
-            hintText: hintText,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppRadius.md),
-              borderSide: BorderSide(color: borderColor),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppRadius.md),
-              borderSide: BorderSide(color: borderColor),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppRadius.md),
-              borderSide: BorderSide(
-                color: primaryColor,
-                width: AppBorders.regular,
+    return Form(
+      key: formKey,
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Text(
+                title,
+                style: AppTextStyles.bodyM.copyWith(color: textSecondaryColor),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          TextFormField(
+            controller: controller,
+            obscureText: obscureText,
+            keyboardType: keyboardType,
+            validator: validator,
+            textAlign: TextAlign.right,
+            decoration: InputDecoration(
+              hintStyle: AppTextStyles.bodyM.copyWith(color: textSecondaryColor),
+              filled: true,
+              fillColor: fillColor ?? AppColorsDark.bgCard,
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.mdLg,
+                vertical: AppSpacing.xl,
+              ),
+              suffixIcon: suffixIcon,
+              prefixIcon: prefixIcon,
+              labelText: label,
+              hintText: hintText,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(AppRadius.md),
+                borderSide: const BorderSide(color: borderColor),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(AppRadius.md),
+                borderSide: const BorderSide(color: borderColor),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(AppRadius.md),
+                borderSide: const BorderSide(
+                  color: primaryColor,
+                  width: AppBorders.regular,
+                ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
