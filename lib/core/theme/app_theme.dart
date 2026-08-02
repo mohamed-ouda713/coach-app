@@ -63,8 +63,7 @@ class AppTheme {
         onSurface: textPrimary,
       ),
       // Custom colors that don't have a standard ColorScheme role
-      // (success/warning/info, borders, soft backgrounds, ...).
-      // Access via `context.appColors` (see extensions/context_extensions.dart).
+      // Access via `context.appColors`
       extensions: [extension],
       textTheme: TextTheme(
         displayLarge: AppTextStyles.displayXL.copyWith(color: textPrimary),
