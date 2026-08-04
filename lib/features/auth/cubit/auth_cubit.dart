@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as supabase;
 
+import 'package:glow_up/core/errors/error_messages.dart';
 import 'package:glow_up/core/errors/exception_mapper.dart';
 import '../data/auth_repository.dart';
 import 'auth_state.dart';
@@ -32,8 +33,6 @@ class AuthCubit extends Cubit<AuthState> {
     emit(const AuthLoading());
     try {
       await _repository.signIn(email: email, password: password);
-      // ما منعمل emit(Authenticated) يدويًا هون — الـ authStateChanges
-      // listener فوق رح يلتقطها تلقائيًا ويحدّث الحالة.
     } catch (e) {
       emit(AuthError(ExceptionMapper.mapToMessage(e)));
     }
@@ -46,13 +45,27 @@ class AuthCubit extends Cubit<AuthState> {
   }) async {
     emit(const AuthLoading());
     try {
-      await _repository.signUp(
+      final response = await _repository.signUp(
         email: email,
         password: password,
         fullName: fullName,
       );
+      final identities = response.user?.identities;
+      if (identities != null && identities.isEmpty) {
+        emit(const AuthError(ErrorMessages.emailNotAvailable));
+        return;
+      }
+      if (response.session == null) {
+        emit(const AuthSignUpEmailConfirmationRequired());
+      }
     } catch (e) {
       emit(AuthError(ExceptionMapper.mapToMessage(e)));
+    }
+  }
+
+  void clearError() {
+    if (state is AuthError) {
+      emit(const AuthUnauthenticated());
     }
   }
 

@@ -1,7 +1,3 @@
-
-
-
-
 import 'package:glow_up/core/errors/error_messages.dart';
 
 import 'app_exception.dart';
@@ -22,14 +18,14 @@ class AppAuthException extends AppException {
   factory AppAuthException.weakPassword() =>
       const AppAuthException(ErrorMessages.weakPassword);
 
-  factory AppAuthException.userNotFound() =>
-      const AppAuthException(ErrorMessages.userNotFound);
-
   factory AppAuthException.emailNotConfirmed() =>
       const AppAuthException(ErrorMessages.emailNotConfirmed);
 
   factory AppAuthException.sessionExpired() =>
       const AppAuthException(ErrorMessages.sessionExpired);
+
+  factory AppAuthException.emailRateLimitExceeded() =>
+      const AppAuthException(ErrorMessages.emailRateLimitExceeded);
 
   factory AppAuthException.generic() =>
       const AppAuthException(ErrorMessages.authGeneric);

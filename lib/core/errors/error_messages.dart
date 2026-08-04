@@ -12,16 +12,22 @@ class ErrorMessages {
 
   // ── شبكة (Network) ─────────────────────────────────────
   static const String noInternet = 'لا يوجد اتصال بالإنترنت، تحقق من الشبكة';
-  static const String requestTimeout = 'استغرق الطلب وقتاً طويلاً، حاول مرة أخرى';
+  static const String requestTimeout =
+      'استغرق الطلب وقتاً طويلاً، حاول مرة أخرى';
   static const String serverUnreachable = 'تعذر الوصول إلى الخادم حالياً';
 
   // ── مصادقة (Auth) ───────────────────────────────────────
-  static const String invalidCredentials = 'البريد الإلكتروني أو كلمة المرور غير صحيحة';
+  static const String invalidCredentials =
+      'البريد الإلكتروني أو كلمة المرور غير صحيحة';
   static const String emailAlreadyInUse = 'هذا البريد الإلكتروني مستخدم مسبقاً';
+  static const String emailNotAvailable =
+      'لا يمكن استخدام هذا البريد الإلكتروني، جرّبي بريداً آخر';
   static const String weakPassword = 'كلمة المرور ضعيفة، اختر كلمة مرور أقوى';
-  static const String userNotFound = 'لا يوجد حساب مرتبط بهذا البريد الإلكتروني';
   static const String emailNotConfirmed = 'يرجى تأكيد بريدك الإلكتروني أولاً';
-  static const String sessionExpired = 'انتهت صلاحية الجلسة، يرجى تسجيل الدخول مرة أخرى';
+  static const String sessionExpired =
+      'انتهت صلاحية الجلسة، يرجى تسجيل الدخول مرة أخرى';
+  static const String emailRateLimitExceeded =
+      'تم إرسال عدد كبير من رسائل التحقق، حاول مرة أخرى بعد قليل';
   static const String authGeneric = 'حدث خطأ أثناء تسجيل الدخول، حاول مرة أخرى';
 
   // ── قاعدة البيانات (Database) ───────────────────────────
@@ -41,6 +47,7 @@ class ErrorMessages {
   static const String requiredField = 'هذا الحقل مطلوب';
   static const String invalidEmail = 'صيغة البريد الإلكتروني غير صحيحة';
   static const String invalidPhone = 'رقم الهاتف غير صحيح';
-  static const String passwordTooShort = 'كلمة المرور يجب أن تكون 6 أحرف على الأقل';
+  static const String passwordTooShort =
+      'كلمة المرور يجب أن تكون 6 أحرف على الأقل';
   static const String validationGeneric = 'يرجى التحقق من البيانات المدخلة';
 }
