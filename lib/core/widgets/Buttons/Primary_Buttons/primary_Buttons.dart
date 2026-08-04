@@ -13,6 +13,7 @@ class PrimaryButton extends StatelessWidget {
     this.icon,
     this.textColor,
     this.height = AppSizes.buttonHeightMd,
+    this.isLoading = false,
   });
   final String title;
   final void Function()? onTap;
@@ -20,11 +21,12 @@ class PrimaryButton extends StatelessWidget {
   final IconData? icon;
   final Color? textColor;
   final double height;
+  final bool isLoading;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTap: onTap,
+      onTap: isLoading ? null : onTap,
       child: Container(
         width: MediaQuery.of(context).size.width,
         height: height,
@@ -37,19 +39,30 @@ class PrimaryButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(AppRadius.cardLg),
         ),
         child: Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (icon != null) ...[
-                Icon(icon, color: textColor, size: AppSizes.icon),
-                const SizedBox(width: AppSpacing.smMd),
-              ],
-              Text(
-                title,
-                style: AppTextStyles.buttonL.copyWith(color: textColor),
-              ),
-            ],
-          ),
+          child: isLoading
+              ? SizedBox(
+                  width: AppSizes.icon,
+                  height: AppSizes.icon,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2.5,
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      textColor ?? Colors.white,
+                    ),
+                  ),
+                )
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (icon != null) ...[
+                      Icon(icon, color: textColor, size: AppSizes.icon),
+                      const SizedBox(width: AppSpacing.smMd),
+                    ],
+                    Text(
+                      title,
+                      style: AppTextStyles.buttonL.copyWith(color: textColor),
+                    ),
+                  ],
+                ),
         ),
       ),
     );
