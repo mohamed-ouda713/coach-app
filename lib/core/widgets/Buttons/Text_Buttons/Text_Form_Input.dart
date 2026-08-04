@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:glow_up/core/constants/app_borders.dart';
 import 'package:glow_up/core/constants/app_radius.dart';
+import 'package:glow_up/core/constants/app_sizes.dart';
 import 'package:glow_up/core/constants/app_spacing.dart';
-import 'package:glow_up/core/theme/app_colors.dart';
 import 'package:glow_up/core/theme/app_text_styles.dart';
+import 'package:glow_up/core/theme/context_extensions.dart';
 
-class CustomTextFormField extends StatelessWidget {
+class CustomTextFormField extends StatefulWidget {
   const CustomTextFormField({
     super.key,
     required this.title,
@@ -17,7 +18,9 @@ class CustomTextFormField extends StatelessWidget {
     this.controller, // 👈 أضفنا الكنترولر
     this.obscureText = false, // 👈 أضفنا خيار إخفاء النص (كلمة المرور)
     this.keyboardType, // 👈 أضفنا نوع الكيبورد
-    this.validator, this.formKey, // 👈 أضفنا الـ validator لو حابب تفعل الـ Validation
+    this.validator,
+    this.helperText,
+    this.autovalidateMode,
   });
 
   final String title;
@@ -30,65 +33,91 @@ class CustomTextFormField extends StatelessWidget {
   final bool obscureText;
   final TextInputType? keyboardType;
   final String? Function(String?)? validator;
-  final GlobalKey<FormState>? formKey;
+
+  final String? helperText;
+  final AutovalidateMode? autovalidateMode;
+
+  @override
+  State<CustomTextFormField> createState() => _CustomTextFormFieldState();
+}
+
+class _CustomTextFormFieldState extends State<CustomTextFormField> {
+  late bool _obscured = widget.obscureText;
 
   @override
   Widget build(BuildContext context) {
-    const borderColor = AppColorsDark.border;
-    const primaryColor = AppColors.primary;
-    const textSecondaryColor = AppColorsDark.textSecondary;
+    final colorScheme = Theme.of(context).colorScheme;
+    final borderColor = context.appColors.border;
+    final textSecondaryColor = context.appColors.textSecondary;
 
-    return Form(
-      key: formKey,
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Text(
-                title,
-                style: AppTextStyles.bodyM.copyWith(color: textSecondaryColor),
+    final effectivePrefixIcon =
+        widget.obscureText
+            ? IconButton(
+              icon: Icon(
+                _obscured
+                    ? Icons.visibility_off_outlined
+                    : Icons.visibility_outlined,
+                size: AppSizes.icon,
+                color: textSecondaryColor,
               ),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          TextFormField(
-            controller: controller,
-            obscureText: obscureText,
-            keyboardType: keyboardType,
-            validator: validator,
-            textAlign: TextAlign.right,
-            decoration: InputDecoration(
-              hintStyle: AppTextStyles.bodyM.copyWith(color: textSecondaryColor),
-              filled: true,
-              fillColor: fillColor ?? AppColorsDark.bgCard,
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.mdLg,
-                vertical: AppSpacing.xl,
-              ),
-              suffixIcon: suffixIcon,
-              prefixIcon: prefixIcon,
-              labelText: label,
-              hintText: hintText,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(AppRadius.md),
-                borderSide: const BorderSide(color: borderColor),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(AppRadius.md),
-                borderSide: const BorderSide(color: borderColor),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(AppRadius.md),
-                borderSide: const BorderSide(
-                  color: primaryColor,
-                  width: AppBorders.regular,
-                ),
+              onPressed: () => setState(() => _obscured = !_obscured),
+            )
+            : widget.prefixIcon;
+
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text(
+              widget.title,
+              style: AppTextStyles.bodyM.copyWith(color: textSecondaryColor),
+            ),
+          ],
+        ),
+        const SizedBox(height: AppSpacing.xs),
+        TextFormField(
+          controller: widget.controller,
+          obscureText: _obscured,
+          keyboardType: widget.keyboardType,
+          validator: widget.validator,
+          autovalidateMode: widget.autovalidateMode,
+          textAlign: TextAlign.right,
+          decoration: InputDecoration(
+            hintStyle: AppTextStyles.bodyM.copyWith(color: textSecondaryColor),
+            helperText: widget.helperText,
+            helperMaxLines: 2,
+            helperStyle: AppTextStyles.bodyS.copyWith(
+              color: textSecondaryColor,
+            ),
+            filled: true,
+            fillColor: widget.fillColor ?? context.appColors.bgSubtle,
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.mdLg,
+              vertical: AppSpacing.xl,
+            ),
+            suffixIcon: widget.suffixIcon,
+            prefixIcon: effectivePrefixIcon,
+            labelText: widget.label,
+            hintText: widget.hintText,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(AppRadius.md),
+              borderSide: BorderSide(color: borderColor),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(AppRadius.md),
+              borderSide: BorderSide(color: borderColor),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(AppRadius.md),
+              borderSide: BorderSide(
+                color: colorScheme.primary,
+                width: AppBorders.regular,
               ),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
