@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:glow_up/core/constants/app_radius.dart';
 import 'package:glow_up/core/constants/app_spacing.dart';
 import 'package:glow_up/core/constants/app_strings.dart';
-import 'package:glow_up/core/theme/app_colors.dart';
 import 'package:glow_up/core/theme/app_text_styles.dart';
+import 'package:glow_up/core/widgets/status/app_success_snackbar.dart';
 import 'package:glow_up/features/auth/cubit/auth_cubit.dart';
 import 'package:glow_up/features/auth/cubit/auth_state.dart';
 import 'package:glow_up/features/auth/screens/login/widgets/login_fields.dart';
@@ -38,79 +38,71 @@ class _LoginFormCardState extends State<LoginFormCard> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AuthCubit, AuthState>(
+    return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is AuthAuthenticated) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('تم تسجيل الدخول بنجاح! 🎉')),
-          );
+          AppSuccessSnackbar.show(context, AppStrings.loginSuccessMessage);
           context.go(AppRoutes.home);
-        } else if (state is AuthError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              backgroundColor: AppColors.financeExpense,
-            ),
-          );
         }
       },
-      child: Stack(
-        children: [
-          Positioned(
-            top: MediaQuery.of(context).size.height * 0.32,
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: Container(
-              decoration: BoxDecoration(
-                color: AppColorsDark.bgCard,
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(AppRadius.sheet),
-                ),
-              ),
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.screenPadding,
-                    vertical: AppSpacing.xxl,
+      builder: (context, state) {
+        final isLoading = state is AuthLoading;
+        final errorMessage = state is AuthError ? state.message : null;
+        return Stack(
+          children: [
+            Positioned(
+              top: MediaQuery.of(context).size.height * 0.32,
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surface,
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(AppRadius.sheet),
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      // العنوان والوصف
-                      Text(
-                        AppStrings.loginWelcomeBack,
-                        style: AppTextStyles.h1.copyWith(
-                          color: AppColorsDark.textPrimary,
+                ),
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.screenPadding,
+                      vertical: AppSpacing.xxl,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // العنوان والوصف
+                        Text(
+                          AppStrings.loginWelcomeBack,
+                          style: AppTextStyles.h1.copyWith(
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
                         ),
-                      ),
-                      LoginFields(
-                        emailController: _emailController,
-                        passwordController: _passwordController,
-                      ),
+                        LoginFields(
+                          emailController: _emailController,
+                          passwordController: _passwordController,
+                          errorMessage: errorMessage,
+                        ),
 
-                      BlocBuilder<AuthCubit, AuthState>(
-                        builder: (context, state) {
-                          return LoginFooter(
-                            isLoading: state is AuthLoading,
-                            onLoginPressed: () {
-                              context.read<AuthCubit>().signIn(
-                                email: _emailController.text.trim(),
-                                password: _passwordController.text,
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ],
+                        LoginFooter(
+                          isLoading: isLoading,
+                          onLoginPressed: () {
+                            context.read<AuthCubit>().signIn(
+                              email: _emailController.text.trim(),
+                              password: _passwordController.text,
+                            );
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
-      ),
+          ],
+        );
+      },
     );
   }
 }

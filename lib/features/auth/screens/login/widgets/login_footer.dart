@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:glow_up/core/constants/app_spacing.dart';
 import 'package:glow_up/core/constants/app_strings.dart';
 import 'package:glow_up/core/theme/app_colors.dart';
+import 'package:glow_up/core/theme/context_extensions.dart';
 import 'package:glow_up/core/widgets/Buttons/Primary_Buttons/primary_Buttons.dart';
 import 'package:glow_up/core/widgets/Buttons/Text_Buttons/custom_text_link.dart';
 import 'package:glow_up/core/widgets/layout/or_divider.dart';
@@ -22,8 +23,9 @@ class LoginFooter extends StatelessWidget {
     return Column(
       children: [
         PrimaryButton(
-          title: isLoading ? 'جاري التحميل...' : AppStrings.loginCta,
-          onTap: isLoading ? null : onLoginPressed,
+          title: AppStrings.loginCta,
+          onTap: onLoginPressed,
+          isLoading: isLoading,
           backgroundColor: AppColors.primary,
           textColor: AppColorsDark.textPrimary,
         ),

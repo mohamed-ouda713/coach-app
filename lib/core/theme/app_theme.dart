@@ -87,6 +87,15 @@ class AppTheme {
         filled: true,
         fillColor: bgSubtle,
         contentPadding: const EdgeInsets.symmetric(horizontal: 14),
+        labelStyle: TextStyle(
+          color: textSecondary,
+          fontWeight: FontWeight.bold,
+        ),
+        hintStyle: TextStyle(color: textSecondary),
+        floatingLabelStyle: const TextStyle(
+          color: AppColors.primary,
+          fontWeight: FontWeight.bold,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppRadius.card),
           borderSide: BorderSide(color: border, width: AppBorders.regular),
