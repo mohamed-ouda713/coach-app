@@ -50,6 +50,29 @@ class LoginFields extends StatelessWidget {
           title: AppStrings.loginEmailLabel,
           hintText: AppStrings.loginEmailLabel,
           controller: emailController,
+          validator: (v) {
+            final value = v?.trim() ?? '';
+            if (value.isEmpty) {
+              return AppStrings.emailRequired;
+            }if (!RegExp(r'^[\w.+-]+@[\w-]+\.[\w.-]+$').hasMatch(value)) {
+              return AppStrings.invalidEmail;
+            }
+          final blockedDomains = [
+              'tempmail.com',
+              'mailinator.com',
+              '10minutemail.com',
+              'guerrillamail.com',
+              'dispostable.com',
+            ];
+            if (value.contains('@')) {
+              final domain = value.split('@').last.toLowerCase();
+              if (blockedDomains.contains(domain)) {
+                return AppStrings.tempEmailNotAllowed;
+              }
+            }
+
+            return null;
+          },
         ),
         const SizedBox(height: AppSpacing.lg),
 

@@ -34,6 +34,8 @@ class AppStrings {
   static const String defaultErrorTitle = 'تنبيه';
   static const String defaultErrorMessage =
       'حدث خطأ ما، يرجى المحاولة مرة أخرى.';
+      static const String tempEmailNotAllowed =
+      'غير مسموح باستخدام بريد إلكتروني مؤقت أو وهمي'; // 👈 المتغير الجديد
 
   // Goals (تظهر في أكتر من شاشة: F0, F7, F9)
   static const String goalWeightLoss = 'خسارة وزن';

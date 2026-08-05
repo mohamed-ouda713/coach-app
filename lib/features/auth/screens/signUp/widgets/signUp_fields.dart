@@ -101,8 +101,20 @@ class _SignupFieldsState extends State<SignupFields> {
             if (!v.contains(RegExp(r'[0-9]'))) {
               return AppStrings.passwordMissingDigit;
             }
+            final blockedDomains = [
+              'tempmail.com',
+              'mailinator.com',
+              '10minutemail.com',
+              'guerrillamail.com',
+              'dispostable.com',
+            ];
+            final domain = v.split('@').last.toLowerCase();
+            if(blockedDomains.contains(domain)) {
+              return AppStrings.tempEmailNotAllowed;
+            }
             return null;
           },
+
           helperText: AppStrings.passwordHint,
           prefixIcon: Icon(
             Icons.visibility_outlined,
