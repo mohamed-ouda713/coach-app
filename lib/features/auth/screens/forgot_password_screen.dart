@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:glow_up/core/constants/app_sizes.dart';
+import 'package:glow_up/core/theme/app_colors.dart';
+import 'package:glow_up/core/widgets/Buttons/Text_Buttons/Text_Form_Input.dart';
+import 'package:glow_up/features/auth/helper/app_validators.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/constants/app_spacing.dart';
@@ -56,12 +60,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   style: AppTextStyles.bodyM,
                 ),
                 const SizedBox(height: AppSpacing.xl),
-                TextField(
+                CustomTextFormField(
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(
-                    labelText: AppStrings.loginEmailLabel,
-                  ),
+                  title: AppStrings.loginEmailLabel,
+                  hintText: AppStrings.loginEmailLabel,
+                  validator: AppValidators.validateEmail,
                 ),
                 const SizedBox(height: AppSpacing.xxl),
                 ElevatedButton(
@@ -74,11 +78,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   child:
                       isLoading
                           ? const SizedBox(
-                            width: 20,
-                            height: 20,
+                            width: AppSizes.icon,
+                            height: AppSizes.icon,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
-                              color: Colors.white,
+                              color: AppColors.white,
                             ),
                           )
                           : const Text(

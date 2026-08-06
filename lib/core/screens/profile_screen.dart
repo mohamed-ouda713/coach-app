@@ -4,6 +4,7 @@ import 'package:glow_up/core/constants/app_radius.dart';
 import 'package:glow_up/core/constants/app_sizes.dart';
 import 'package:glow_up/core/constants/app_spacing.dart';
 import 'package:glow_up/core/constants/app_strings.dart';
+import 'package:glow_up/core/models/user_model.dart';
 import 'package:glow_up/core/theme/app_text_styles.dart';
 import 'package:glow_up/core/theme/context_extensions.dart';
 import 'package:glow_up/features/auth/cubit/auth_cubit.dart';
@@ -48,9 +49,8 @@ class ProfileScreen extends StatelessWidget {
       appBar: AppBar(title: const Text(AppStrings.profileTitle)),
       body: BlocBuilder<AuthCubit, AuthState>(
         builder: (context, state) {
-          final user = state is AuthAuthenticated ? state.user : null;
-          final name = user?.userMetadata?['full_name'] as String?;
-          final email = user?.email;
+          final rawUser = state is AuthAuthenticated ? state.user : null;
+          final userModel = rawUser != null ? UserModel.fromSupabaseUser(rawUser) : null;
 
           return Padding(
             padding: const EdgeInsets.all(AppSpacing.screenPadding),
@@ -60,13 +60,13 @@ class ProfileScreen extends StatelessWidget {
                 _ProfileInfoTile(
                   icon: Icons.person_outline,
                   label: AppStrings.profileFullNameLabel,
-                  value: (name != null && name.trim().isNotEmpty) ? name : '-',
+                  value: userModel?.displayName ?? '-',
                 ),
                 const SizedBox(height: AppSpacing.lg),
                 _ProfileInfoTile(
                   icon: Icons.email_outlined,
                   label: AppStrings.profileEmailLabel,
-                  value: email ?? '-',
+                  value: userModel?.displayEmail ?? '-',
                 ),
                 const Spacer(),
                 OutlinedButton.icon(

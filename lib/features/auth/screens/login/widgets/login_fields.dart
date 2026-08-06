@@ -7,6 +7,7 @@ import 'package:glow_up/core/theme/context_extensions.dart';
 import 'package:glow_up/core/widgets/Buttons/Text_Buttons/Text_Form_Input.dart';
 import 'package:glow_up/core/widgets/Buttons/Text_Buttons/custom_text_link.dart';
 import 'package:glow_up/core/widgets/error_widgets/app_error_card.dart';
+import 'package:glow_up/features/auth/helper/app_validators.dart';
 import 'package:glow_up/routing/app_router.dart';
 import 'package:go_router/go_router.dart';
 
@@ -50,29 +51,7 @@ class LoginFields extends StatelessWidget {
           title: AppStrings.loginEmailLabel,
           hintText: AppStrings.loginEmailLabel,
           controller: emailController,
-          validator: (v) {
-            final value = v?.trim() ?? '';
-            if (value.isEmpty) {
-              return AppStrings.emailRequired;
-            }if (!RegExp(r'^[\w.+-]+@[\w-]+\.[\w.-]+$').hasMatch(value)) {
-              return AppStrings.invalidEmail;
-            }
-          final blockedDomains = [
-              'tempmail.com',
-              'mailinator.com',
-              '10minutemail.com',
-              'guerrillamail.com',
-              'dispostable.com',
-            ];
-            if (value.contains('@')) {
-              final domain = value.split('@').last.toLowerCase();
-              if (blockedDomains.contains(domain)) {
-                return AppStrings.tempEmailNotAllowed;
-              }
-            }
-
-            return null;
-          },
+          validator: AppValidators.validateEmail,
         ),
         const SizedBox(height: AppSpacing.lg),
 
@@ -87,6 +66,7 @@ class LoginFields extends StatelessWidget {
           title: AppStrings.loginPasswordLabel,
           hintText: AppStrings.loginPasswordLabel,
           controller: passwordController,
+          validator: AppValidators.validatePassword,
         ),
         const SizedBox(height: AppSpacing.xs),
 

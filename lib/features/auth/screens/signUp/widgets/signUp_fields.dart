@@ -5,8 +5,9 @@ import 'package:glow_up/core/constants/app_strings.dart';
 import 'package:glow_up/core/theme/context_extensions.dart';
 import 'package:glow_up/core/widgets/Buttons/Text_Buttons/Text_Form_Input.dart';
 import 'package:glow_up/core/widgets/error_widgets/app_error_card.dart';
+import 'package:glow_up/features/auth/helper/app_validators.dart';
 
-class SignupFields extends StatefulWidget {
+class SignupFields extends StatelessWidget {
   final TextEditingController nameController;
   final TextEditingController emailController;
   final TextEditingController passwordController;
@@ -22,29 +23,19 @@ class SignupFields extends StatefulWidget {
   });
 
   @override
-  State<SignupFields> createState() => _SignupFieldsState();
-}
-
-class _SignupFieldsState extends State<SignupFields> {
-  @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         const SizedBox(height: AppSpacing.xs),
-        if (widget.errorMessage != null) ...[
-          AppErrorCard(message: widget.errorMessage),
+        if (errorMessage != null) ...[
+          AppErrorCard(message: errorMessage),
           const SizedBox(height: AppSpacing.lg),
         ],
 
         // 1️⃣ حقل الاسم الكامل
         CustomTextFormField(
-          controller: widget.nameController,
-          validator: (v) {
-            if (v == null || v.trim().isEmpty) {
-              return AppStrings.nameRequired;
-            }
-            return null;
-          },
+          controller: nameController,
+          validator: AppValidators.validateName,
           suffixIcon: Icon(
             Icons.person,
             size: AppSizes.icon,
@@ -57,18 +48,9 @@ class _SignupFieldsState extends State<SignupFields> {
 
         // 2️⃣ حقل البريد الإلكتروني
         CustomTextFormField(
-          controller: widget.emailController,
+          controller: emailController,
           autovalidateMode: AutovalidateMode.onUserInteraction,
-          validator: (v) {
-            final value = v?.trim() ?? '';
-            if (value.isEmpty) {
-              return AppStrings.emailRequired;
-            }
-            if (!RegExp(r'^[\w.+-]+@[\w-]+\.[\w.-]+$').hasMatch(value)) {
-              return AppStrings.invalidEmail;
-            }
-            return null;
-          },
+          validator: AppValidators.validateEmail,
           keyboardType: TextInputType.emailAddress,
           suffixIcon: Icon(
             Icons.email_outlined,
@@ -82,38 +64,10 @@ class _SignupFieldsState extends State<SignupFields> {
 
         // 3️⃣ حقل كلمة المرور
         CustomTextFormField(
-          controller: widget.passwordController,
+          controller: passwordController,
           obscureText: true,
           autovalidateMode: AutovalidateMode.onUserInteraction,
-          validator: (v) {
-            if (v == null || v.trim().isEmpty) {
-              return AppStrings.passwordRequired;
-            }
-            if (v.length < 8) {
-              return AppStrings.passwordTooShort;
-            }
-            if (!v.contains(RegExp(r'[A-Z]'))) {
-              return AppStrings.passwordMissingUppercase;
-            }
-            if (!v.contains(RegExp(r'[a-z]'))) {
-              return AppStrings.passwordMissingLowercase;
-            }
-            if (!v.contains(RegExp(r'[0-9]'))) {
-              return AppStrings.passwordMissingDigit;
-            }
-            final blockedDomains = [
-              'tempmail.com',
-              'mailinator.com',
-              '10minutemail.com',
-              'guerrillamail.com',
-              'dispostable.com',
-            ];
-            final domain = v.split('@').last.toLowerCase();
-            if(blockedDomains.contains(domain)) {
-              return AppStrings.tempEmailNotAllowed;
-            }
-            return null;
-          },
+          validator: AppValidators.validatePassword,
 
           helperText: AppStrings.passwordHint,
           prefixIcon: Icon(

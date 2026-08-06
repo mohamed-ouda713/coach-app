@@ -27,6 +27,7 @@ class AppColors {
   static const Color financeIncome = Color(0xFF15803D);
   static const Color financeExpense = Color(0xFFB91C1C);
   static const Color financeNet = Color(0xFF0369A1);
+  static const Color white = Color(0xFFFFFFFF);
 }
 
 class AppColorsLight {

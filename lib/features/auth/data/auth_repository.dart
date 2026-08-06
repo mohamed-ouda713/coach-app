@@ -1,5 +1,6 @@
 // lib/features/auth/data/auth_repository.dart
 
+import 'package:glow_up/core/constants/auth_constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthRepository {
@@ -30,7 +31,7 @@ class AuthRepository {
     return _client.auth.signUp(
       email: email,
       password: password,
-      data: {'full_name': fullName},
+      data: {UserMetadataKeys.fullName: fullName,},
     );
   }
 
