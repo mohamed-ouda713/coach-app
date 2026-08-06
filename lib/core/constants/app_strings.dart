@@ -16,12 +16,26 @@ class AppStrings {
   static const String actionBack = 'رجوع';
   static const String dividerOr = 'أو';
 
+  static const String homeWelcomeGreeting = 'مرحباً';
+  static const String homeAddTooltip = 'إضافة';
+  static const String homeNotificationsTooltip = 'الإشعارات';
+  static const String logoutCta = 'تسجيل الخروج';
+  static const String comingSoon = 'قريباً';
+
+  static const String profileTitle = 'الملف الشخصي';
+  static const String profileFullNameLabel = 'الاسم الكامل';
+  static const String profileEmailLabel = 'البريد الإلكتروني';
+  static const String logoutConfirmMessage = 'هل أنت متأكد إنك بدك تسجل خروج؟';
+
   // 🆕 نصوص مضافة للـ Dialogs والـ SnackBars والـ Views العامة
   static const String dialogConfirmOk = 'حسناً';
   static const String dialogCancel = 'إلغاء';
   static const String errorViewRetry = 'إعادة المحاولة';
   static const String defaultErrorTitle = 'تنبيه';
-  static const String defaultErrorMessage = 'حدث خطأ ما، يرجى المحاولة مرة أخرى.';
+  static const String defaultErrorMessage =
+      'حدث خطأ ما، يرجى المحاولة مرة أخرى.';
+      static const String tempEmailNotAllowed =
+      'غير مسموح باستخدام بريد إلكتروني مؤقت أو وهمي'; // 👈 المتغير الجديد
 
   // Goals (تظهر في أكتر من شاشة: F0, F7, F9)
   static const String goalWeightLoss = 'خسارة وزن';
@@ -60,7 +74,8 @@ class AppStrings {
   static const String addMeasurementCta = 'إضافة قياس';
 
   // ── F3 — القياسات والتقدم ──────────────────────────────────
-  static const String measurementsOverallProgress3Months = 'التقدم الإجمالي — 3 أشهر';
+  static const String measurementsOverallProgress3Months =
+      'التقدم الإجمالي — 3 أشهر';
   static const String measurementsWeightLabel = 'الوزن (كغ)';
   static const String measurementsWaistLabel = 'الخصر (سم)';
   static const String measurementsBellyLabel = 'البطن (سم)';
@@ -70,11 +85,15 @@ class AppStrings {
 
   // ── F4 — الإشعارات ─────────────────────────────────────────
   static const String notificationsMarkAllRead = 'قراءة الكل';
-    // أمثلة نصوص إشعارات فعلية (تبقى Templates بتتبني ديناميك من الباك إند)
-  static const String notificationSubscriptionEndingTemplate = 'اشتراك {name} ينتهي خلال {days} أيام';
-  static const String notificationMissingMeasurementTemplate = '{name} لم تسجل قياساتها هذا الشهر';
-  static const String notificationNeedsNewProgramTemplate = '{name} تحتاج برنامجاً جديداً';
-  static const String notificationGreatProgressTemplate = '{name}: تقدم ممتاز هذا الشهر';
+  // أمثلة نصوص إشعارات فعلية (تبقى Templates بتتبني ديناميك من الباك إند)
+  static const String notificationSubscriptionEndingTemplate =
+      'اشتراك {name} ينتهي خلال {days} أيام';
+  static const String notificationMissingMeasurementTemplate =
+      '{name} لم تسجل قياساتها هذا الشهر';
+  static const String notificationNeedsNewProgramTemplate =
+      '{name} تحتاج برنامجاً جديداً';
+  static const String notificationGreatProgressTemplate =
+      '{name}: تقدم ممتاز هذا الشهر';
   static const String timeAgoHour = 'منذ ساعة';
   static const String timeAgoDay = 'منذ يوم';
   static const String timeAgoDays3 = 'منذ 3 أيام';
@@ -131,17 +150,37 @@ class AppStrings {
   static const String signUpEnterDataToStart = 'أدخلي بياناتك للبدء';
   static const String createAccountCta = 'إنشاء الحساب';
   static const String signUpAlreadyHaveAccount = 'لديك حساب بالفعل؟';
+  static const String signUpSuccessMessage = 'تم إنشاء الحساب بنجاح';
+  static const String signUpConfirmEmailMessage =
+      'تم إنشاء الحساب! تحقّقي من بريدك الإلكتروني لتأكيد الحساب قبل تسجيل الدخول';
+  static const String loginSuccessMessage = 'تم تسجيل الدخول بنجاح';
+  //  نصوص التحقق من الصحة (Validation)
+  static const String nameRequired = 'يرجى إدخال الاسم الكامل';
+  static const String emailRequired = 'يرجى إدخال البريد الإلكتروني';
+  static const String invalidEmail = 'يرجى إدخال بريد إلكتروني صحيح';
+  static const String passwordRequired = 'يرجى إدخال كلمة المرور';
+  static const String passwordTooShort = 'كلمة المرور يجب أن لا تقل عن 8 أحرف';
+  static const String passwordMissingUppercase =
+      'يجب أن تحتوي كلمة المرور على حرف كبير واحد على الأقل (A-Z)';
+  static const String passwordMissingLowercase =
+      'يجب أن تحتوي كلمة المرور على حرف صغير واحد على الأقل (a-z)';
+  static const String passwordMissingDigit =
+      'يجب أن تحتوي كلمة المرور على رقم واحد على الأقل (0-9)';
+  static const String passwordHint =
+      '8 أحرف على الأقل، تحتوي على حرف كبير وحرف صغير ورقم';
 
   // ── F11 / F12 — نسيت كلمة المرور ───────────────────────────
   static const String forgotPasswordRecoverPassword = 'استعادة كلمة المرور';
   static const String forgotPasswordTitle = 'نسيت كلمة المرور؟';
-  static const String forgotPasswordEnterEmailInstructions = 'أدخلي بريدك الإلكتروني وسنرسل لك رابط الاستعادة';
+  static const String forgotPasswordEnterEmailInstructions =
+      'أدخلي بريدك الإلكتروني وسنرسل لك رابط الاستعادة';
   static const String forgotPasswordSendResetLinkCta = 'إرسال رابط الاستعادة';
   static const String forgotPasswordBackToLogin = 'العودة لتسجيل الدخول';
 
   static const String forgotPasswordLinkSentTitle = 'تم الإرسال بنجاح';
   static const String forgotPasswordEmailSentHeading = 'تم الإرسال!';
-  static const String forgotPasswordCheckEmailInstructions = 'تحقّقي من بريدك الإلكتروني واتّبعي الرابط لإعادة التعيين';
+  static const String forgotPasswordCheckEmailInstructions =
+      'تحقّقي من بريدك الإلكتروني واتّبعي الرابط لإعادة التعيين';
   static const String forgotPasswordOpenEmailCta = 'فتح البريد الإلكتروني';
   static const String forgotPasswordDidNotReceiveEmail = 'لم تصلك الرسالة؟';
   static const String forgotPasswordResend = 'إعادة الإرسال';

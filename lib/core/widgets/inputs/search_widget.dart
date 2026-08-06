@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:glow_up/core/constants/app_radius.dart';
 import 'package:glow_up/core/constants/app_spacing.dart';
 import 'package:glow_up/core/constants/app_strings.dart';
-import 'package:glow_up/core/theme/app_text_styles.dart';
 import 'package:glow_up/core/theme/context_extensions.dart';
 
-class SerchWidget extends StatelessWidget {
-  const SerchWidget({super.key, this.hintText});
+class SearchWidget extends StatelessWidget {
+  const SearchWidget({super.key, this.hintText});
   final String? hintText;
 
   @override
@@ -39,7 +37,7 @@ class SerchWidget extends StatelessWidget {
                   horizontal: AppSpacing.md,
                   vertical: AppSpacing.lg,
                 ),
-               hintText: hintText ?? AppStrings.clientsSearchHint,
+                hintText: hintText ?? AppStrings.clientsSearchHint,
               ),
             ),
           ),

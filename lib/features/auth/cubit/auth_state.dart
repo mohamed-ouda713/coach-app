@@ -51,3 +51,7 @@ class AuthError extends AuthState {
 class AuthPasswordResetEmailSent extends AuthState {
   const AuthPasswordResetEmailSent();
 }
+
+class AuthSignUpEmailConfirmationRequired extends AuthState {
+  const AuthSignUpEmailConfirmationRequired();
+}
