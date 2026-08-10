@@ -71,3 +71,9 @@ app.*.map.json
 **/android/**/*.jks
 **/android/.gradle/
 **/android/captures/
+
+# FVM Version Cache
+.fvm/
+
+# Xcode Swift Package Manager
+**/xcshareddata/swiftpm/

@@ -63,8 +63,7 @@ class AppTheme {
         onSurface: textPrimary,
       ),
       // Custom colors that don't have a standard ColorScheme role
-      // (success/warning/info, borders, soft backgrounds, ...).
-      // Access via `context.appColors` (see extensions/context_extensions.dart).
+      // Access via `context.appColors`
       extensions: [extension],
       textTheme: TextTheme(
         displayLarge: AppTextStyles.displayXL.copyWith(color: textPrimary),
@@ -88,6 +87,15 @@ class AppTheme {
         filled: true,
         fillColor: bgSubtle,
         contentPadding: const EdgeInsets.symmetric(horizontal: 14),
+        labelStyle: TextStyle(
+          color: textSecondary,
+          fontWeight: FontWeight.bold,
+        ),
+        hintStyle: TextStyle(color: textSecondary),
+        floatingLabelStyle: const TextStyle(
+          color: AppColors.primary,
+          fontWeight: FontWeight.bold,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppRadius.card),
           borderSide: BorderSide(color: border, width: AppBorders.regular),

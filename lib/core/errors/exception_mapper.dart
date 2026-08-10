@@ -9,9 +9,6 @@ import 'package:glow_up/core/errors/exceptions/network_exception.dart';
 import 'package:glow_up/core/errors/exceptions/storage_exception.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as supabase;
 
-
-
-
 /// نقطة الدخول الوحيدة لتحويل أي خطأ (Supabase أو غيره) إلى رسالة نصية
 /// جاهزة بالعربي، تُستخدم مباشرة بالـ Cubit:
 ///
@@ -67,16 +64,21 @@ class ExceptionMapper {
       return AppAuthException.emailNotConfirmed();
     }
     if (msg.contains('user not found')) {
-      return AppAuthException.userNotFound();
+      return AppAuthException.invalidCredentials();
     }
     if (msg.contains('session') && msg.contains('expired')) {
       return AppAuthException.sessionExpired();
+    }
+    if (msg.contains('rate limit')) {
+      return AppAuthException.emailRateLimitExceeded();
     }
     return AppAuthException.generic();
   }
 
   // ── Database (Postgrest) ────────────────────────────────
-  static DatabaseException _mapDatabaseException(supabase.PostgrestException e) {
+  static DatabaseException _mapDatabaseException(
+    supabase.PostgrestException e,
+  ) {
     switch (e.code) {
       case '23505': // unique_violation
         return DatabaseException.duplicateEntry();
