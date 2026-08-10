@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:glow_up/features/subscribers/cubit/subscriber_cubit.dart';
+import 'package:glow_up/features/subscribers/data/subscriber_repository.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'core/constants/app_strings.dart';
@@ -17,7 +20,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await dotenv.load(fileName: 'assets/.env');
-  
+  await initializeDateFormatting('ar');
 
   await Supabase.initialize(
     url: SupabaseConfig.url,
@@ -37,6 +40,9 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => AuthCubit(AuthRepository(supabaseClient))),
+        BlocProvider(
+          create: (_) => SubscriberCubit(SubscriberRepository(supabaseClient)),
+        ),
       ],
       child: Builder(
         builder: (context) {

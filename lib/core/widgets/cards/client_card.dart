@@ -71,7 +71,7 @@ class ClientCard extends StatelessWidget {
                 ],
               ),
             ),
-            Icon(Icons.chevron_left, size: AppSizes.iconMd, color: appColors.textDisabled),
+            Icon(Icons.chevron_right, size: AppSizes.iconMd, color: appColors.textDisabled),
           ],
         ),
       ),

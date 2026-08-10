@@ -11,7 +11,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.subtitle,
     this.leading,
     this.actions,
-    this.height = AppSizes.inputHeight, 
+    this.height = AppSizes.inputHeight,
   });
 
   final String title;
@@ -55,7 +55,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   fontWeight: FontWeight.w700,
                 ),
               ),
-              const SizedBox(height: AppSpacing.xs / 2), 
+              const SizedBox(height: AppSpacing.xs / 2),
               Text(
                 subtitle!,
                 textAlign: TextAlign.center,
@@ -66,89 +66,59 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             ],
           );
 
+    const double sidePadding = AppSpacing.lgAlt;
+
     return SafeArea(
       bottom: false,
       child: Container(
         color: bg,
         height: height,
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final double availableWidth = constraints.maxWidth.isFinite
-                ? constraints.maxWidth
-                : MediaQuery.of(context).size.width;
-
-            final double maxSideWidth = availableWidth * 0.30;
-            final double minTitleSpace = availableWidth * 0.25;
-
-            final double effectiveMaxSideWidth =
-                (availableWidth - minTitleSpace) / 2;
-
-            final double maxWidth = maxSideWidth < effectiveMaxSideWidth
-                ? maxSideWidth
-                : effectiveMaxSideWidth;
-
-            return Stack(
-              alignment: Alignment.center,
-              children: [
-                Positioned.fill(
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppSpacing.screenPadding * 2,
-                      ),
-                      child: titleWidget,
-                    ),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            // 1. العنوان في المنتصف مع حماية المسافة الجانبية حتى لا يتداخل مع الأزرار
+            Positioned.fill(
+              child: Align(
+                alignment: Alignment.center,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.screenPadding * 2 + 40,
                   ),
+                  child: titleWidget,
                 ),
+              ),
+            ),
 
-                PositionedDirectional(
-                  start: AppSpacing.xs, 
-                  top: 0,
-                  bottom: 0,
-                  child: Align(
-                    alignment: AlignmentDirectional.centerStart,
-                    child: ConstrainedBox(
-                      constraints: BoxConstraints(
-                        minWidth: 0,
-                        maxWidth: maxWidth,
-                      ),
-                      child: leading != null 
-                          ? Align(
-                              alignment: AlignmentDirectional.centerStart,
-                              child: leading,
-                            )
-                          : const SizedBox.shrink(),
-                    ),
-                  ),
+            // 2. جهة البداية (Leading) - يأخذ العرض الأدنى فقط الحاضن لمحتواه
+            PositionedDirectional(
+              start: sidePadding,
+              top: 0,
+              bottom: 0,
+              child: Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: UnconstrainedBox(
+                  child: leading ?? const SizedBox.shrink(),
                 ),
+              ),
+            ),
 
-                PositionedDirectional(
-                  end: AppSpacing.xs,
-                  top: 0,
-                  bottom: 0,
-                  child: Align(
-                    alignment: AlignmentDirectional.centerEnd, 
-                    child: ConstrainedBox(
-                      constraints: BoxConstraints(
-                        minWidth: 0,
-                        maxWidth: maxWidth,
-                      ),
-                      child: actions != null
-                          ? Align(
-                              alignment: AlignmentDirectional.centerEnd,
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: actions!,
-                              ),
-                            )
-                          : const SizedBox.shrink(),
-                    ),
-                  ),
-                ),
-              ],
-            );
-          },
+            // 3. جهة النهاية (Actions)
+            PositionedDirectional(
+              end: sidePadding,
+              top: 0,
+              bottom: 0,
+              child: Align(
+                alignment: AlignmentDirectional.centerEnd,
+                child: actions != null && actions!.isNotEmpty
+                    ? Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: actions!,
+                      )
+                    : const SizedBox.shrink(),
+              ),
+            ),
+          ],
         ),
       ),
     );
