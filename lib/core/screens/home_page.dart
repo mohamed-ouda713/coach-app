@@ -1,3 +1,5 @@
+// lib/core/screens/home_page.dart
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:glow_up/core/constants/app_sizes.dart';
@@ -9,6 +11,7 @@ import 'package:glow_up/core/widgets/layout/bottom_nav_bar.dart';
 import 'package:glow_up/core/widgets/layout/home_top_bar.dart';
 import 'package:glow_up/features/auth/cubit/auth_cubit.dart';
 import 'package:glow_up/features/auth/cubit/auth_state.dart';
+import 'package:glow_up/features/subscribers/screens/subscribers_list_screen.dart';
 import 'package:glow_up/routing/app_router.dart';
 import 'package:go_router/go_router.dart';
 
@@ -59,7 +62,9 @@ class _HomePageState extends State<HomePage> {
             return HomeTopBar(
               userName: userName,
               onProfileTap: () => context.push(AppRoutes.profile),
-              onAddTap: () => _showComingSoon(context),
+              onAddTap: () {
+                context.push(AppRoutes.addSubscriber);
+              },
               onNotificationsTap: () => _showComingSoon(context),
             );
           },
@@ -68,8 +73,10 @@ class _HomePageState extends State<HomePage> {
       body: IndexedStack(
         index: _currentIndex,
         children: [
-          for (final tab in _tabs)
-            _PlaceholderTab(icon: tab.icon, label: tab.label),
+          const SubscribersListScreen(),
+          _PlaceholderTab(icon: _tabs[1].icon, label: _tabs[1].label),
+          _PlaceholderTab(icon: _tabs[2].icon, label: _tabs[2].label),
+          _PlaceholderTab(icon: _tabs[3].icon, label: _tabs[3].label),
         ],
       ),
       bottomNavigationBar: BottomNavBar(
