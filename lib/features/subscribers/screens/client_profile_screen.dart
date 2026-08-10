@@ -49,7 +49,6 @@ class _ClientProfileScreenState extends State<ClientProfileScreen> {
 
   Future<void> _navigateToEdit(BuildContext context) async {
     final result = await context.push('/clients/${widget.clientId}/edit');
-    // إعادة جلب بيانات المشتركة عند العودة من شاشة التعديل
     if (mounted) {
       _loadSubscriber();
     }
@@ -121,7 +120,7 @@ class _ProfileHeroCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppRadius.lg),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: context.appColors.bgSubtle.withValues(alpha: 0.05),
             blurRadius: 12,
             offset: const Offset(0, 2),
           ),
