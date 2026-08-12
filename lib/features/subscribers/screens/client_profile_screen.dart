@@ -321,27 +321,54 @@ class _ActionsRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
       children: [
-        Expanded(
-          child: PrimaryButton(
-            title: AppStrings.addMeasurementCta,
-            backgroundColor: Theme.of(context).colorScheme.primary,
-            textColor: Colors.white,
-            onTap: () {
-              // لاحقًا: context.push(AppRoutes.addMeasurement(subscriber.id))
-            },
-          ),
+        Row(
+          children: [
+            Expanded(
+              child: PrimaryButton(
+                title: AppStrings.addMeasurementCta,
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                textColor: Colors.white,
+                onTap:
+                    () => context.push(
+                      '/subscribers/${subscriber.id}/measurements/add',
+                    ),
+              ),
+            ),
+            const SizedBox(width: AppSpacing.mdLg),
+            SizedBox(
+              width: 88,
+              child: PrimaryButton(
+                title: AppStrings.actionEdit,
+                backgroundColor: context.appColors.bgSubtle,
+                textColor: context.appColors.textSecondary,
+                onTap: onEditTap,
+              ),
+            ),
+          ],
         ),
-        const SizedBox(width: AppSpacing.mdLg),
-        SizedBox(
-          width: 88,
-          child: PrimaryButton(
-            title: AppStrings.actionEdit,
-            backgroundColor: context.appColors.bgSubtle,
-            textColor: context.appColors.textSecondary,
-            onTap: onEditTap,
-          ),
+        const SizedBox(height: AppSpacing.mdLg),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            CustomTextLink(
+              title: AppStrings.measurementsMonthlyLog,
+              icon: Icons.list_alt_outlined,
+              onPressed:
+                  () => context.push(
+                    '/subscribers/${subscriber.id}/measurements',
+                  ),
+            ),
+            CustomTextLink(
+              title: AppStrings.measurementsOverallProgress3Months,
+              icon: Icons.show_chart,
+              onPressed:
+                  () => context.push(
+                    '/subscribers/${subscriber.id}/measurements/progress',
+                  ),
+            ),
+          ],
         ),
       ],
     );
