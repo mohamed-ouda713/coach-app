@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as supabase;
 
+import 'package:glow_up/core/constants/auth_constants.dart';
 import 'package:glow_up/core/errors/error_messages.dart';
 import 'package:glow_up/core/errors/exception_mapper.dart';
 import '../data/auth_repository.dart';
@@ -26,6 +27,10 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   void _onAuthChange(supabase.AuthState data) {
+    if (data.event == supabase.AuthChangeEvent.passwordRecovery) {
+      emit(const AuthPasswordRecovery());
+      return;
+    }
     final user = data.session?.user;
     final isEmailConfirmed = user?.emailConfirmedAt != null;
     emit(user != null  && isEmailConfirmed ? AuthAuthenticated(user) : const AuthUnauthenticated());
@@ -88,8 +93,22 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> resetPassword(String email) async {
     emit(const AuthLoading());
     try {
-      await _repository.resetPasswordForEmail(email);
+      await _repository.resetPasswordForEmail(
+        email,
+        redirectTo: AuthRedirectUrls.passwordRecovery,
+      );
       emit(const AuthPasswordResetEmailSent());
+    } catch (e) {
+      emit(AuthError(ExceptionMapper.mapToMessage(e)));
+    }
+  }
+
+  /// بتستدعى من شاشة تعيين كلمة مرور جديدة (بعد فتح رابط الاستعادة).
+  Future<void> updatePassword(String newPassword) async {
+    emit(const AuthLoading());
+    try {
+      final user = await _repository.updatePassword(newPassword);
+      emit(AuthAuthenticated(user));
     } catch (e) {
       emit(AuthError(ExceptionMapper.mapToMessage(e)));
     }

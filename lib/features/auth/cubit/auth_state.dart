@@ -55,3 +55,9 @@ class AuthPasswordResetEmailSent extends AuthState {
 class AuthSignUpEmailConfirmationRequired extends AuthState {
   const AuthSignUpEmailConfirmationRequired();
 }
+
+/// المستخدم دخل من رابط استعادة كلمة المرور (F12) — الجلسة صالحة مؤقتاً
+/// بس القصد منها تعيين كلمة مرور جديدة بس، مش الدخول العادي عالتطبيق.
+class AuthPasswordRecovery extends AuthState {
+  const AuthPasswordRecovery();
+}

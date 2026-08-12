@@ -15,6 +15,7 @@ import '../features/auth/cubit/auth_cubit.dart';
 import '../features/auth/cubit/auth_state.dart';
 import '../features/auth/screens/forgot_password_screen.dart';
 import '../features/auth/screens/password_reset_sent_screen.dart';
+import '../features/auth/screens/reset_password_screen.dart';
 import '../features/measurements/cubit/measurements_cubit.dart';
 import '../features/measurements/data/measurement_repository.dart';
 import '../features/measurements/screens/add_measurement_screen.dart';
@@ -30,6 +31,7 @@ class AppRoutes {
   static const signup = '/signup';
   static const forgotPassword = '/forgot-password';
   static const passwordResetSent = '/forgot-password/sent';
+  static const resetPassword = '/reset-password';
   static const home = '/home';
   static const profile = '/home/profile';
   static const clientsList = '/clients';
@@ -61,6 +63,14 @@ String? _redirect(
 
   // لسا ما تحقّقنا من حالة الجلسة (أول لحظة فتح التطبيق) — لا تعيد التوجيه لحد ما نعرف.
   if (authState is AuthInitial) return null;
+
+  // فتح رابط استعادة كلمة المرور — حوّلها لشاشة تعيين كلمة مرور جديدة
+  // بغض النظر وين كانت واقفة، ومنعها من الرجوع لأي شاشة تانية لحد ما تكمل.
+  if (authState is AuthPasswordRecovery) {
+    return state.matchedLocation == AppRoutes.resetPassword
+        ? null
+        : AppRoutes.resetPassword;
+  }
 
   final isAuthenticated = authState is AuthAuthenticated;
   final isOnAuthRoute = _authRoutes.contains(state.matchedLocation);
@@ -96,6 +106,10 @@ GoRouter buildAppRouter(AuthCubit authCubit) {
         builder:
             (context, state) =>
                 PasswordResetSentScreen(email: state.extra as String? ?? ''),
+      ),
+      GoRoute(
+        path: AppRoutes.resetPassword,
+        builder: (context, state) => const ResetPasswordScreen(),
       ),
       GoRoute(
         path: AppRoutes.clientsList,

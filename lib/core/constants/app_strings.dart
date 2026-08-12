@@ -25,6 +25,9 @@ class AppStrings {
   static const String profileTitle = 'الملف الشخصي';
   static const String profileFullNameLabel = 'الاسم الكامل';
   static const String profileEmailLabel = 'البريد الإلكتروني';
+  static const String profileAppearanceLabel = 'المظهر';
+  static const String themeLight = 'فاتح';
+  static const String themeDark = 'غامق';
   static const String logoutConfirmMessage = 'هل أنت متأكد إنك بدك تسجل خروج؟';
 
   // 🆕 نصوص مضافة للـ Dialogs والـ SnackBars والـ Views العامة
@@ -186,6 +189,15 @@ class AppStrings {
   static const String forgotPasswordOpenEmailCta = 'فتح البريد الإلكتروني';
   static const String forgotPasswordDidNotReceiveEmail = 'لم تصلك الرسالة؟';
   static const String forgotPasswordResend = 'إعادة الإرسال';
+
+  // ── تعيين كلمة مرور جديدة (تكملة F11 / F12) ────────────────
+  static const String resetPasswordTitle = 'كلمة مرور جديدة';
+  static const String resetPasswordInstructions =
+      'أدخلي كلمة المرور الجديدة الخاصة بحسابك';
+  static const String resetPasswordNewPasswordLabel = 'كلمة المرور الجديدة';
+  static const String resetPasswordConfirmPasswordLabel = 'تأكيد كلمة المرور';
+  static const String resetPasswordMismatch = 'كلمتا المرور غير متطابقتين';
+  static const String resetPasswordSubmitCta = 'حفظ كلمة المرور';
 
   // ── Subscribers — فورم إضافة/تعديل عميلة (F7 / F9) ─────────
   // نصوص التحقق (Validation) الخاصة بحقول الفورم
