@@ -19,7 +19,7 @@ import 'routing/app_router.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await dotenv.load(fileName: 'assets/.env');
+  await dotenv.load(fileName: '.env');
   await initializeDateFormatting('ar');
 
   await Supabase.initialize(
