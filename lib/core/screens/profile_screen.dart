@@ -7,6 +7,8 @@ import 'package:glow_up/core/constants/app_strings.dart';
 import 'package:glow_up/core/models/user_model.dart';
 import 'package:glow_up/core/theme/app_text_styles.dart';
 import 'package:glow_up/core/theme/context_extensions.dart';
+import 'package:glow_up/core/theme/cubit/theme_cubit.dart';
+import 'package:glow_up/core/widgets/selection/selectable_chip.dart';
 import 'package:glow_up/features/auth/cubit/auth_cubit.dart';
 import 'package:glow_up/features/auth/cubit/auth_state.dart';
 
@@ -68,6 +70,8 @@ class ProfileScreen extends StatelessWidget {
                   label: AppStrings.profileEmailLabel,
                   value: userModel?.displayEmail ?? '-',
                 ),
+                const SizedBox(height: AppSpacing.lg),
+                const _ThemeModeSelector(),
                 const Spacer(),
                 OutlinedButton.icon(
                   onPressed: () => _confirmLogout(context),
@@ -97,6 +101,52 @@ class ProfileScreen extends StatelessWidget {
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+class _ThemeModeSelector extends StatelessWidget {
+  const _ThemeModeSelector();
+
+  @override
+  Widget build(BuildContext context) {
+    final currentMode = context.watch<ThemeCubit>().state;
+    final isSystemDark =
+        MediaQuery.of(context).platformBrightness == Brightness.dark;
+    final isDarkSelected =
+        currentMode == ThemeMode.dark ||
+        (currentMode == ThemeMode.system && isSystemDark);
+
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.mdLg),
+      decoration: BoxDecoration(
+        color: context.appColors.bgSubtle,
+        borderRadius: BorderRadius.circular(AppRadius.md),
+        border: Border.all(color: context.appColors.border),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              AppStrings.profileAppearanceLabel,
+              style: AppTextStyles.bodyL.copyWith(
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
+            ),
+          ),
+          SelectableChip(
+            label: AppStrings.themeLight,
+            isSelected: !isDarkSelected,
+            onTap: () => context.read<ThemeCubit>().setThemeMode(ThemeMode.light),
+          ),
+          const SizedBox(width: AppSpacing.sm),
+          SelectableChip(
+            label: AppStrings.themeDark,
+            isSelected: isDarkSelected,
+            onTap: () => context.read<ThemeCubit>().setThemeMode(ThemeMode.dark),
+          ),
+        ],
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'app_colors.dart';
+import 'app_colors_dark.dart';
 
 /// Extra colors that don't have a slot in Flutter's standard [ColorScheme]
 /// (success/warning/info variants, borders, soft backgrounds, ...).

@@ -7,11 +7,13 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:glow_up/features/subscribers/cubit/subscriber_cubit.dart';
 import 'package:glow_up/features/subscribers/data/subscriber_repository.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'core/constants/app_strings.dart';
 import 'core/constants/supabase_constants.dart';
 import 'core/theme/app_theme.dart';
+import 'core/theme/cubit/theme_cubit.dart';
 import 'features/auth/cubit/auth_cubit.dart';
 import 'features/auth/data/auth_repository.dart';
 import 'routing/app_router.dart';
@@ -22,16 +24,20 @@ Future<void> main() async {
   await dotenv.load(fileName: '.env');
   await initializeDateFormatting('ar');
 
+  final prefs = await SharedPreferences.getInstance();
+
   await Supabase.initialize(
     url: SupabaseConfig.url,
     anonKey: SupabaseConfig.anonKey,
   );
 
-  runApp(const MyApp());
+  runApp(MyApp(prefs: prefs));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, required this.prefs});
+
+  final SharedPreferences prefs;
 
   @override
   Widget build(BuildContext context) {
@@ -43,24 +49,29 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (_) => SubscriberCubit(SubscriberRepository(supabaseClient)),
         ),
+        BlocProvider(create: (_) => ThemeCubit(prefs)),
       ],
       child: Builder(
         builder: (context) {
           final authCubit = context.read<AuthCubit>();
-          return MaterialApp.router(
-            title: AppStrings.appName,
-            debugShowCheckedModeBanner: false,
-            theme: AppTheme.light,
-            darkTheme: AppTheme.dark,
-            themeMode: ThemeMode.light,
-            locale: const Locale('ar'),
-            supportedLocales: const [Locale('ar'), Locale('en')],
-            localizationsDelegates: const [
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
-            routerConfig: buildAppRouter(authCubit),
+          return BlocBuilder<ThemeCubit, ThemeMode>(
+            builder: (context, themeMode) {
+              return MaterialApp.router(
+                title: AppStrings.appName,
+                debugShowCheckedModeBanner: false,
+                theme: AppTheme.light,
+                darkTheme: AppTheme.dark,
+                themeMode: themeMode,
+                locale: const Locale('ar'),
+                supportedLocales: const [Locale('ar'), Locale('en')],
+                localizationsDelegates: const [
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                ],
+                routerConfig: buildAppRouter(authCubit),
+              );
+            },
           );
         },
       ),

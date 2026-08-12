@@ -40,8 +40,8 @@ class MeasurementCard extends StatelessWidget {
         Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(AppRadius.cardLg),
-            color: const Color(0xFF0B1E2D),
-            border: Border.all(width: AppBorders.regular),
+            color: cardBackgroundColor,
+            border: Border.all(color: borderColor, width: AppBorders.regular),
           ),
           child: Padding(
             padding: EdgeInsets.symmetric(
