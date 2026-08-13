@@ -112,11 +112,6 @@ class _ThemeModeSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentMode = context.watch<ThemeCubit>().state;
-    final isSystemDark =
-        MediaQuery.of(context).platformBrightness == Brightness.dark;
-    final isDarkSelected =
-        currentMode == ThemeMode.dark ||
-        (currentMode == ThemeMode.system && isSystemDark);
 
     return Container(
       padding: const EdgeInsets.all(AppSpacing.mdLg),
@@ -125,26 +120,36 @@ class _ThemeModeSelector extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppRadius.md),
         border: Border.all(color: context.appColors.border),
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: Text(
-              AppStrings.profileAppearanceLabel,
-              style: AppTextStyles.bodyL.copyWith(
-                color: Theme.of(context).colorScheme.onSurface,
-              ),
+          Text(
+            AppStrings.profileAppearanceLabel,
+            style: AppTextStyles.bodyL.copyWith(
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
-          SelectableChip(
-            label: AppStrings.themeLight,
-            isSelected: !isDarkSelected,
-            onTap: () => context.read<ThemeCubit>().setThemeMode(ThemeMode.light),
-          ),
-          const SizedBox(width: AppSpacing.sm),
-          SelectableChip(
-            label: AppStrings.themeDark,
-            isSelected: isDarkSelected,
-            onTap: () => context.read<ThemeCubit>().setThemeMode(ThemeMode.dark),
+          const SizedBox(height: AppSpacing.md),
+          Row(
+            children: [
+              SelectableChip(
+                label: AppStrings.themeSystem,
+                isSelected: currentMode == ThemeMode.system,
+                onTap: () => context.read<ThemeCubit>().setThemeMode(ThemeMode.system),
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              SelectableChip(
+                label: AppStrings.themeDark,
+                isSelected: currentMode == ThemeMode.dark,
+                onTap: () => context.read<ThemeCubit>().setThemeMode(ThemeMode.dark),
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              SelectableChip(
+                label: AppStrings.themeLight,
+                isSelected: currentMode == ThemeMode.light,
+                onTap: () => context.read<ThemeCubit>().setThemeMode(ThemeMode.light),
+              ),
+            ],
           ),
         ],
       ),

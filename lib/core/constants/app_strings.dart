@@ -26,6 +26,7 @@ class AppStrings {
   static const String profileFullNameLabel = 'الاسم الكامل';
   static const String profileEmailLabel = 'البريد الإلكتروني';
   static const String profileAppearanceLabel = 'المظهر';
+  static const String themeSystem = 'حسب الجهاز';
   static const String themeLight = 'فاتح';
   static const String themeDark = 'غامق';
   static const String logoutConfirmMessage = 'هل أنت متأكد إنك بدك تسجل خروج؟';
