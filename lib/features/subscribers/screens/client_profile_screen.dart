@@ -349,26 +349,14 @@ class _ActionsRow extends StatelessWidget {
           ],
         ),
         const SizedBox(height: AppSpacing.mdLg),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            CustomTextLink(
-              title: AppStrings.measurementsMonthlyLog,
-              icon: Icons.list_alt_outlined,
-              onPressed:
-                  () => context.push(
-                    '/subscribers/${subscriber.id}/measurements',
-                  ),
-            ),
-            CustomTextLink(
-              title: AppStrings.measurementsOverallProgress3Months,
-              icon: Icons.show_chart,
-              onPressed:
-                  () => context.push(
-                    '/subscribers/${subscriber.id}/measurements/progress',
-                  ),
-            ),
-          ],
+        CustomTextLink(
+          title: AppStrings.navMeasurements,
+          icon: Icons.bar_chart,
+          onPressed:
+              () => context.push(
+                '/subscribers/${subscriber.id}/measurements',
+                extra: subscriber.fullName,
+              ),
         ),
       ],
     );

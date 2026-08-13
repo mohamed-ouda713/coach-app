@@ -74,7 +74,10 @@ class _HomePageState extends State<HomePage> {
         index: _currentIndex,
         children: [
           const SubscribersListScreen(),
-          _PlaceholderTab(icon: _tabs[1].icon, label: _tabs[1].label),
+          // ما في شاشة قياسات عامة عبر كل العميلات — القياسات الفعلية
+          // (السجل والتقدم) مبنية لكل عميلة لحالها، فبتبويب "القياسات"
+          // منعرض قائمة العميلات نفسها كنقطة دخول لحد ما تختاري وحدة.
+          const SubscribersListScreen(),
           _PlaceholderTab(icon: _tabs[2].icon, label: _tabs[2].label),
           _PlaceholderTab(icon: _tabs[3].icon, label: _tabs[3].label),
         ],

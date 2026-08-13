@@ -19,8 +19,7 @@ import '../features/auth/screens/reset_password_screen.dart';
 import '../features/measurements/cubit/measurements_cubit.dart';
 import '../features/measurements/data/measurement_repository.dart';
 import '../features/measurements/screens/add_measurement_screen.dart';
-import '../features/measurements/screens/measurement_history_screen.dart';
-import '../features/measurements/screens/overall_progress_screen.dart';
+import '../features/measurements/screens/client_measurements_screen.dart';
 import 'go_router_refresh_stream.dart';
 
 /// كل feature بتضيف مساراتها هون بنفس الطريقة.
@@ -39,9 +38,7 @@ class AppRoutes {
   static const addSubscriber = '/clients/add';
   static const editSubscriber = '/clients/:id/edit';
   static const addMeasurement = '/subscribers/:subscriberId/measurements/add';
-  static const measurementHistory = '/subscribers/:subscriberId/measurements';
-  static const overallProgress =
-      '/subscribers/:subscriberId/measurements/progress';
+  static const clientMeasurements = '/subscribers/:subscriberId/measurements';
 }
 
 final _authRoutes = {
@@ -49,6 +46,7 @@ final _authRoutes = {
   AppRoutes.signup,
   AppRoutes.forgotPassword,
   AppRoutes.passwordResetSent,
+  AppRoutes.resetPassword,
 };
 
 MeasurementsCubit _measurementsCubit() =>
@@ -153,22 +151,13 @@ GoRouter buildAppRouter(AuthCubit authCubit) {
             ),
       ),
       GoRoute(
-        path: AppRoutes.measurementHistory,
+        path: AppRoutes.clientMeasurements,
         builder:
             (context, state) => BlocProvider(
               create: (_) => _measurementsCubit(),
-              child: MeasurementHistoryScreen(
+              child: ClientMeasurementsScreen(
                 subscriberId: state.pathParameters['subscriberId']!,
-              ),
-            ),
-      ),
-      GoRoute(
-        path: AppRoutes.overallProgress,
-        builder:
-            (context, state) => BlocProvider(
-              create: (_) => _measurementsCubit(),
-              child: OverallProgressScreen(
-                subscriberId: state.pathParameters['subscriberId']!,
+                subscriberName: state.extra as String? ?? '',
               ),
             ),
       ),
