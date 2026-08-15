@@ -42,63 +42,60 @@ class HomeTopBar extends StatelessWidget implements PreferredSizeWidget {
           height: height,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lgAlt),
-            child: Directionality(
-              textDirection: TextDirection.ltr,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: InkWell(
-                      onTap: onProfileTap,
-                      borderRadius: BorderRadius.circular(AppRadius.badge),
-                      child: Row(
-                        children: [
-                          AppAvatar(name: userName, size: AvatarSize.small),
-                          const SizedBox(width: AppSpacing.mdLg),
-                          Flexible(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  AppStrings.homeWelcomeGreeting,
-                                  style: AppTextStyles.bodyS.copyWith(
-                                    color: context.appColors.textTertiary,
-                                  ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: InkWell(
+                    onTap: onProfileTap,
+                    borderRadius: BorderRadius.circular(AppRadius.badge),
+                    child: Row(
+                      children: [
+                        AppAvatar(name: userName, size: AvatarSize.small),
+                        const SizedBox(width: AppSpacing.mdLg),
+                        Flexible(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                AppStrings.homeWelcomeGreeting,
+                                style: AppTextStyles.bodyS.copyWith(
+                                  color: context.appColors.textTertiary,
                                 ),
-                                Text(
-                                  userName,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: AppTextStyles.h2.copyWith(
-                                    color: colorScheme.onSurface,
-                                  ),
+                              ),
+                              Text(
+                                userName,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: AppTextStyles.h2.copyWith(
+                                  color: colorScheme.onSurface,
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(width: AppSpacing.md),
-                  _TopBarActionButton(
-                    icon: Icons.add,
-                    tooltip: AppStrings.homeAddTooltip,
-                    backgroundColor: colorScheme.primary,
-                    iconColor: colorScheme.onPrimary,
-                    onTap: onAddTap,
-                  ),
-                  const SizedBox(width: AppSpacing.smMd),
-                  _TopBarActionButton(
-                    icon: Icons.notifications,
-                    tooltip: AppStrings.homeNotificationsTooltip,
-                    backgroundColor: context.appColors.bgSubtle,
-                    iconColor: colorScheme.onSurface.withOpacity(0.5),
-                    onTap: onNotificationsTap,
-                    showBadge: hasUnreadNotifications,
-                  ),
-                ],
-              ),
+                ),
+                const SizedBox(width: AppSpacing.md),
+                _TopBarActionButton(
+                  icon: Icons.add,
+                  tooltip: AppStrings.homeAddTooltip,
+                  backgroundColor: colorScheme.primary,
+                  iconColor: colorScheme.onPrimary,
+                  onTap: onAddTap,
+                ),
+                const SizedBox(width: AppSpacing.smMd),
+                _TopBarActionButton(
+                  icon: Icons.notifications,
+                  tooltip: AppStrings.homeNotificationsTooltip,
+                  backgroundColor: context.appColors.bgSubtle,
+                  iconColor: colorScheme.onSurface.withOpacity(0.5),
+                  onTap: onNotificationsTap,
+                  showBadge: hasUnreadNotifications,
+                ),
+              ],
             ),
           ),
         ),
@@ -149,9 +146,9 @@ class _TopBarActionButton extends StatelessWidget {
               ),
             ),
             if (showBadge)
-              Positioned(
+              PositionedDirectional(
                 top: AppSpacing.sm,
-                right: AppSpacing.sm,
+                end: AppSpacing.sm,
                 child: Container(
                   width: _badgeSize,
                   height: _badgeSize,
