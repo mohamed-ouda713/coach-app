@@ -5,6 +5,7 @@ import 'package:glow_up/routing/app_router.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import 'package:glow_up/core/constants/app_date_formats.dart';
 import 'package:glow_up/core/constants/app_enums.dart';
 import 'package:glow_up/core/constants/app_radius.dart';
 import 'package:glow_up/core/constants/app_spacing.dart';
@@ -55,8 +56,6 @@ class _SubscriberFormScreenState extends State<SubscriberFormScreen> {
   /// بيضل false لحد أول محاولة حفظ — عشان ما يبلّش الفورم يتحقق
   /// من كل الحقول تلقائيًا بمجرد ما تكتبي بحقل واحد بس.
   bool _autovalidate = false;
-
-  static final _dateFormat = DateFormat('dd / MM / yyyy');
 
   @override
   void initState() {
@@ -208,7 +207,7 @@ class _SubscriberFormScreenState extends State<SubscriberFormScreen> {
       return;
     }
 
-    context.go(AppRoutes.home);
+     context.go(AppRoutes.home);
   }
 
   @override
@@ -384,7 +383,7 @@ class _SubscriberFormScreenState extends State<SubscriberFormScreen> {
                     child: _DateField(
                       label: AppStrings.subscriptionStartDate,
                       date: _startDate,
-                      dateFormat: _dateFormat,
+                      dateFormat: AppDateFormats.inputField,
                       isEditMode: widget.isEditMode,
                       onTap: () => _pickDate(isStartDate: true),
                     ),
@@ -394,7 +393,7 @@ class _SubscriberFormScreenState extends State<SubscriberFormScreen> {
                     child: _DateField(
                       label: AppStrings.subscriptionEndDate,
                       date: _endDate,
-                      dateFormat: _dateFormat,
+                      dateFormat: AppDateFormats.inputField,
                       isEditMode: widget.isEditMode,
                       onTap: () => _pickDate(isStartDate: false),
                     ),
@@ -545,10 +544,7 @@ class _DateField extends StatelessWidget {
             height: 48,
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.mdLg),
             decoration: BoxDecoration(
-              color:
-                  highlighted
-                      ? appColors.primarySoftBg
-                      : Theme.of(context).colorScheme.onPrimary,
+              color: highlighted ? appColors.primarySoftBg : Colors.white,
               borderRadius: BorderRadius.circular(AppRadius.md),
               border: Border.all(
                 color:
@@ -651,21 +647,17 @@ class _SaveChip extends StatelessWidget {
         child: Center(
           child:
               isLoading
-                  ? SizedBox(
+                  ? const SizedBox(
                     width: 14,
                     height: 14,
                     child: CircularProgressIndicator(
                       strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        Theme.of(context).colorScheme.onPrimary,
-                      ),
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                     ),
                   )
                   : Text(
                     label,
-                    style: AppTextStyles.buttonS.copyWith(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                    ),
+                    style: AppTextStyles.buttonS.copyWith(color: Colors.white),
                   ),
         ),
       ),
