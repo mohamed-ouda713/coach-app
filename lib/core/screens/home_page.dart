@@ -11,6 +11,7 @@ import 'package:glow_up/core/widgets/layout/bottom_nav_bar.dart';
 import 'package:glow_up/core/widgets/layout/home_top_bar.dart';
 import 'package:glow_up/features/auth/cubit/auth_cubit.dart';
 import 'package:glow_up/features/auth/cubit/auth_state.dart';
+import 'package:glow_up/features/measurements/screens/measurements_client_picker_screen.dart';
 import 'package:glow_up/features/subscribers/screens/subscribers_list_screen.dart';
 import 'package:glow_up/routing/app_router.dart';
 import 'package:go_router/go_router.dart';
@@ -25,7 +26,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
 
-  static const _tabs = [
+  static List<({IconData icon, String label})> get _tabs => [
     (icon: Icons.people, label: AppStrings.navClients),
     (icon: Icons.bar_chart, label: AppStrings.navMeasurements),
     (icon: Icons.notifications, label: AppStrings.navNotifications),
@@ -36,10 +37,10 @@ class _HomePageState extends State<HomePage> {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text(AppStrings.comingSoon),
           behavior: SnackBarBehavior.floating,
-          margin: EdgeInsets.all(AppSpacing.lgAlt),
+          margin: const EdgeInsets.all(AppSpacing.lgAlt),
         ),
       );
   }
@@ -63,7 +64,11 @@ class _HomePageState extends State<HomePage> {
               userName: userName,
               onProfileTap: () => context.push(AppRoutes.profile),
               onAddTap: () {
-                context.push(AppRoutes.addSubscriber);
+                if (_currentIndex == 1) {
+                  context.push(AppRoutes.addMeasurementPickClient);
+                } else {
+                  context.push(AppRoutes.addSubscriber);
+                }
               },
               onNotificationsTap: () => _showComingSoon(context),
             );
@@ -74,10 +79,7 @@ class _HomePageState extends State<HomePage> {
         index: _currentIndex,
         children: [
           const SubscribersListScreen(),
-          // ما في شاشة قياسات عامة عبر كل العميلات — القياسات الفعلية
-          // (السجل والتقدم) مبنية لكل عميلة لحالها، فبتبويب "القياسات"
-          // منعرض قائمة العميلات نفسها كنقطة دخول لحد ما تختاري وحدة.
-          const SubscribersListScreen(),
+          const MeasurementsClientPickerScreen(),
           _PlaceholderTab(icon: _tabs[2].icon, label: _tabs[2].label),
           _PlaceholderTab(icon: _tabs[3].icon, label: _tabs[3].label),
         ],

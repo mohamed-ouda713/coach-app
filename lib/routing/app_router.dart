@@ -38,6 +38,7 @@ class AppRoutes {
   static const addSubscriber = '/clients/add';
   static const editSubscriber = '/clients/:id/edit';
   static const addMeasurement = '/subscribers/:subscriberId/measurements/add';
+  static const addMeasurementPickClient = '/measurements/add';
   static const clientMeasurements = '/subscribers/:subscriberId/measurements';
 }
 
@@ -147,7 +148,16 @@ GoRouter buildAppRouter(AuthCubit authCubit) {
               create: (_) => _measurementsCubit(),
               child: AddMeasurementScreen(
                 subscriberId: state.pathParameters['subscriberId']!,
+                subscriberName: state.extra as String?,
               ),
+            ),
+      ),
+      GoRoute(
+        path: AppRoutes.addMeasurementPickClient,
+        builder:
+            (context, state) => BlocProvider(
+              create: (_) => _measurementsCubit(),
+              child: const AddMeasurementScreen(),
             ),
       ),
       GoRoute(
@@ -158,6 +168,7 @@ GoRouter buildAppRouter(AuthCubit authCubit) {
               child: ClientMeasurementsScreen(
                 subscriberId: state.pathParameters['subscriberId']!,
                 subscriberName: state.extra as String? ?? '',
+                justAdded: state.uri.queryParameters['added'] == '1',
               ),
             ),
       ),

@@ -1,3 +1,4 @@
+import 'package:glow_up/core/localization/app_locale.dart';
 // lib/features/subscribers/screens/client_profile_screen.dart
 
 import 'package:flutter/material.dart';
@@ -199,7 +200,7 @@ class _SubscriptionCard extends StatelessWidget {
 
   final SubscriberModel subscriber;
 
-  static final _dateFormat = DateFormat('d MMMM yyyy', 'ar');
+  DateFormat get _dateFormat => DateFormat('d MMMM yyyy', AppLocale.code);
 
   @override
   Widget build(BuildContext context) {
@@ -333,6 +334,7 @@ class _ActionsRow extends StatelessWidget {
                 onTap:
                     () => context.push(
                       '/subscribers/${subscriber.id}/measurements/add',
+                      extra: subscriber.fullName,
                     ),
               ),
             ),

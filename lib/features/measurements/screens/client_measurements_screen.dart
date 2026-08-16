@@ -1,31 +1,37 @@
+import 'package:glow_up/core/localization/app_locale.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../../core/constants/app_radius.dart';
+import '../../../core/constants/app_sizes.dart';
 import '../../../core/constants/app_spacing.dart';
 import '../../../core/constants/app_strings.dart';
+import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/theme/context_extensions.dart';
 import '../../../core/widgets/cards/stat_card.dart';
 import '../../../core/widgets/layout/custom_app_bar.dart';
+import '../../../core/widgets/status/app_success_snackbar.dart';
 import '../../../core/widgets/status/badges.dart';
 import '../cubit/measurements_cubit.dart';
 import '../cubit/measurements_state.dart';
 import '../models/measurement.dart';
 
-/// شاشة القياسات الموحّدة لعميلة معينة — التقدم الإجمالي + السجل الشهري
-/// بشاشة وحدة (بدل شاشتين منفصلتين)، مطابقة لتصميم F3.
 class ClientMeasurementsScreen extends StatefulWidget {
   const ClientMeasurementsScreen({
     super.key,
     required this.subscriberId,
     required this.subscriberName,
+    this.justAdded = false,
   });
 
   final String subscriberId;
   final String subscriberName;
+
+  final bool justAdded;
 
   @override
   State<ClientMeasurementsScreen> createState() => _ClientMeasurementsScreenState();
@@ -36,6 +42,78 @@ class _ClientMeasurementsScreenState extends State<ClientMeasurementsScreen> {
   void initState() {
     super.initState();
     context.read<MeasurementsCubit>().loadHistory(widget.subscriberId);
+
+    if (widget.justAdded) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          AppSuccessSnackbar.show(context, AppStrings.measurementAddedSuccess);
+        }
+      });
+    }
+  }
+
+  Future<void> _refresh() =>
+      context.read<MeasurementsCubit>().loadHistory(widget.subscriberId);
+
+  void _openAddMeasurement() {
+    context.push(
+      '/subscribers/${widget.subscriberId}/measurements/add',
+      extra: widget.subscriberName,
+    );
+  }
+
+  Widget _buildBody(BuildContext context, MeasurementsState state) {
+    const scrollPhysics = AlwaysScrollableScrollPhysics();
+    const listPadding = EdgeInsets.all(AppSpacing.screenPadding);
+
+    if (state is MeasurementsError) {
+      return ListView(
+        physics: scrollPhysics,
+        padding: listPadding,
+        children: [
+          const SizedBox(height: AppSpacing.xxl),
+          Text(state.message, textAlign: TextAlign.center),
+        ],
+      );
+    }
+
+    if (state is! MeasurementsLoaded) {
+      return ListView(physics: scrollPhysics, children: const []);
+    }
+
+    if (state.measurements.isEmpty) {
+      return ListView(
+        physics: scrollPhysics,
+        padding: listPadding,
+        children: [
+          const SizedBox(height: AppSpacing.xxl),
+          Text(
+            AppStrings.measurementsEmptyHistory,
+            textAlign: TextAlign.center,
+          ),
+        ],
+      );
+    }
+
+    return ListView(
+      physics: scrollPhysics,
+      padding: listPadding,
+      children: [
+        _buildProgressCard(context, state.measurements),
+        const SizedBox(height: AppSpacing.xl),
+        Text(
+          AppStrings.measurementsMonthlyLog,
+          style: AppTextStyles.h5.copyWith(
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
+        ),
+        const SizedBox(height: AppSpacing.smMd),
+        for (final measurement in state.measurements) ...[
+          _MonthlyEntryCard(measurement: measurement),
+          const SizedBox(height: AppSpacing.md),
+        ],
+      ],
+    );
   }
 
   @override
@@ -47,12 +125,9 @@ class _ClientMeasurementsScreenState extends State<ClientMeasurementsScreen> {
         leading: BackButton(onPressed: () => context.pop()),
         actions: [
           IconButton(
-            icon: const Icon(Icons.add_circle, size: 32),
+            icon: const Icon(Icons.add_circle, size: AppSizes.iconXxl),
             color: Theme.of(context).colorScheme.primary,
-            onPressed:
-                () => context.push(
-                  '/subscribers/${widget.subscriberId}/measurements/add',
-                ),
+            onPressed: _openAddMeasurement,
           ),
         ],
       ),
@@ -61,33 +136,10 @@ class _ClientMeasurementsScreenState extends State<ClientMeasurementsScreen> {
           if (state is MeasurementsLoading || state is MeasurementsInitial) {
             return const Center(child: CircularProgressIndicator());
           }
-          if (state is MeasurementsError) {
-            return Center(child: Text(state.message));
-          }
-          if (state is! MeasurementsLoaded) {
-            return const SizedBox.shrink();
-          }
-          if (state.measurements.isEmpty) {
-            return const Center(child: Text(AppStrings.measurementsEmptyHistory));
-          }
 
-          return ListView(
-            padding: const EdgeInsets.all(AppSpacing.screenPadding),
-            children: [
-              _buildProgressCard(context, state.measurements),
-              const SizedBox(height: AppSpacing.xl),
-              Text(
-                AppStrings.measurementsMonthlyLog,
-                style: AppTextStyles.h5.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
-              ),
-              const SizedBox(height: AppSpacing.smMd),
-              for (final measurement in state.measurements) ...[
-                _MonthlyEntryCard(measurement: measurement),
-                const SizedBox(height: AppSpacing.md),
-              ],
-            ],
+          return RefreshIndicator(
+            onRefresh: _refresh,
+            child: _buildBody(context, state),
           );
         },
       ),
@@ -189,7 +241,7 @@ class _ClientMeasurementsScreenState extends State<ClientMeasurementsScreen> {
                 style: AppTextStyles.bodyS.copyWith(color: appColors.textTertiary),
               ),
               const SizedBox(width: AppSpacing.xs),
-              const Icon(Icons.arrow_back, size: 14),
+              const Icon(Icons.arrow_back, size: AppSizes.iconXs),
               const SizedBox(width: AppSpacing.xs),
               Text(
                 value.toStringAsFixed(1),
@@ -228,7 +280,7 @@ class _MonthlyEntryCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            DateFormat.yMMMM('ar').format(measurement.measurementMonth),
+            DateFormat.yMMMM(AppLocale.code).format(measurement.measurementMonth),
             style: AppTextStyles.h5.copyWith(
               color: Theme.of(context).colorScheme.onSurface,
             ),
@@ -236,11 +288,11 @@ class _MonthlyEntryCard extends StatelessWidget {
           const SizedBox(height: AppSpacing.smMd),
           Row(
             children: [
-              _stat(context, measurement.weight, '${AppStrings.unitKg} وزن'),
+              _stat(context, measurement.weight, AppStrings.measurementsStatWeight),
               const SizedBox(width: AppSpacing.sm),
-              _stat(context, measurement.waistSize, '${AppStrings.unitCm} خصر'),
+              _stat(context, measurement.waistSize, AppStrings.measurementsStatWaist),
               const SizedBox(width: AppSpacing.sm),
-              _stat(context, measurement.abdomenSize, '${AppStrings.unitCm} بطن'),
+              _stat(context, measurement.abdomenSize, AppStrings.measurementsStatBelly),
             ],
           ),
           if (hasPhotos) ...[
@@ -268,24 +320,108 @@ class _MonthlyEntryCard extends StatelessWidget {
     );
   }
 
-  Widget _photo(BuildContext context, String? url, String label) {
-    final appColors = context.appColors;
-    return Container(
-      height: 70,
-      decoration: BoxDecoration(
-        color: appColors.bgSubtle,
-        borderRadius: BorderRadius.circular(AppRadius.card),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child:
-          url != null
-              ? Image.network(url, fit: BoxFit.cover)
-              : Center(
-                child: Text(
-                  label,
-                  style: AppTextStyles.tiny.copyWith(color: appColors.textSecondary),
-                ),
+  void _openFullImage(BuildContext context, String url, String label) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => Scaffold(
+          backgroundColor: AppColors.photoViewerBackground,
+          appBar: AppBar(
+            title: Text(label),
+            backgroundColor: AppColors.photoViewerBackground,
+            foregroundColor: AppColors.white,
+          ),
+          body: Center(
+            child: InteractiveViewer(
+              minScale: 1,
+              maxScale: 4,
+              child: Image.network(
+                url,
+                fit: BoxFit.contain,
+                loadingBuilder: (context, child, progress) {
+                  if (progress == null) return child;
+                  return const CircularProgressIndicator(color: AppColors.white);
+                },
               ),
+            ),
+          ),
+        ),
+      ),
     );
   }
+
+  Widget _photoBox(BuildContext context, {required Widget child}) {
+    return Container(
+      height: AppSizes.photoThumb,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: context.appColors.bgSubtle,
+        borderRadius: BorderRadius.circular(AppRadius.card),
+      ),
+      alignment: Alignment.center,
+      child: child,
+    );
+  }
+
+  Widget _photo(BuildContext context, String? storedValue, String label) {
+    final appColors = context.appColors;
+
+    final empty = _photoBox(
+      context,
+      child: Text(
+        label,
+        style: AppTextStyles.tiny.copyWith(color: appColors.textSecondary),
+      ),
+    );
+
+    if (storedValue == null) return empty;
+
+    final loading = Shimmer.fromColors(
+      baseColor: appColors.bgSubtle,
+      highlightColor: Theme.of(context).colorScheme.surface,
+      child: Container(
+        height: AppSizes.photoThumb,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: appColors.bgSubtle,
+          borderRadius: BorderRadius.circular(AppRadius.card),
+        ),
+      ),
+    );
+
+    return FutureBuilder<String>(
+      future: context.read<MeasurementsCubit>().photoUrl(storedValue),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return loading;
+        }
+        if (snapshot.hasError || snapshot.data == null) {
+          debugPrint('DEBUG signed url error for $storedValue: ${snapshot.error}');
+          return empty;
+        }
+
+        final url = snapshot.data!;
+        return GestureDetector(
+          onTap: () => _openFullImage(context, url, label),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(AppRadius.card),
+            child: Image.network(
+              url,
+              height: AppSizes.photoThumb,
+              width: double.infinity,
+              fit: BoxFit.cover,
+              loadingBuilder: (context, child, progress) {
+                if (progress == null) return child;
+                return loading;
+              },
+              errorBuilder: (context, error, stackTrace) {
+                debugPrint('DEBUG photo load error for $url: $error');
+                return empty;
+              },
+            ),
+          ),
+        );
+      },
+    );
+  }
+
 }

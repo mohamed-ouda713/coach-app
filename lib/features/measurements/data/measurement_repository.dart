@@ -29,6 +29,14 @@ class MeasurementRepository {
 
   Future<String> uploadPhoto(File file, String fileName) async {
     await _client.storage.from(SupabaseBuckets.measurementPhotos).upload(fileName, file);
-    return _client.storage.from(SupabaseBuckets.measurementPhotos).getPublicUrl(fileName);
+    return fileName;
   }
+
+  Future<String> getPhotoSignedUrl(String path) {
+    return _client.storage
+        .from(SupabaseBuckets.measurementPhotos)
+        .createSignedUrl(path, _signedUrlTtlSeconds);
+  }
+
+  static const int _signedUrlTtlSeconds = 3600;
 }

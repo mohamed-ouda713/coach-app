@@ -1,7 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' as supabase;
 
+import '../../../core/constants/app_strings.dart';
+import '../../../core/constants/supabase_constants.dart';
 import '../../../core/errors/exception_mapper.dart';
 import '../data/measurement_repository.dart';
 import '../models/measurement.dart';
@@ -51,8 +54,26 @@ class MeasurementsCubit extends Cubit<MeasurementsState> {
 
       await _repository.addMeasurement(toSave);
       emit(const MeasurementSaved());
+    } on supabase.PostgrestException catch (e) {
+      emit(MeasurementsError(
+        e.code == '23505'
+            ? AppStrings.measurementsDuplicateMonth
+            : ExceptionMapper.mapToMessage(e),
+      ));
     } catch (e) {
       emit(MeasurementsError(ExceptionMapper.mapToMessage(e)));
     }
+  }
+
+  Future<String> photoUrl(String storedValue) {
+    return _repository.getPhotoSignedUrl(_storagePathOf(storedValue));
+  }
+
+  static String _storagePathOf(String storedValue) {
+    const marker = '/${SupabaseBuckets.measurementPhotos}/';
+    final markerIndex = storedValue.indexOf(marker);
+    return markerIndex == -1
+        ? storedValue
+        : storedValue.substring(markerIndex + marker.length);
   }
 }

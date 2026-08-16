@@ -14,7 +14,6 @@ import 'package:glow_up/core/widgets/cards/stat_card.dart';
 import 'package:glow_up/core/widgets/error_widgets/app_error_view.dart';
 import 'package:glow_up/core/widgets/inputs/search_widget.dart';
 import 'package:glow_up/core/widgets/selection/selectable_chip.dart';
-import 'package:glow_up/routing/app_router.dart';
 import 'package:go_router/go_router.dart';
 
 import '../cubit/subscriber_cubit.dart';
@@ -50,6 +49,14 @@ class _SubscribersListScreenState extends State<SubscribersListScreen> {
     _searchController.dispose();
     _debounce?.cancel();
     super.dispose();
+  }
+
+  Future<void> _refresh() {
+    final query = _searchController.text.trim();
+    final cubit = context.read<SubscriberCubit>();
+    return query.isEmpty
+        ? cubit.loadSubscribers()
+        : cubit.searchSubscribers(query);
   }
 
   void _onSearchChanged(String query) {
@@ -151,32 +158,42 @@ class _SubscribersListScreenState extends State<SubscribersListScreen> {
         const SizedBox(height: AppSpacing.sm),
 
         Expanded(
-          child: filtered.isEmpty
-              ? const AppErrorView(
-                  message: AppStrings.noMatchingClients,
-                  icon: Icons.people_outline,
-                )
-              : ListView.separated(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.lgAlt,
-                  ),
-                  itemCount: filtered.length,
-                  separatorBuilder: (_, __) =>
-                      const SizedBox(height: AppSpacing.smMd),
-                  itemBuilder: (context, index) {
-                    final subscriber = filtered[index];
-                    final card = ClientCard(
-                      name: subscriber.fullName,
-                      goal: subscriber.goal,
-                      status: subscriber.status,
-                      onTap: () => context.push('/clients/${subscriber.id}'),
-                    );
+          child: RefreshIndicator(
+            onRefresh: _refresh,
+            child: filtered.isEmpty
+                ? ListView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    children: [
+                      const SizedBox(height: AppSpacing.xxl),
+                      AppErrorView(
+                        message: AppStrings.noMatchingClients,
+                        icon: Icons.people_outline,
+                      ),
+                    ],
+                  )
+                : ListView.separated(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.lgAlt,
+                    ),
+                    itemCount: filtered.length,
+                    separatorBuilder: (_, __) =>
+                        const SizedBox(height: AppSpacing.smMd),
+                    itemBuilder: (context, index) {
+                      final subscriber = filtered[index];
+                      final card = ClientCard(
+                        name: subscriber.fullName,
+                        goal: subscriber.goal,
+                        status: subscriber.status,
+                        onTap: () => context.push('/clients/${subscriber.id}'),
+                      );
 
-                    return subscriber.status == SubscriptionStatus.expired
-                        ? Opacity(opacity: 0.45, child: card)
-                        : card;
-                  },
-                ),
+                      return subscriber.status == SubscriptionStatus.expired
+                          ? Opacity(opacity: 0.45, child: card)
+                          : card;
+                    },
+                  ),
+          ),
         ),
       ],
     );
