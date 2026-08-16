@@ -47,7 +47,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text(AppStrings.resetPasswordTitle)),
+      appBar: AppBar(title: Text(AppStrings.resetPasswordTitle)),
       body: BlocConsumer<AuthCubit, AuthState>(
         listener: (context, state) {
           if (state is AuthError) {
@@ -102,7 +102,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                                 color: AppColors.white,
                               ),
                             )
-                            : const Text(AppStrings.resetPasswordSubmitCta),
+                            : Text(AppStrings.resetPasswordSubmitCta),
                   ),
                 ],
               ),

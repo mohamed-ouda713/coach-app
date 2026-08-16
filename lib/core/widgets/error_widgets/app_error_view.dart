@@ -12,7 +12,7 @@ class AppErrorView extends StatelessWidget {
     super.key,
     required this.message,
     this.onRetry,
-    this.retryLabel = AppStrings.errorViewRetry,
+    this.retryLabel,
     this.icon = Icons.error_outline_rounded,
   });
 
@@ -21,7 +21,7 @@ class AppErrorView extends StatelessWidget {
 
   final VoidCallback? onRetry;
 
-  final String retryLabel;
+  final String? retryLabel;
   final IconData icon;
 
   @override
@@ -75,7 +75,10 @@ class AppErrorView extends StatelessWidget {
                       ),
                     ),
                     icon: const Icon(Icons.refresh_rounded, size: AppSizes.icon),
-                    label: Text(retryLabel, style: AppTextStyles.buttonM),
+                    label: Text(
+                      retryLabel ?? AppStrings.errorViewRetry,
+                      style: AppTextStyles.buttonM,
+                    ),
                   ),
                 ),
               ),

@@ -14,7 +14,7 @@ class AppErrorDialog extends StatelessWidget {
     required this.message,
     this.title,
     this.icon = Icons.error_outline_rounded,
-    this.confirmLabel = AppStrings.dialogConfirmOk,
+    this.confirmLabel,
     this.cancelLabel,
     this.isDestructive = false,
   });
@@ -22,7 +22,7 @@ class AppErrorDialog extends StatelessWidget {
   final String? title;
   final String message;
   final IconData icon;
-  final String confirmLabel;
+  final String? confirmLabel;
   final String? cancelLabel;
   final bool isDestructive;
 
@@ -31,7 +31,7 @@ class AppErrorDialog extends StatelessWidget {
     required String message,
     String? title,
     IconData icon = Icons.error_outline_rounded,
-    String confirmLabel = AppStrings.dialogConfirmOk,
+    String? confirmLabel,
     String? cancelLabel,
     bool isDestructive = false,
   }) {
@@ -159,7 +159,10 @@ class AppErrorDialog extends StatelessWidget {
                           borderRadius: BorderRadius.circular(AppRadius.card),
                         ),
                       ),
-                      child: Text(confirmLabel, style: AppTextStyles.buttonM),
+                      child: Text(
+                        confirmLabel ?? AppStrings.dialogConfirmOk,
+                        style: AppTextStyles.buttonM,
+                      ),
                     ),
                   ),
                 ),

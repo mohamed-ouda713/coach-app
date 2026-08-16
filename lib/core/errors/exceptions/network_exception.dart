@@ -10,11 +10,11 @@ class NetworkException extends AppException {
   const NetworkException(super.message);
 
   factory NetworkException.noInternet() =>
-      const NetworkException(ErrorMessages.noInternet);
+      NetworkException(ErrorMessages.noInternet);
 
   factory NetworkException.timeout() =>
-      const NetworkException(ErrorMessages.requestTimeout);
+      NetworkException(ErrorMessages.requestTimeout);
 
   factory NetworkException.serverUnreachable() =>
-      const NetworkException(ErrorMessages.serverUnreachable);
+      NetworkException(ErrorMessages.serverUnreachable);
 }

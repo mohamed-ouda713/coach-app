@@ -12,6 +12,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'core/constants/app_strings.dart';
 import 'core/constants/supabase_constants.dart';
+import 'core/localization/app_locale.dart';
+import 'core/localization/cubit/locale_cubit.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/cubit/theme_cubit.dart';
 import 'features/auth/cubit/auth_cubit.dart';
@@ -23,6 +25,7 @@ Future<void> main() async {
 
   await dotenv.load(fileName: '.env');
   await initializeDateFormatting('ar');
+  await initializeDateFormatting('en');
 
   final prefs = await SharedPreferences.getInstance();
 
@@ -50,26 +53,32 @@ class MyApp extends StatelessWidget {
           create: (_) => SubscriberCubit(SubscriberRepository(supabaseClient)),
         ),
         BlocProvider(create: (_) => ThemeCubit(prefs)),
+        BlocProvider(create: (_) => LocaleCubit(prefs)),
       ],
       child: Builder(
         builder: (context) {
           final authCubit = context.read<AuthCubit>();
+          final router = buildAppRouter(authCubit);
           return BlocBuilder<ThemeCubit, ThemeMode>(
             builder: (context, themeMode) {
-              return MaterialApp.router(
-                title: AppStrings.appName,
-                debugShowCheckedModeBanner: false,
-                theme: AppTheme.light,
-                darkTheme: AppTheme.dark,
-                themeMode: themeMode,
-                locale: const Locale('ar'),
-                supportedLocales: const [Locale('ar'), Locale('en')],
-                localizationsDelegates: const [
-                  GlobalMaterialLocalizations.delegate,
-                  GlobalWidgetsLocalizations.delegate,
-                  GlobalCupertinoLocalizations.delegate,
-                ],
-                routerConfig: buildAppRouter(authCubit),
+              return BlocBuilder<LocaleCubit, Locale>(
+                builder: (context, locale) {
+                  return MaterialApp.router(
+                    title: AppStrings.appName,
+                    debugShowCheckedModeBanner: false,
+                    theme: AppTheme.light,
+                    darkTheme: AppTheme.dark,
+                    themeMode: themeMode,
+                    locale: locale,
+                    supportedLocales: AppLocale.supported,
+                    localizationsDelegates: const [
+                      GlobalMaterialLocalizations.delegate,
+                      GlobalWidgetsLocalizations.delegate,
+                      GlobalCupertinoLocalizations.delegate,
+                    ],
+                    routerConfig: router,
+                  );
+                },
               );
             },
           );

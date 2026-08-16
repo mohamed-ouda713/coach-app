@@ -64,7 +64,7 @@ class AuthCubit extends Cubit<AuthState> {
       );
       final identities = response.user?.identities;
       if (identities != null && identities.isEmpty) {
-        emit(const AuthError(ErrorMessages.emailNotAvailable));
+        emit(AuthError(ErrorMessages.emailNotAvailable));
         return;
       }
       if (response.session == null) {

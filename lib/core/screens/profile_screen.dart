@@ -4,6 +4,8 @@ import 'package:glow_up/core/constants/app_radius.dart';
 import 'package:glow_up/core/constants/app_sizes.dart';
 import 'package:glow_up/core/constants/app_spacing.dart';
 import 'package:glow_up/core/constants/app_strings.dart';
+import 'package:glow_up/core/localization/app_locale.dart';
+import 'package:glow_up/core/localization/cubit/locale_cubit.dart';
 import 'package:glow_up/core/models/user_model.dart';
 import 'package:glow_up/core/theme/app_text_styles.dart';
 import 'package:glow_up/core/theme/context_extensions.dart';
@@ -20,12 +22,12 @@ class ProfileScreen extends StatelessWidget {
       context: context,
       builder:
           (dialogContext) => AlertDialog(
-            title: const Text(AppStrings.logoutCta),
-            content: const Text(AppStrings.logoutConfirmMessage),
+            title: Text(AppStrings.logoutCta),
+            content: Text(AppStrings.logoutConfirmMessage),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(dialogContext).pop(false),
-                child: const Text(AppStrings.dialogCancel),
+                child: Text(AppStrings.dialogCancel),
               ),
               TextButton(
                 onPressed: () => Navigator.of(dialogContext).pop(true),
@@ -48,11 +50,12 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text(AppStrings.profileTitle)),
+      appBar: AppBar(title: Text(AppStrings.profileTitle)),
       body: BlocBuilder<AuthCubit, AuthState>(
         builder: (context, state) {
           final rawUser = state is AuthAuthenticated ? state.user : null;
-          final userModel = rawUser != null ? UserModel.fromSupabaseUser(rawUser) : null;
+          final userModel =
+              rawUser != null ? UserModel.fromSupabaseUser(rawUser) : null;
 
           return Padding(
             padding: const EdgeInsets.all(AppSpacing.screenPadding),
@@ -72,6 +75,8 @@ class ProfileScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: AppSpacing.lg),
                 const _ThemeModeSelector(),
+                const SizedBox(height: AppSpacing.lg),
+                const _LanguageSelector(),
                 const Spacer(),
                 OutlinedButton.icon(
                   onPressed: () => _confirmLogout(context),
@@ -113,6 +118,66 @@ class _ThemeModeSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     final currentMode = context.watch<ThemeCubit>().state;
 
+    return _SettingCard(
+      label: AppStrings.profileAppearanceLabel,
+      children: [
+        SelectableChip(
+          label: AppStrings.themeSystem,
+          isSelected: currentMode == ThemeMode.system,
+          onTap:
+              () => context.read<ThemeCubit>().setThemeMode(ThemeMode.system),
+        ),
+        const SizedBox(width: AppSpacing.sm),
+        SelectableChip(
+          label: AppStrings.themeDark,
+          isSelected: currentMode == ThemeMode.dark,
+          onTap: () => context.read<ThemeCubit>().setThemeMode(ThemeMode.dark),
+        ),
+        const SizedBox(width: AppSpacing.sm),
+        SelectableChip(
+          label: AppStrings.themeLight,
+          isSelected: currentMode == ThemeMode.light,
+          onTap: () => context.read<ThemeCubit>().setThemeMode(ThemeMode.light),
+        ),
+      ],
+    );
+  }
+}
+
+class _LanguageSelector extends StatelessWidget {
+  const _LanguageSelector();
+
+  @override
+  Widget build(BuildContext context) {
+    final currentLocale = context.watch<LocaleCubit>().state;
+
+    return _SettingCard(
+      label: AppStrings.profileLanguageLabel,
+      children: [
+        SelectableChip(
+          label: 'العربية',
+          isSelected: currentLocale == AppLocale.arabic,
+          onTap: () => context.read<LocaleCubit>().setLocale(AppLocale.arabic),
+        ),
+        const SizedBox(width: AppSpacing.sm),
+        SelectableChip(
+          label: 'English',
+          isSelected: currentLocale == AppLocale.english,
+          onTap: () => context.read<LocaleCubit>().setLocale(AppLocale.english),
+        ),
+      ],
+    );
+  }
+}
+
+class _SettingCard extends StatelessWidget {
+  const _SettingCard({required this.label, required this.children});
+
+  final String label;
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.mdLg),
       decoration: BoxDecoration(
@@ -124,33 +189,13 @@ class _ThemeModeSelector extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            AppStrings.profileAppearanceLabel,
+            label,
             style: AppTextStyles.bodyL.copyWith(
               color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: AppSpacing.md),
-          Row(
-            children: [
-              SelectableChip(
-                label: AppStrings.themeSystem,
-                isSelected: currentMode == ThemeMode.system,
-                onTap: () => context.read<ThemeCubit>().setThemeMode(ThemeMode.system),
-              ),
-              const SizedBox(width: AppSpacing.sm),
-              SelectableChip(
-                label: AppStrings.themeDark,
-                isSelected: currentMode == ThemeMode.dark,
-                onTap: () => context.read<ThemeCubit>().setThemeMode(ThemeMode.dark),
-              ),
-              const SizedBox(width: AppSpacing.sm),
-              SelectableChip(
-                label: AppStrings.themeLight,
-                isSelected: currentMode == ThemeMode.light,
-                onTap: () => context.read<ThemeCubit>().setThemeMode(ThemeMode.light),
-              ),
-            ],
-          ),
+          Row(children: children),
         ],
       ),
     );

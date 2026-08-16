@@ -288,7 +288,7 @@ class _SubscriberFormScreenState extends State<SubscriberFormScreen> {
                       controller: _ageController,
                       keyboardType: TextInputType.number,
                       textAlign: TextAlign.center,
-                      suffixIcon: const _UnitLabel(AppStrings.ageUnitYear),
+                      suffixIcon: _UnitLabel(AppStrings.ageUnitYear),
                       fillColor: editFillColor,
                       borderColor: editBorderColor,
                       inputFormatters: [
