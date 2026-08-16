@@ -31,6 +31,8 @@ class AppSizes {
   static const double iconXxl = 32;
   static const double iconDisplay = 34;
 
+  static const double photoThumb = 96;
+
   // أفاتارات
   static const double avatarSm = 46;
   static const double avatarMd = 66;
