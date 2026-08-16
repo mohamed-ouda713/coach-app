@@ -77,3 +77,6 @@ app.*.map.json
 
 # Xcode Swift Package Manager
 **/xcshareddata/swiftpm/
+
+# Design tool exports
+*.dc.html
