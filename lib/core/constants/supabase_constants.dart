@@ -24,6 +24,7 @@ class SupabaseColumns {
   SupabaseColumns._();
 
   static const String id = 'id';
+  static const String fcmToken = 'fcm_token';
   static const String trainerId = 'trainer_id';
   static const String subscriberId = 'subscriber_id';
   static const String fullName = 'full_name';
