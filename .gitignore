@@ -81,3 +81,5 @@ app.*.map.json
 
 # Design tool exports
 *.dc.html
+# Supabase CLI local state
+supabase/.temp/
