@@ -1,6 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:glow_up/core/theme/app_colors.dart';
 
 class NotificationService {
   NotificationService._();
@@ -35,7 +36,7 @@ class NotificationService {
 
     await _localNotifications.initialize(
       const InitializationSettings(
-        android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+        android: AndroidInitializationSettings('ic_stat_notification'),
         iOS: DarwinInitializationSettings(),
       ),
     );
@@ -58,6 +59,8 @@ class NotificationService {
           channelDescription: _channel.description,
           importance: Importance.high,
           priority: Priority.high,
+          icon: 'ic_stat_notification',
+          color: AppColors.primary,
         ),
         iOS: const DarwinNotificationDetails(),
       ),
