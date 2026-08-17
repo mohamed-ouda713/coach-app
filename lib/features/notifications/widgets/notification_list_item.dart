@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:glow_up/core/constants/app_enums.dart';
+import 'package:glow_up/core/constants/app_borders.dart';
 import 'package:glow_up/core/constants/app_radius.dart';
 import 'package:glow_up/core/constants/app_sizes.dart';
 import 'package:glow_up/core/constants/app_spacing.dart';
@@ -51,7 +52,10 @@ class NotificationListItem extends StatelessWidget {
             isRead
                 ? null
                 : Border(
-                  right: BorderSide(color: colorScheme.primary, width: 3),
+                  right: BorderSide(
+                    color: colorScheme.primary,
+                    width: AppBorders.accent,
+                  ),
                 ),
       ),
       child: ListTile(

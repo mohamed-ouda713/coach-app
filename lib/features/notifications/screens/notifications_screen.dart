@@ -9,6 +9,7 @@ import 'package:glow_up/features/notifications/widgets/notifications_empty_state
 import 'package:glow_up/features/notifications/widgets/notifications_error.dart';
 import 'package:glow_up/features/notifications/widgets/notifications_list.dart';
 import 'package:glow_up/features/notifications/widgets/notifications_loading.dart';
+import 'package:glow_up/routing/app_router.dart';
 import 'package:go_router/go_router.dart';
 
 /// محتوى تبويب الإشعارات — بدون Scaffold/AppBar خاص فيه، لأنه بينعرض
@@ -30,7 +31,7 @@ class NotificationsScreen extends StatelessWidget {
 
     final subscriberId = notification.subscriberId;
     if (subscriberId != null && subscriberId.isNotEmpty) {
-      context.push('/clients/$subscriberId');
+      context.push(AppRoutes.clientProfilePath(subscriberId));
     }
   }
 

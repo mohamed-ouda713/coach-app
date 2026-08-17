@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:glow_up/core/constants/app_borders.dart';
 import 'package:glow_up/core/constants/app_spacing.dart';
 import 'package:glow_up/core/constants/app_strings.dart';
 import 'package:glow_up/core/theme/app_text_styles.dart';
@@ -67,7 +68,10 @@ class NotificationsList extends StatelessWidget {
         if (next is _SectionHeader) {
           return const SizedBox(height: AppSpacing.lgAlt);
         }
-        return Divider(color: context.appColors.border, height: 1);
+        return Divider(
+          color: context.appColors.border,
+          height: AppBorders.thin,
+        );
       },
       itemBuilder: (context, index) {
         final entry = entries[index];

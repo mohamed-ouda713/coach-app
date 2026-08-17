@@ -39,6 +39,7 @@ class AppRoutes {
   static const notifications = '/notifications';
   static const clientsList = '/clients';
   static const clientProfile = '/clients/:id';
+  static String clientProfilePath(String id) => '/clients/$id';
   static const addSubscriber = '/clients/add';
   static const editSubscriber = '/clients/:id/edit';
   static const addMeasurement = '/subscribers/:subscriberId/measurements/add';
