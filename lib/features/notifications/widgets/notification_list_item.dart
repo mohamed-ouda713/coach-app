@@ -22,15 +22,15 @@ class NotificationListItem extends StatelessWidget {
   String _typeLabel(NotificationModel item) {
     switch (item.notificationType) {
       case null:
-        return 'عام';
+        return AppStrings.notificationTypeGeneral;
       case NotificationType.subscriptionExpiry:
-        return 'اشتراك';
+        return AppStrings.notificationTypeSubscription;
       case NotificationType.overdueMeasurement:
-        return 'قياسات';
+        return AppStrings.notificationTypeMeasurements;
       case NotificationType.newProgramNeeded:
-        return 'برنامج';
+        return AppStrings.notificationTypeProgram;
       case NotificationType.progressUpdate:
-        return 'تقدم';
+        return AppStrings.notificationTypeProgress;
     }
   }
 

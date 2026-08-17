@@ -1,6 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:glow_up/core/constants/app_strings.dart';
 import 'package:glow_up/core/theme/app_colors.dart';
 
 class NotificationService {
@@ -9,10 +10,16 @@ class NotificationService {
   static final FlutterLocalNotificationsPlugin _localNotifications =
       FlutterLocalNotificationsPlugin();
 
-  static const AndroidNotificationChannel _channel = AndroidNotificationChannel(
-    'high_importance_channel',
-    'إشعارات هامة',
-    description: 'إشعارات الاشتراكات والتنبيهات الهامة',
+  /// لازم يطابق default_notification_channel_id بـ AndroidManifest.
+  static const String channelId = 'high_importance_channel';
+
+  /// اسم الـ drawable بـ android/app/src/main/res/drawable-*.
+  static const String androidIcon = 'ic_stat_notification';
+
+  static AndroidNotificationChannel get _channel => AndroidNotificationChannel(
+    channelId,
+    AppStrings.notificationsChannelName,
+    description: AppStrings.notificationsChannelDescription,
     importance: Importance.high,
   );
 
@@ -36,7 +43,7 @@ class NotificationService {
 
     await _localNotifications.initialize(
       const InitializationSettings(
-        android: AndroidInitializationSettings('ic_stat_notification'),
+        android: AndroidInitializationSettings(androidIcon),
         iOS: DarwinInitializationSettings(),
       ),
     );
@@ -48,18 +55,20 @@ class NotificationService {
     final notification = message.notification;
     if (notification == null) return;
 
+    final channel = _channel;
+
     await _localNotifications.show(
       notification.hashCode,
       notification.title,
       notification.body,
       NotificationDetails(
         android: AndroidNotificationDetails(
-          _channel.id,
-          _channel.name,
-          channelDescription: _channel.description,
+          channel.id,
+          channel.name,
+          channelDescription: channel.description,
           importance: Importance.high,
           priority: Priority.high,
-          icon: 'ic_stat_notification',
+          icon: androidIcon,
           color: AppColors.primary,
         ),
         iOS: const DarwinNotificationDetails(),

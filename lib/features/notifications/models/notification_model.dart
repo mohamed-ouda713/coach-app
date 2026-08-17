@@ -1,4 +1,7 @@
 import 'package:glow_up/core/constants/app_enums.dart';
+import 'package:glow_up/core/constants/app_strings.dart';
+import 'package:glow_up/core/constants/supabase_constants.dart';
+import 'package:glow_up/core/localization/app_locale.dart';
 import 'package:intl/intl.dart';
 
 class NotificationModel {
@@ -26,12 +29,14 @@ class NotificationModel {
 
   NotificationType? get notificationType {
     switch (type) {
-      case 'subscription_expiry':
+      case NotificationTypeValues.subscriptionExpiry:
         return NotificationType.subscriptionExpiry;
-      case 'overdue_measurement':
+      case NotificationTypeValues.overdueMeasurement:
         return NotificationType.overdueMeasurement;
-      case 'new_program_needed':
+      case NotificationTypeValues.newProgramNeeded:
         return NotificationType.newProgramNeeded;
+      case NotificationTypeValues.progressUpdate:
+        return NotificationType.progressUpdate;
       default:
         return null;
     }
@@ -42,13 +47,15 @@ class NotificationModel {
 
     switch (notificationType) {
       case NotificationType.subscriptionExpiry:
-        return 'اشتراكك على وشك الانتهاء';
+        return AppStrings.notificationSubscriptionExpiryTitle;
       case NotificationType.overdueMeasurement:
-        return 'تأخر قياساتك';
+        return AppStrings.notificationOverdueMeasurementTitle;
       case NotificationType.newProgramNeeded:
-        return 'تحتاج إلى برنامج تدريبي جديد';
+        return AppStrings.notificationNewProgramNeededTitle;
       default:
-        return message.isNotEmpty ? message : 'إشعار جديد';
+        return message.isNotEmpty
+            ? message
+            : AppStrings.notificationFallbackTitle;
     }
   }
 
@@ -57,13 +64,13 @@ class NotificationModel {
 
     switch (notificationType) {
       case NotificationType.subscriptionExpiry:
-        return 'تبقى 1 يوم فقط على انتهاء اشتراكك الحالي.';
+        return AppStrings.notificationSubscriptionExpiryBody;
       case NotificationType.overdueMeasurement:
-        return 'لم يتم تسجيل قياساتك خلال المدة المحددة.';
+        return AppStrings.notificationOverdueMeasurementBody;
       case NotificationType.newProgramNeeded:
-        return 'مر أكثر من 28 يوم على برنامجك الحالي، ويجب مراجعة خطة جديدة.';
+        return AppStrings.notificationNewProgramNeededBody;
       default:
-        return 'إشعار جديد';
+        return AppStrings.notificationFallbackTitle;
     }
   }
 
@@ -73,38 +80,30 @@ class NotificationModel {
     final today = DateTime(now.year, now.month, now.day);
     final thatDay = DateTime(local.year, local.month, local.day);
     final daysAgo = today.difference(thatDay).inDays;
-    final time = DateFormat.jm('ar').format(local);
+    final locale = AppLocale.code;
+    final time = DateFormat.jm(locale).format(local);
 
     if (daysAgo == 0) {
-      return 'اليوم • $time';
+      return '${AppStrings.notificationsToday} • $time';
     }
 
     if (daysAgo == 1) {
-      return 'أمس • $time';
+      return '${AppStrings.notificationsYesterday} • $time';
     }
 
-    return '${DateFormat('EEEE d MMMM', 'ar').format(local)} • $time';
+    return '${DateFormat('EEEE d MMMM', locale).format(local)} • $time';
   }
 
   factory NotificationModel.fromJson(Map<String, dynamic> json) {
-    final rawType = json['type']?.toString();
-    final rawTitle = json['title']?.toString() ?? '';
-    final rawMessage =
-        json['body']?.toString() ?? json['message']?.toString() ?? '';
-
     return NotificationModel(
-      id:
-          json['id']?.toString() ??
-          DateTime.now().microsecondsSinceEpoch.toString(),
-      trainerId: json['trainer_id']?.toString() ?? 'demo_trainer',
-      subscriberId: json['subscriber_id']?.toString(),
-      type: rawType,
-      title: rawTitle,
-      message: rawMessage,
-      isRead: json['is_read'] ?? false,
-      createdAt:
-          DateTime.tryParse(json['created_at']?.toString() ?? '') ??
-          DateTime.now(),
+      id: json[SupabaseColumns.id] as String,
+      trainerId: json[SupabaseColumns.trainerId] as String,
+      subscriberId: json[SupabaseColumns.subscriberId]?.toString(),
+      type: json[SupabaseColumns.type]?.toString(),
+      title: json[SupabaseColumns.title]?.toString() ?? '',
+      message: json[SupabaseColumns.message]?.toString() ?? '',
+      isRead: json[SupabaseColumns.isRead] as bool? ?? false,
+      createdAt: DateTime.parse(json[SupabaseColumns.createdAt] as String),
       data: Map<String, dynamic>.from(json['data'] ?? const {}),
     );
   }
