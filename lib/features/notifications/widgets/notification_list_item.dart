@@ -46,7 +46,6 @@ class NotificationListItem extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: isRead ? Colors.transparent : appColors.primarySoftBg,
         borderRadius: BorderRadius.circular(AppRadius.smMd),
         border:
             isRead
@@ -60,6 +59,7 @@ class NotificationListItem extends StatelessWidget {
           vertical: AppRadius.smMd,
           horizontal: AppRadius.md,
         ),
+        tileColor: isRead ? Colors.transparent : appColors.primarySoftBg,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppRadius.smMd),
         ),
