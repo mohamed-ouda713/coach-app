@@ -27,6 +27,8 @@ class AppStrings {
       _t('الإشعارات', 'Notifications');
   static String get logoutCta => _t('تسجيل الخروج', 'Log out');
   static String get comingSoon => _t('قريباً', 'Coming soon');
+  static String get checkingSession =>
+      _t('جاري التحقق من الجلسة...', 'Checking session...');
 
   static String get profileTitle => _t('الملف الشخصي', 'Profile');
   static String get profileFullNameLabel => _t('الاسم الكامل', 'Full name');
@@ -131,6 +133,10 @@ class AppStrings {
   // ── F4 — الإشعارات ─────────────────────────────────────────
   static String get notificationsMarkAllRead =>
       _t('قراءة الكل', 'Mark all read');
+  static String get notificationsMarkAsRead =>
+      _t('تحديد كمقروء', 'Mark as read');
+  static String get notificationsUnreadSection => _t('غير مقروءة', 'Unread');
+  static String get notificationsReadSection => _t('مقروءة', 'Read');
   // أمثلة نصوص إشعارات فعلية (تبقى Templates بتتبني ديناميك من الباك إند)
   static String get notificationSubscriptionEndingTemplate => _t(
     'اشتراك {name} ينتهي خلال {days} أيام',
