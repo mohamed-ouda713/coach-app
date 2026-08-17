@@ -18,8 +18,8 @@ class SplashScreen extends StatelessWidget {
           children: [
             Image.asset(
               'assets/splash/splash_logo.png',
-              width: AppSizes.avatarLogo,
-              height: AppSizes.avatarLogo,
+              width: AppSizes.splashLogo,
+              height: AppSizes.splashLogo,
             ),
             const SizedBox(height: AppSpacing.xxxl),
             const CircularProgressIndicator(color: AppColors.white),
