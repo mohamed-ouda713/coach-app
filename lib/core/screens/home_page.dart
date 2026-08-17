@@ -13,10 +13,12 @@ import 'package:glow_up/features/auth/cubit/auth_cubit.dart';
 import 'package:glow_up/features/auth/cubit/auth_state.dart';
 import 'package:glow_up/features/measurements/screens/measurements_client_picker_screen.dart';
 import 'package:glow_up/features/notifications/cubit/notification_cubit.dart';
+import 'package:glow_up/features/notifications/data/notification_repository.dart';
 import 'package:glow_up/features/notifications/screens/notifications_screen.dart';
 import 'package:glow_up/features/subscribers/screens/subscribers_list_screen.dart';
 import 'package:glow_up/routing/app_router.dart';
 import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' show Supabase;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -50,7 +52,12 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => NotificationCubit()..fetchNotifications(),
+      create:
+          (_) =>
+              NotificationCubit(
+                  NotificationRepository(Supabase.instance.client),
+                )
+                ..fetchNotifications(),
       child: Builder(
         builder: (context) => Scaffold(
           appBar: PreferredSize(
