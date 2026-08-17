@@ -1,6 +1,20 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import JWT from 'https://esm.sh/google-auth-library@9.0.0'
 
+// لازم تطابق NotificationTypeValues بـ lib/core/constants/supabase_constants.dart
+const NOTIFICATION_TYPE_SUBSCRIPTION_EXPIRY = 'subscription_expiry'
+
+const TABLE_SUBSCRIBERS = 'subscribers'
+const TABLE_TRAINERS = 'trainers'
+const TABLE_NOTIFICATIONS = 'notifications'
+
+const FCM_SCOPE = 'https://www.googleapis.com/auth/firebase.messaging'
+const FCM_ENDPOINT = 'https://fcm.googleapis.com/v1/projects'
+
+const SUBSCRIPTION_EXPIRY_TITLE = 'تنبيه انتهاء اشتراك ⚠️'
+const subscriptionExpiryBody = (name: string) =>
+  `اشتراك المشترك ${name} سينتهي غداً.`
+
 Deno.serve(async (req) => {
   try {
     const serviceAccountSecret = Deno.env.get('FCM_SERVICE_ACCOUNT')
@@ -17,7 +31,7 @@ Deno.serve(async (req) => {
     const client = new JWT.JWT({
       email: serviceAccount.client_email,
       key: serviceAccount.private_key,
-      scopes: ['https://www.googleapis.com/auth/firebase.messaging'],
+      scopes: [FCM_SCOPE],
     })
     const tokens = await client.getRequestHeaders()
     const accessToken = tokens.Authorization
@@ -34,7 +48,7 @@ Deno.serve(async (req) => {
 
     // جلب المشتركين المنتهية اشتراكاتهم بدون عمل JOIN لتفادي مشكلة العلاقات
     const { data: expiringSubscribers, error: subError } = await supabaseClient
-      .from('subscribers')
+      .from(TABLE_SUBSCRIBERS)
       .select('id, full_name, subscription_end_date, trainer_id')
       .eq('subscription_end_date', tomorrowStr)
 
@@ -42,13 +56,13 @@ Deno.serve(async (req) => {
 
     if (expiringSubscribers && expiringSubscribers.length > 0) {
       for (const sub of expiringSubscribers) {
-        const msgText = `اشتراك المشترك ${sub.full_name} سينتهي غداً.`
+        const msgText = subscriptionExpiryBody(sub.full_name)
 
         // أ) حفظ الإشعار في جدول notifications
-        await supabaseClient.from('notifications').insert({
+        await supabaseClient.from(TABLE_NOTIFICATIONS).insert({
           trainer_id: sub.trainer_id,
           subscriber_id: sub.id,
-          type: 'subscription_expiry',
+          type: NOTIFICATION_TYPE_SUBSCRIPTION_EXPIRY,
           message: msgText,
           is_read: false
         })
@@ -56,7 +70,7 @@ Deno.serve(async (req) => {
         // ب) جلب الـ fcm_token مباشرة من جدول trainers للمدرب المطلوب
         if (sub.trainer_id) {
           const { data: trainer } = await supabaseClient
-            .from('trainers')
+            .from(TABLE_TRAINERS)
             .select('fcm_token')
             .eq('id', sub.trainer_id)
             .maybeSingle()
@@ -69,7 +83,7 @@ Deno.serve(async (req) => {
                 accessToken,
                 serviceAccount.project_id,
                 fcmToken,
-                'تنبيه انتهاء اشتراك ⚠️',
+                SUBSCRIPTION_EXPIRY_TITLE,
                 msgText,
                 String(sub.id)
               )
@@ -115,7 +129,7 @@ async function sendFcmNotification(
   }
 
   const response = await fetch(
-    `https://fcm.googleapis.com/v1/projects/${projectId}/messages:send`,
+    `${FCM_ENDPOINT}/${projectId}/messages:send`,
     {
       method: 'POST',
       headers: {
