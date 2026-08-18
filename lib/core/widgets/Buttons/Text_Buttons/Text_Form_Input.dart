@@ -1,4 +1,7 @@
+// lib/core/widgets/Buttons/Text_Buttons/Text_Form_Input.dart
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:glow_up/core/constants/app_borders.dart';
 import 'package:glow_up/core/constants/app_radius.dart';
 import 'package:glow_up/core/constants/app_sizes.dart';
@@ -15,12 +18,15 @@ class CustomTextFormField extends StatefulWidget {
     this.suffixIcon,
     required this.hintText,
     this.fillColor,
-    this.controller, // 👈 أضفنا الكنترولر
-    this.obscureText = false, // 👈 أضفنا خيار إخفاء النص (كلمة المرور)
-    this.keyboardType, // 👈 أضفنا نوع الكيبورد
+    this.borderColor, // 👈 لتخصيص لون الحدود بحالات معيّنة (وضع التعديل مثلاً)
+    this.controller,
+    this.obscureText = false,
+    this.keyboardType,
     this.validator,
     this.helperText,
     this.autovalidateMode,
+    this.textAlign = TextAlign.right,
+    this.inputFormatters,
   });
 
   final String title;
@@ -29,13 +35,15 @@ class CustomTextFormField extends StatefulWidget {
   final Widget? prefixIcon;
   final Widget? suffixIcon;
   final Color? fillColor;
+  final Color? borderColor;
   final TextEditingController? controller;
   final bool obscureText;
   final TextInputType? keyboardType;
   final String? Function(String?)? validator;
-
   final String? helperText;
   final AutovalidateMode? autovalidateMode;
+  final TextAlign textAlign;
+  final List<TextInputFormatter>? inputFormatters;
 
   @override
   State<CustomTextFormField> createState() => _CustomTextFormFieldState();
@@ -46,31 +54,52 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final borderColor = context.appColors.border;
     final textSecondaryColor = context.appColors.textSecondary;
 
-    final effectivePrefixIcon =
-        widget.obscureText
-            ? IconButton(
-              icon: Icon(
-                _obscured
-                    ? Icons.visibility_off_outlined
-                    : Icons.visibility_outlined,
-                size: AppSizes.icon,
-                color: textSecondaryColor,
-              ),
-              onPressed: () => setState(() => _obscured = !_obscured),
-            )
-            : widget.prefixIcon;
+    final Widget? effectivePrefixIcon = widget.obscureText
+        ? IconButton(
+            icon: Icon(
+              _obscured
+                  ? Icons.visibility_off_outlined
+                  : Icons.visibility_outlined,
+              size: AppSizes.icon,
+              color: textSecondaryColor,
+            ),
+            onPressed: () => setState(() => _obscured = !_obscured),
+          )
+        : (widget.prefixIcon != null
+            ? IconTheme(
+                data: IconThemeData(color: textSecondaryColor),
+                child: widget.prefixIcon!,
+              )
+            : null);
+
+    // لو ما تم تمرير borderColor مخصص، منسيب border/enabledBorder فاضيين
+    // (null) عشان يجيبوا الافتراضي من AppTheme.inputDecorationTheme —
+    // هيك أي تعديل مستقبلي عالثيم بينعكس تلقائيًا هون بدون تغيير الـ widget.
+    final OutlineInputBorder? customBorder = widget.borderColor != null
+        ? OutlineInputBorder(
+            borderRadius: BorderRadius.circular(AppRadius.md),
+            borderSide: BorderSide(
+              color: widget.borderColor!,
+              width: AppBorders.regular,
+            ),
+          )
+        : null;
 
     return Column(
+      crossAxisAlignment: widget.textAlign == TextAlign.center
+          ? CrossAxisAlignment.center
+          : CrossAxisAlignment.start,
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: widget.textAlign == TextAlign.center
+              ? MainAxisAlignment.center
+              : MainAxisAlignment.start,
           children: [
             Text(
               widget.title,
+              textAlign: widget.textAlign,
               style: AppTextStyles.bodyM.copyWith(color: textSecondaryColor),
             ),
           ],
@@ -82,39 +111,17 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
           keyboardType: widget.keyboardType,
           validator: widget.validator,
           autovalidateMode: widget.autovalidateMode,
-          textAlign: TextAlign.right,
+          textAlign: widget.textAlign,
+          inputFormatters: widget.inputFormatters,
           decoration: InputDecoration(
-            hintStyle: AppTextStyles.bodyM.copyWith(color: textSecondaryColor),
             helperText: widget.helperText,
-            helperMaxLines: 2,
-            helperStyle: AppTextStyles.bodyS.copyWith(
-              color: textSecondaryColor,
-            ),
-            filled: true,
-            fillColor: widget.fillColor ?? context.appColors.bgSubtle,
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.mdLg,
-              vertical: AppSpacing.xl,
-            ),
+            fillColor: widget.fillColor,
             suffixIcon: widget.suffixIcon,
             prefixIcon: effectivePrefixIcon,
             labelText: widget.label,
             hintText: widget.hintText,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppRadius.md),
-              borderSide: BorderSide(color: borderColor),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppRadius.md),
-              borderSide: BorderSide(color: borderColor),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppRadius.md),
-              borderSide: BorderSide(
-                color: colorScheme.primary,
-                width: AppBorders.regular,
-              ),
-            ),
+            border: customBorder,
+            enabledBorder: customBorder,
           ),
         ),
       ],

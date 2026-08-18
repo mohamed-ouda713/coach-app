@@ -1,35 +1,50 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:glow_up/core/constants/app_radius.dart';
-import 'package:glow_up/core/constants/app_spacing.dart';
 
 class CustomIconButton extends StatelessWidget {
   const CustomIconButton({
     super.key,
     required this.icon,
     this.onPressed,
-     this.color,
-     this.iconColor,
+    this.color,
+    this.iconColor,
+    this.size = 40.0,
+    this.iconSize = 20.0,
   });
+
   final IconData icon;
   final void Function()? onPressed;
   final Color? color;
   final Color? iconColor;
+  final double size;
+  final double iconSize;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final effectiveColor = color ?? theme.colorScheme.surfaceContainerHigh;
     final effectiveIconColor = iconColor ?? theme.colorScheme.onSurface;
-    return Ink(
-      decoration: BoxDecoration(
-        color: effectiveColor,
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onPressed,
         borderRadius: BorderRadius.circular(AppRadius.md),
-      ),
-      child: IconButton(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        constraints: const BoxConstraints(),
-        onPressed: onPressed,
-        icon: Icon(icon, color: effectiveIconColor),
+        child: Ink(
+          width: size,
+          height: size,
+          decoration: BoxDecoration(
+            color: effectiveColor,
+            borderRadius: BorderRadius.circular(AppRadius.md),
+          ),
+          child: Center(
+            child: Icon(
+              icon,
+              size: iconSize,
+              color: effectiveIconColor,
+            ),
+          ),
+        ),
       ),
     );
   }

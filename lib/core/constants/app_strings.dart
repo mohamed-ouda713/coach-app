@@ -184,4 +184,36 @@ class AppStrings {
   static const String forgotPasswordOpenEmailCta = 'فتح البريد الإلكتروني';
   static const String forgotPasswordDidNotReceiveEmail = 'لم تصلك الرسالة؟';
   static const String forgotPasswordResend = 'إعادة الإرسال';
+
+  // ── Subscribers — فورم إضافة/تعديل عميلة (F7 / F9) ─────────
+  // نصوص التحقق (Validation) الخاصة بحقول الفورم
+  static const String subscriberNameRequired = 'يرجى إدخال اسم العميلة';
+  static const String subscriberNameTooShort =
+      'الاسم يجب أن يحتوي على 3 حروف على الأقل';
+  static const String subscriberNameInvalidChars =
+      'الاسم يحتوي على رموز غير مسموح بها';
+  static const String fieldRequiredShort = 'مطلوب';
+  static const String ageInvalid = 'عمر غير منطقي';
+  static const String heightInvalid = 'طول غير منطقي';
+  static const String weightInvalid = 'وزن غير منطقي';
+  static const String feeRequired = 'يرجى إدخال المبلغ';
+  static const String feeInvalid = 'مبلغ غير صالح';
+  static const String noteTooLong =
+      'الملاحظة طويلة جداً (يجب ألا تتجاوز 60 حرف)';
+  static const String ageUnitYear = 'سنة';
+
+  static const String subscriptionDatesRequired =
+      'يرجى اختيار تاريخ البدء والانتهاء';
+  static const String subscriptionDateOrderInvalid =
+      'تاريخ الانتهاء يجب أن يكون بعد تاريخ البدء';
+
+  // رسائل نجاح/تأكيد
+  static const String addSubscriberSuccessMessage = 'تمت إضافة العميلة بنجاح';
+  static const String editSubscriberSuccessMessage = 'تم حفظ التعديلات بنجاح';
+  static const String deleteSubscriberConfirmMessage =
+      'هل أنتِ متأكدة من حذف هذه العميلة؟ لا يمكن التراجع عن هذا الإجراء.';
+
+  // قائمة العملاء وشاشة التعديل
+  static const String noMatchingClients = 'لا يوجد عملاء مطابقين';
+  static const String loadSubscriberError = 'تعذر تحميل بيانات العميلة';
 }

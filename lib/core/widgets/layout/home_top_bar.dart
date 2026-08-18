@@ -88,10 +88,10 @@ class HomeTopBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
                 const SizedBox(width: AppSpacing.smMd),
                 _TopBarActionButton(
-                  icon: Icons.notifications_none_rounded,
+                  icon: Icons.notifications,
                   tooltip: AppStrings.homeNotificationsTooltip,
                   backgroundColor: context.appColors.bgSubtle,
-                  iconColor: colorScheme.onSurface,
+                  iconColor: colorScheme.onSurface.withOpacity(0.5),
                   onTap: onNotificationsTap,
                   showBadge: hasUnreadNotifications,
                 ),
@@ -146,9 +146,9 @@ class _TopBarActionButton extends StatelessWidget {
               ),
             ),
             if (showBadge)
-              Positioned(
+              PositionedDirectional(
                 top: AppSpacing.sm,
-                right: AppSpacing.sm,
+                end: AppSpacing.sm,
                 child: Container(
                   width: _badgeSize,
                   height: _badgeSize,

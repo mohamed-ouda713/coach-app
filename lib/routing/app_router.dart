@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:glow_up/core/screens/home_page.dart';
 import 'package:glow_up/core/screens/profile_screen.dart';
 import 'package:glow_up/features/auth/screens/login/login_screen.dart';
 import 'package:glow_up/features/auth/screens/signup/signup_screen.dart';
+import 'package:glow_up/features/subscribers/cubit/subscriber_cubit.dart';
+import 'package:glow_up/features/subscribers/data/subscriber_repository.dart';
+import 'package:glow_up/features/subscribers/screens/add_subscriber_screen.dart';
+import 'package:glow_up/features/subscribers/screens/client_profile_screen.dart';
+import 'package:glow_up/features/subscribers/screens/edit_subscriber_screen.dart';
+import 'package:glow_up/features/subscribers/screens/subscribers_list_screen.dart';
 import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../features/auth/cubit/auth_cubit.dart';
 import '../features/auth/cubit/auth_state.dart';
@@ -21,8 +29,10 @@ class AppRoutes {
   static const passwordResetSent = '/forgot-password/sent';
   static const home = '/home';
   static const profile = '/home/profile';
-  // static const clientsList = '/clients';
-  // static const clientProfile = '/clients/:id';
+  static const clientsList = '/clients';
+  static const clientProfile = '/clients/:id';
+  static const addSubscriber = '/clients/add';
+  static const editSubscriber = '/clients/:id/edit';
 }
 
 final _authRoutes = {
@@ -77,24 +87,53 @@ GoRouter buildAppRouter(AuthCubit authCubit) {
             (context, state) =>
                 PasswordResetSentScreen(email: state.extra as String? ?? ''),
       ),
-      // GoRoute(
-      //   path: AppRoutes.clientsList,
-      //   builder: (context, state) => const ClientsListScreen(),
-      // ),
-      // GoRoute(
-      //   path: AppRoutes.clientProfile,
-      //   builder: (context, state) {
-      //     final clientId = state.pathParameters['id']!;
-      //     return ClientProfileScreen(clientId: clientId);
-      //   },
-      // ),
-      GoRoute(
-        path: AppRoutes.home,
-        builder: (context, state) => const HomePage(),
-      ),
       GoRoute(
         path: AppRoutes.profile,
         builder: (context, state) => const ProfileScreen(),
+      ),
+
+      // كل مسارات فيتشر Subscribers مغلّفة بـ SubscriberCubit واحد
+      // مشترك بينها — بيتخلق أول مرة تُفتح فيها أي شاشة منهم، وينحذف
+      // تلقائيًا لما نطلع منهم كلهم (بدل Cubit عالمي بـ main.dart عايش
+      // طول عمر التطبيق حتى لو المدربة ما فتحت تبويب العميلات أبدًا).
+      ShellRoute(
+        builder: (context, state, child) {
+          return BlocProvider(
+            create:
+                (_) => SubscriberCubit(
+                  SubscriberRepository(Supabase.instance.client),
+                ),
+            child: child,
+          );
+        },
+        routes: [
+          GoRoute(
+            path: AppRoutes.home,
+            builder: (context, state) => const HomePage(),
+          ),
+          GoRoute(
+            path: AppRoutes.clientsList,
+            builder: (context, state) => const SubscribersListScreen(),
+          ),
+          GoRoute(
+            path: AppRoutes.addSubscriber,
+            builder: (context, state) => const AddSubscriberScreen(),
+          ),
+          GoRoute(
+            path: AppRoutes.editSubscriber,
+            builder: (context, state) {
+              final id = state.pathParameters['id']!;
+              return EditSubscriberScreen(subscriberId: id);
+            },
+          ),
+          GoRoute(
+            path: AppRoutes.clientProfile,
+            builder: (context, state) {
+              final clientId = state.pathParameters['id']!;
+              return ClientProfileScreen(clientId: clientId);
+            },
+          ),
+        ],
       ),
     ],
   );
