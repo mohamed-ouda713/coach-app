@@ -216,4 +216,37 @@ class AppStrings {
   // قائمة العملاء وشاشة التعديل
   static const String noMatchingClients = 'لا يوجد عملاء مطابقين';
   static const String loadSubscriberError = 'تعذر تحميل بيانات العميلة';
+
+  
+  // نصوص فورم "مصروف جديد"
+  static const String financeAddExpenseTitle = 'مصروف جديد';
+  static const String financeExpenseDescriptionLabel = 'الوصف';
+  static const String financeExpenseDescriptionHint = 'مثال: إيجار الصالة';
+  static const String financeDateLabel = 'التاريخ';
+  static const String financeAddExpenseCta = 'إضافة المصروف';
+  static const String financeExpenseDescriptionRequired =
+      'يرجى إدخال وصف المصروف';
+  static const String financeDateRequired = 'يرجى اختيار التاريخ';
+  static const String financeExpenseAddedMessage = 'تمت إضافة المصروف بنجاح';
+  static const String financeNoExpensesMessage = 'لا يوجد مصروفات هذا الشهر';
+
+  // نصوص فورم "طرف جديد" / تعديل طرف
+  static const String financeAddPartnerTitle = 'طرف جديد';
+  static const String financeEditPartnerTitle = 'تعديل الطرف';
+  static const String financePartnerNameLabel = 'الاسم';
+  static const String financePartnerNameRequired = 'يرجى إدخال الاسم';
+  static const String financeSharePercentageLabel = 'نسبة الحصة (%)';
+  static const String financeSharePercentageRequired = 'يرجى إدخال النسبة';
+  static const String financeSharePercentageInvalid =
+      'النسبة يجب أن تكون بين 0 و100';
+  static const String financePartnerSavedMessage = 'تم الحفظ بنجاح';
+  static const String financeNoPartnersMessage = 'لا يوجد شركاء بعد';
+
+  // نصوص تأكيد السحب
+  static const String financeWithdrawConfirmTitle = 'تأكيد السحب';
+  static const String financeWithdrawConfirmMessageTemplate =
+      'هل أنتِ متأكدة من سحب رصيد {name} بالكامل ({amount} ريال)؟';
+  static const String financeWithdrawSuccessMessage = 'تم سحب الرصيد بنجاح';
+  static const String financeNoBalanceToWithdraw = 'لا يوجد رصيد للسحب حالياً';
+
 }
