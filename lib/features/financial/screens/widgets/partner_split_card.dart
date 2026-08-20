@@ -31,13 +31,14 @@ class PartnerSplitCard extends StatelessWidget {
   final Color accentColor;
   final Color accentBackgroundColor;
   final VoidCallback onEdit;
-  final VoidCallback onWithdraw;
+   // كانت: required this.onWithdraw
+  final VoidCallback? onWithdraw;
 
-  /// حساب رصيد الشريك الحالي = (رصيده المسجل/التراكمي) + (حصة الشريك من صافي ربح الشهر)
+   /// رصيد الشريك = صافي الربح الشهري × نسبته. مافي رصيد مخزّن أو
+  /// متراكم — هاد المصدر الوحيد للرقم بكل الشاشة.
   double get _calculatedBalance {
-    final monthlyShare =
-        (netProfit > 0 ? netProfit : 0.0) * (partner.sharePercentage / 100);
-    return partner.balance + monthlyShare;
+    if (netProfit <= 0) return 0;
+    return netProfit * (partner.sharePercentage / 100);
   }
 
   @override
@@ -99,11 +100,12 @@ class PartnerSplitCard extends StatelessWidget {
 class _WithdrawButton extends StatelessWidget {
   const _WithdrawButton({required this.onTap});
 
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     final appColors = context.appColors;
+    final isEnabled = onTap != null;
 
     return InkWell(
       onTap: onTap,
@@ -119,7 +121,11 @@ class _WithdrawButton extends StatelessWidget {
         ),
         child: Text(
           AppStrings.financeWithdraw,
-          style: AppTextStyles.buttonS.copyWith(color: appColors.textSecondary),
+          style: AppTextStyles.buttonS.copyWith(
+            color: isEnabled
+                ? appColors.textSecondary
+                : appColors.textSecondary.withOpacity(0.4),
+          ),
         ),
       ),
     );

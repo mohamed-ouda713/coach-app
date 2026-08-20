@@ -46,7 +46,9 @@ class FinancialRepository {
   }
 
   /// الدخل الشهري = مجموع رسوم اشتراكات العميلات يلي تاريخ بدء
-  /// اشتراكهم وقع بنفس الشهر المحدّد.
+  /// اشتراكهم وقع بنفس الشهر المحدّد. (مؤكَّد — هاد التعريف المقصود،
+  /// مش bug: الاشتراك السنوي بيدخل كامل بشهر واحد، والتجديدات ما
+  /// بتنعد.)
   Future<double> getMonthlyIncome(DateTime month) async {
     final start = DateTime(month.year, month.month, 1);
     final end = DateTime(month.year, month.month + 1, 1);
@@ -111,7 +113,6 @@ class FinancialRepository {
       SupabaseColumns.trainerId: _currentTrainerId,
       SupabaseColumns.name: name,
       SupabaseColumns.sharePercentage: sharePercentage,
-      SupabaseColumns.balance: 0,
     };
 
     final response = await _client
@@ -142,16 +143,6 @@ class FinancialRepository {
     return PartnerModel.fromJson(response);
   }
 
-  /// بتصفّر رصيد الشريك (سحب كامل الرصيد).
-  Future<PartnerModel> withdrawPartnerBalance(String id) async {
-    final response = await _client
-        .from(SupabaseTables.partners)
-        .update({SupabaseColumns.balance: 0})
-        .eq(SupabaseColumns.id, id)
-        .eq(SupabaseColumns.trainerId, _currentTrainerId)
-        .select()
-        .single();
-
-    return PartnerModel.fromJson(response);
-  }
+  // withdrawPartnerBalance اتشالت — سلوك السحب لسا مش محدد (بند 4).
+  // رح ترجع لما يوصل قرار واضح من زميلك.
 }

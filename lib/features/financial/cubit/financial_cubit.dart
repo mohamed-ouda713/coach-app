@@ -86,20 +86,14 @@ class FinancialCubit extends Cubit<FinancialState> {
     }, logTag: 'updatePartner');
   }
 
-  Future<String?> withdrawPartnerBalance(String partnerId) {
-    return _runMutation((current) async {
-      final updated = await _repository.withdrawPartnerBalance(partnerId);
-      return current.copyWith(
-        partners: _replacePartner(current.partners, updated),
-      );
-    }, logTag: 'withdrawPartnerBalance');
-  }
+  // withdrawPartnerBalance اتشالت — سلوك السحب لسا مش محدد (بند 4).
+  // رح ترجع لما يوصل قرار واضح من زميلك.
 
-  /// نمط موحّد لأي "إجراء سريع" (إضافة/تعديل/سحب): يعلّم isMutating،
+  /// نمط موحّد لأي "إجراء سريع" (إضافة/تعديل): يعلّم isMutating،
   /// ينفّذ [action] اللي بيرجع الحالة الجديدة المبنية على الحالة
   /// الحالية، وبيرجّع رسالة الخطأ (أو null لو نجح) عشان الشاشة تتصرف
   /// بدون ما تراقب الـ state مباشرة. أي دالة إجراء جديدة مستقبلًا
-  /// (حذف طرف مثلاً) بتضيف سطر واحد بس هون بدل تكرار try/catch كامل.
+  /// بتضيف سطر واحد بس هون بدل تكرار try/catch كامل.
   Future<String?> _runMutation(
     Future<FinancialLoaded> Function(FinancialLoaded current) action, {
     required String logTag,

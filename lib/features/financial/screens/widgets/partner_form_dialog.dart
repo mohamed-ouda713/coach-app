@@ -14,6 +14,7 @@ import 'package:glow_up/core/widgets/error_widgets/app_error_snackbar.dart';
 import 'package:glow_up/core/widgets/status/app_success_snackbar.dart';
 
 import '../../cubit/financial_cubit.dart';
+import '../../cubit/financial_state.dart';
 import '../../helper/financial_validators.dart';
 import '../../models/partner_model.dart';
 
@@ -60,6 +61,17 @@ class _PartnerFormDialogState extends State<PartnerFormDialog> {
     _nameController.dispose();
     _shareController.dispose();
     super.dispose();
+  }
+
+  /// مجموع نسب باقي الشركاء (بدون الشريك الحالي لو الديالوج بوضع
+  /// تعديل) — بنستخدمه كسقف عشان الشريك الحالي/الجديد ما يخلي
+  /// المجموع الكلي يتخطى 100%.
+  double get _othersTotal {
+    final state = context.read<FinancialCubit>().state;
+    if (state is! FinancialLoaded) return 0;
+    return state.partners
+        .where((p) => p.id != widget.initialPartner?.id)
+        .fold<double>(0, (sum, p) => sum + p.sharePercentage);
   }
 
   Future<void> _onSave() async {
@@ -136,7 +148,10 @@ class _PartnerFormDialogState extends State<PartnerFormDialog> {
                   FilteringTextInputFormatter.digitsOnly,
                   LengthLimitingTextInputFormatter(3),
                 ],
-                validator: FinancialValidators.sharePercentage,
+                validator: (value) => FinancialValidators.sharePercentage(
+                  value,
+                  othersTotal: _othersTotal,
+                ),
               ),
               const SizedBox(height: AppSpacing.xxl),
               PrimaryButton(

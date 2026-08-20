@@ -56,7 +56,6 @@ class SupabaseColumns {
   // ── Financial — partners (قسمة الربح) ─────────────────────
   static const String name = 'name';
   static const String sharePercentage = 'share_percentage';
-  static const String balance = 'balance';
 }
 
 /// أسماء الـ Storage Buckets

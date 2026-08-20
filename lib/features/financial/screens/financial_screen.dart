@@ -9,14 +9,10 @@ import 'package:glow_up/core/constants/app_strings.dart';
 import 'package:glow_up/core/theme/app_text_styles.dart';
 import 'package:glow_up/core/theme/context_extensions.dart';
 import 'package:glow_up/core/widgets/Buttons/Primary_Buttons/custom_icon_button.dart';
-import 'package:glow_up/core/widgets/error_widgets/app_error_dialog.dart';
-import 'package:glow_up/core/widgets/error_widgets/app_error_snackbar.dart';
 import 'package:glow_up/core/widgets/error_widgets/app_error_view.dart';
-import 'package:glow_up/core/widgets/status/app_success_snackbar.dart';
 
 import '../cubit/financial_cubit.dart';
 import '../cubit/financial_state.dart';
-import '../helper/finance_formatters.dart';
 import '../models/partner_model.dart';
 import 'widgets/add_expense_dialog.dart';
 import 'widgets/expense_list_tile.dart';
@@ -41,36 +37,6 @@ class _FinancialScreenState extends State<FinancialScreen> {
     context.read<FinancialCubit>().loadMonth();
   }
 
-  Future<void> _onWithdraw(BuildContext context, PartnerModel partner) async {
-    if (partner.balance <= 0) {
-      AppErrorSnackbar.show(context, AppStrings.financeNoBalanceToWithdraw);
-      return;
-    }
-
-    final confirmed = await AppErrorDialog.show(
-      context,
-      icon: Icons.account_balance_wallet_outlined,
-      title: AppStrings.financeWithdrawConfirmTitle,
-      message: AppStrings.financeWithdrawConfirmMessageTemplate
-          .replaceAll('{name}', partner.name)
-          .replaceAll('{amount}', FinanceFormatters.number(partner.balance)),
-      confirmLabel: AppStrings.financeWithdraw,
-      cancelLabel: AppStrings.dialogCancel,
-    );
-    if (confirmed != true) return;
-    if (!context.mounted) return;
-
-    final errorMessage =
-        await context.read<FinancialCubit>().withdrawPartnerBalance(partner.id);
-
-    if (!context.mounted) return;
-    if (errorMessage != null) {
-      AppErrorSnackbar.show(context, errorMessage);
-      return;
-    }
-    AppSuccessSnackbar.show(context, AppStrings.financeWithdrawSuccessMessage);
-  }
-
   @override
   Widget build(BuildContext context) {
     return ColoredBox(
@@ -87,10 +53,7 @@ class _FinancialScreenState extends State<FinancialScreen> {
                   message: message,
                   onRetry: () => context.read<FinancialCubit>().loadMonth(),
                 ),
-              FinancialLoaded() => _FinancialContent(
-                  state: state,
-                  onWithdraw: (partner) => _onWithdraw(context, partner),
-                ),
+              FinancialLoaded() => _FinancialContent(state: state),
             };
           },
         ),
@@ -100,10 +63,9 @@ class _FinancialScreenState extends State<FinancialScreen> {
 }
 
 class _FinancialContent extends StatelessWidget {
-  const _FinancialContent({required this.state, required this.onWithdraw});
+  const _FinancialContent({required this.state});
 
   final FinancialLoaded state;
-  final ValueChanged<PartnerModel> onWithdraw;
 
   @override
   Widget build(BuildContext context) {
@@ -193,7 +155,6 @@ class _FinancialContent extends StatelessWidget {
         _PartnersCard(
           partners: state.partners,
           netProfit: state.netProfit,
-          onWithdraw: onWithdraw,
         ),
       ],
     );
@@ -204,12 +165,10 @@ class _PartnersCard extends StatelessWidget {
   const _PartnersCard({
     required this.partners,
     required this.netProfit,
-    required this.onWithdraw,
   });
 
   final List<PartnerModel> partners;
   final double netProfit;
-  final ValueChanged<PartnerModel> onWithdraw;
 
   @override
   Widget build(BuildContext context) {
@@ -247,7 +206,10 @@ class _PartnersCard extends StatelessWidget {
                     i == 0 ? appColors.primarySoftBg : appColors.bgSubtle,
                 onEdit: () =>
                     PartnerFormDialog.show(context, partner: partners[i]),
-                onWithdraw: () => onWithdraw(partners[i]),
+                // سلوك السحب لسا مش محدد (بند 4) — الزر بيترسم
+                // بحالة معطّلة جوا PartnerSplitCard لما onWithdraw تكون
+                // null.
+                onWithdraw: null,
               ),
               if (i != partners.length - 1) ...[
                 const SizedBox(height: AppSpacing.lg),

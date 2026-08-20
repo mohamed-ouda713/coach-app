@@ -25,12 +25,20 @@ abstract class FinancialValidators {
     return null;
   }
 
-  static String? sharePercentage(String? value) {
+  /// [othersTotal] = مجموع نسب باقي الشركاء (بدون الشريك الحالي لو
+  /// بحالة تعديل). لازم يوصل من الطرف المستدعي (partner_form_dialog).
+  static String? sharePercentage(
+    String? value, {
+    required double othersTotal,
+  }) {
     final trimmed = value?.trim() ?? '';
     if (trimmed.isEmpty) return AppStrings.financeSharePercentageRequired;
     final share = double.tryParse(trimmed);
     if (share == null || share < 0 || share > 100) {
       return AppStrings.financeSharePercentageInvalid;
+    }
+    if (othersTotal + share > 100) {
+      return AppStrings.financeSharePercentageSumExceeded;
     }
     return null;
   }

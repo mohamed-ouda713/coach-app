@@ -248,5 +248,7 @@ class AppStrings {
       'هل أنتِ متأكدة من سحب رصيد {name} بالكامل ({amount} ريال)؟';
   static const String financeWithdrawSuccessMessage = 'تم سحب الرصيد بنجاح';
   static const String financeNoBalanceToWithdraw = 'لا يوجد رصيد للسحب حالياً';
+  static const String financeSharePercentageSumExceeded =
+    'مجموع نسب الشركاء ما بيقدر يتخطى 100%';
 
 }
