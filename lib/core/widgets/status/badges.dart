@@ -170,3 +170,30 @@ class MeasurementDeltaBadge extends StatelessWidget {
     );
   }
 }
+
+/// شارة صغيرة توضح نسبة حصة طرف بقسمة الربح (Financial feature).
+class SharePercentageBadge extends StatelessWidget {
+  const SharePercentageBadge({
+    super.key,
+    required this.percentage,
+    required this.background,
+    required this.foreground,
+  });
+
+  final double percentage;
+  final Color background;
+  final Color foreground;
+
+  @override
+  Widget build(BuildContext context) {
+    return _Badge(
+      label: '${percentage.toStringAsFixed(0)}%',
+      background: background,
+      foreground: foreground,
+      textStyle: AppTextStyles.tiny.copyWith(
+        color: foreground,
+        fontWeight: FontWeight.w700,
+      ),
+    );
+  }
+}

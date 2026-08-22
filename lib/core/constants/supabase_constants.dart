@@ -16,6 +16,7 @@ class SupabaseTables {
   static const String subscribers = 'subscribers';
   static const String measurements = 'measurements';
   static const String expenses = 'expenses';
+  static const String partners = 'partners';
   static const String notifications = 'notifications';
 }
 
@@ -51,6 +52,10 @@ class SupabaseColumns {
   static const String message = 'message';
   static const String isRead = 'is_read';
   static const String createdAt = 'created_at';
+
+  // ── Financial — partners (قسمة الربح) ─────────────────────
+  static const String name = 'name';
+  static const String sharePercentage = 'share_percentage';
 }
 
 /// أسماء الـ Storage Buckets

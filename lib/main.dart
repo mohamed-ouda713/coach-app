@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:glow_up/features/financial/cubit/financial_cubit.dart';
+import 'package:glow_up/features/financial/data/financial_repository.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -18,7 +20,8 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await dotenv.load(fileName: 'assets/.env');
-  await initializeDateFormatting('ar');
+  
+ await initializeDateFormatting('ar'); 
 
   await Supabase.initialize(
     url: SupabaseConfig.url,
@@ -35,17 +38,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final supabaseClient = Supabase.instance.client;
 
-    // ملاحظة: SubscriberCubit عمداً مش هون — تم نقلها لـ ShellRoute
-    // بـ routing/app_router.dart لأنها بتُستخدم بفيتشر Subscribers بس،
-    // فمش لازم تتخلق وتعيش طول عمر التطبيق من قبل ما تسجّل المدربة
-    // دخول حتى.
     return MultiBlocProvider(
       providers: [
+        BlocProvider(create: (_) => AuthCubit(AuthRepository(supabaseClient))),
         BlocProvider(
-          create: (_) => AuthCubit(AuthRepository(supabaseClient)),
-        ), //       BlocProvider(create: (_) => FinancialCubit(FinancialRepository(supabaseClient)),),
+          create: (_) => FinancialCubit(FinancialRepository(supabaseClient)),
+        ),
       ],
-
       child: Builder(
         builder: (context) {
           final authCubit = context.read<AuthCubit>();
