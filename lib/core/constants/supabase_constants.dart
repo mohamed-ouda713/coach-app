@@ -24,6 +24,7 @@ class SupabaseColumns {
   SupabaseColumns._();
 
   static const String id = 'id';
+  static const String fcmToken = 'fcm_token';
   static const String trainerId = 'trainer_id';
   static const String subscriberId = 'subscriber_id';
   static const String fullName = 'full_name';
@@ -48,6 +49,7 @@ class SupabaseColumns {
   static const String description = 'description';
   static const String date = 'date';
   static const String type = 'type';
+  static const String title = 'title';
   static const String message = 'message';
   static const String isRead = 'is_read';
   static const String createdAt = 'created_at';
@@ -64,4 +66,15 @@ class SupabaseBuckets {
 /// أسماء الـ RPC Functions (لسا مفيش عنا حاليًا)
 class SupabaseFunctions {
   SupabaseFunctions._();
+}
+
+/// قيم عمود `type` بجدول notifications — لازم تطابق يلي بتكتبه
+/// الـ edge function (supabase/functions/send-notifications).
+class NotificationTypeValues {
+  NotificationTypeValues._();
+
+  static const String subscriptionExpiry = 'subscription_expiry';
+  static const String overdueMeasurement = 'overdue_measurement';
+  static const String newProgramNeeded = 'new_program_needed';
+  static const String progressUpdate = 'progress_update';
 }

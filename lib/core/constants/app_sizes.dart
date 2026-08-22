@@ -37,4 +37,6 @@ class AppSizes {
   static const double avatarSm = 46;
   static const double avatarMd = 66;
   static const double avatarLogo = 84;
+
+  static const double splashLogo = 180;
 }

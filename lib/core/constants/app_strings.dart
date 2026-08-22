@@ -27,6 +27,8 @@ class AppStrings {
       _t('الإشعارات', 'Notifications');
   static String get logoutCta => _t('تسجيل الخروج', 'Log out');
   static String get comingSoon => _t('قريباً', 'Coming soon');
+  static String get checkingSession =>
+      _t('جاري التحقق من الجلسة...', 'Checking session...');
 
   static String get profileTitle => _t('الملف الشخصي', 'Profile');
   static String get profileFullNameLabel => _t('الاسم الكامل', 'Full name');
@@ -131,6 +133,47 @@ class AppStrings {
   // ── F4 — الإشعارات ─────────────────────────────────────────
   static String get notificationsMarkAllRead =>
       _t('قراءة الكل', 'Mark all read');
+  static String get notificationsMarkAsRead =>
+      _t('تحديد كمقروء', 'Mark as read');
+  static String get notificationsUnreadSection => _t('غير مقروءة', 'Unread');
+  static String get notificationsReadSection => _t('مقروءة', 'Read');
+  static String get notificationsEmpty =>
+      _t('لا توجد إشعارات حالياً', 'No notifications yet');
+  static String get notificationsChannelName =>
+      _t('إشعارات هامة', 'Important notifications');
+  static String get notificationsChannelDescription => _t(
+    'إشعارات الاشتراكات والتنبيهات الهامة',
+    'Subscription and other important alerts',
+  );
+  static String get notificationsToday => _t('اليوم', 'Today');
+  static String get notificationsYesterday => _t('أمس', 'Yesterday');
+
+  static String get notificationFallbackTitle =>
+      _t('إشعار جديد', 'New notification');
+  static String get notificationSubscriptionExpiryTitle =>
+      _t('اشتراكك على وشك الانتهاء', 'Your subscription is ending soon');
+  static String get notificationSubscriptionExpiryBody => _t(
+    'تبقى 1 يوم فقط على انتهاء اشتراكك الحالي.',
+    'Only 1 day left on your current subscription.',
+  );
+  static String get notificationOverdueMeasurementTitle =>
+      _t('تأخر قياساتك', 'Your measurements are overdue');
+  static String get notificationOverdueMeasurementBody => _t(
+    'لم يتم تسجيل قياساتك خلال المدة المحددة.',
+    'No measurements were recorded within the expected period.',
+  );
+  static String get notificationNewProgramNeededTitle =>
+      _t('تحتاج إلى برنامج تدريبي جديد', 'You need a new training program');
+  static String get notificationNewProgramNeededBody => _t(
+    'مر أكثر من 28 يوم على برنامجك الحالي، ويجب مراجعة خطة جديدة.',
+    'Your current program is over 28 days old and should be reviewed.',
+  );
+
+  static String get notificationTypeGeneral => _t('عام', 'General');
+  static String get notificationTypeSubscription => _t('اشتراك', 'Subscription');
+  static String get notificationTypeMeasurements => _t('قياسات', 'Measurements');
+  static String get notificationTypeProgram => _t('برنامج', 'Program');
+  static String get notificationTypeProgress => _t('تقدم', 'Progress');
   // أمثلة نصوص إشعارات فعلية (تبقى Templates بتتبني ديناميك من الباك إند)
   static String get notificationSubscriptionEndingTemplate => _t(
     'اشتراك {name} ينتهي خلال {days} أيام',

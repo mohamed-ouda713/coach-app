@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "906068235960",
+    "project_id": "coach-app-60f2c",
+    "storage_bucket": "coach-app-60f2c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:906068235960:android:d1147ec79d9dbb65b7c64d",
+        "android_client_info": {
+          "package_name": "com.glowup.glow_up"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOFk2cw1iKMc0qWIIQuSFlaH0xNUNJp6Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:glow_up/core/screens/home_page.dart';
 import 'package:glow_up/core/screens/profile_screen.dart';
+import 'package:glow_up/core/screens/splash_screen.dart';
 import 'package:glow_up/features/auth/screens/login/login_screen.dart';
 import 'package:glow_up/features/auth/screens/signup/signup_screen.dart';
+import 'package:glow_up/features/notifications/screens/notifications_screen.dart';
 import 'package:glow_up/features/subscribers/screens/add_subscriber_screen.dart';
 import 'package:glow_up/features/subscribers/screens/client_profile_screen.dart';
 import 'package:glow_up/features/subscribers/screens/edit_subscriber_screen.dart';
@@ -26,6 +28,7 @@ import 'go_router_refresh_stream.dart';
 class AppRoutes {
   AppRoutes._();
 
+  static const splash = '/';
   static const login = '/login';
   static const signup = '/signup';
   static const forgotPassword = '/forgot-password';
@@ -33,8 +36,10 @@ class AppRoutes {
   static const resetPassword = '/reset-password';
   static const home = '/home';
   static const profile = '/home/profile';
+  static const notifications = '/notifications';
   static const clientsList = '/clients';
   static const clientProfile = '/clients/:id';
+  static String clientProfilePath(String id) => '/clients/$id';
   static const addSubscriber = '/clients/add';
   static const editSubscriber = '/clients/:id/edit';
   static const addMeasurement = '/subscribers/:subscriberId/measurements/add';
@@ -59,9 +64,13 @@ String? _redirect(
   AuthCubit authCubit,
 ) {
   final authState = authCubit.state;
+  final isOnSplash = state.matchedLocation == AppRoutes.splash;
 
-  // لسا ما تحقّقنا من حالة الجلسة (أول لحظة فتح التطبيق) — لا تعيد التوجيه لحد ما نعرف.
-  if (authState is AuthInitial) return null;
+  // لسا ما تحقّقنا من حالة الجلسة (أول لحظة فتح التطبيق) — خليه على شاشة
+  // التحقق لحد ما نعرف، بدل ما تومض شاشة تسجيل الدخول وبعدين ينط للرئيسية.
+  if (authState is AuthInitial) {
+    return isOnSplash ? null : AppRoutes.splash;
+  }
 
   // فتح رابط استعادة كلمة المرور — حوّلها لشاشة تعيين كلمة مرور جديدة
   // بغض النظر وين كانت واقفة، ومنعها من الرجوع لأي شاشة تانية لحد ما تكمل.
@@ -74,8 +83,8 @@ String? _redirect(
   final isAuthenticated = authState is AuthAuthenticated;
   final isOnAuthRoute = _authRoutes.contains(state.matchedLocation);
 
-  if (!isAuthenticated && !isOnAuthRoute) return AppRoutes.login;
-  if (isAuthenticated && isOnAuthRoute) return AppRoutes.home;
+  if (!isAuthenticated && (isOnSplash || !isOnAuthRoute)) return AppRoutes.login;
+  if (isAuthenticated && (isOnSplash || isOnAuthRoute)) return AppRoutes.home;
 
   return null;
 }
@@ -84,10 +93,14 @@ String? _redirect(
 /// كل ما تتغير (دخول/خروج/انتهاء صلاحية التوكن).
 GoRouter buildAppRouter(AuthCubit authCubit) {
   return GoRouter(
-    initialLocation: AppRoutes.login,
+    initialLocation: AppRoutes.splash,
     refreshListenable: GoRouterRefreshStream(authCubit.stream),
     redirect: (context, state) => _redirect(context, state, authCubit),
     routes: [
+      GoRoute(
+        path: AppRoutes.splash,
+        builder: (context, state) => const SplashScreen(),
+      ),
       GoRoute(
         path: AppRoutes.login,
         builder: (context, state) => const LoginScreen(),
@@ -140,6 +153,10 @@ GoRouter buildAppRouter(AuthCubit authCubit) {
       GoRoute(
         path: AppRoutes.profile,
         builder: (context, state) => const ProfileScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.notifications,
+        builder: (context, state) => const NotificationsScreen(),
       ),
       GoRoute(
         path: AppRoutes.addMeasurement,
