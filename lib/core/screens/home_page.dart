@@ -16,6 +16,7 @@ import 'package:glow_up/features/financial/screens/financial_screen.dart';
 import 'package:glow_up/features/financial/screens/widgets/add_expense_dialog.dart';
 import 'package:glow_up/features/measurements/screens/measurements_client_picker_screen.dart';
 import 'package:glow_up/features/notifications/cubit/notification_cubit.dart';
+import 'package:glow_up/features/notifications/cubit/notification_state.dart';
 import 'package:glow_up/features/notifications/data/notification_repository.dart';
 import 'package:glow_up/features/notifications/screens/notifications_screen.dart';
 import 'package:glow_up/features/subscribers/screens/subscribers_list_screen.dart';
@@ -86,18 +87,27 @@ class _HomePageState extends State<HomePage> {
               (fullName != null && fullName.trim().isNotEmpty)
                   ? fullName.trim()
                   : AppStrings.appName;
-          return HomeTopBar(
-            userName: userName,
-            onProfileTap: () => context.push(AppRoutes.profile),
-            onAddTap: () {
-              if (_currentIndex == 1) {
-                context.push(AppRoutes.addMeasurementPickClient);
-              } else {
-                context.push(AppRoutes.addSubscriber);
-              }
+          return BlocBuilder<NotificationCubit, NotificationState>(
+            builder: (context, notificationState) {
+              final unreadCount =
+                  notificationState is NotificationLoaded
+                      ? notificationState.unreadCount
+                      : 0;
+              return HomeTopBar(
+                userName: userName,
+                onProfileTap: () => context.push(AppRoutes.profile),
+                onAddTap: () {
+                  if (_currentIndex == 1) {
+                    context.push(AppRoutes.addMeasurementPickClient);
+                  } else {
+                    context.push(AppRoutes.addSubscriber);
+                  }
+                },
+                onNotificationsTap:
+                    () => _onTabSelected(context, _notificationsTabIndex),
+                unreadNotificationsCount: unreadCount,
+              );
             },
-            onNotificationsTap:
-                () => _onTabSelected(context, _notificationsTabIndex),
           );
         },
       ),

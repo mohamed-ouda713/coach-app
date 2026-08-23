@@ -16,14 +16,14 @@ class HomeTopBar extends StatelessWidget implements PreferredSizeWidget {
     this.onProfileTap,
     this.onAddTap,
     this.onNotificationsTap,
-    this.hasUnreadNotifications = false,
+    this.unreadNotificationsCount = 0,
   });
 
   final String userName;
   final VoidCallback? onProfileTap;
   final VoidCallback? onAddTap;
   final VoidCallback? onNotificationsTap;
-  final bool hasUnreadNotifications;
+  final int unreadNotificationsCount;
 
   static const double height = 84;
 
@@ -93,7 +93,7 @@ class HomeTopBar extends StatelessWidget implements PreferredSizeWidget {
                   backgroundColor: context.appColors.bgSubtle,
                   iconColor: colorScheme.onSurface.withOpacity(0.5),
                   onTap: onNotificationsTap,
-                  showBadge: hasUnreadNotifications,
+                  badgeCount: unreadNotificationsCount,
                 ),
               ],
             ),
@@ -111,7 +111,7 @@ class _TopBarActionButton extends StatelessWidget {
     required this.backgroundColor,
     required this.iconColor,
     this.onTap,
-    this.showBadge = false,
+    this.badgeCount = 0,
   });
 
   final IconData icon;
@@ -119,10 +119,11 @@ class _TopBarActionButton extends StatelessWidget {
   final Color backgroundColor;
   final Color iconColor;
   final VoidCallback? onTap;
-  final bool showBadge;
+  final int badgeCount;
 
   static const double _size = AppSizes.inputHeightSm;
-  static const double _badgeSize = 10;
+  static const double _badgeSize = 18;
+  static const int _badgeMaxCount = 99;
 
   @override
   Widget build(BuildContext context) {
@@ -145,19 +146,36 @@ class _TopBarActionButton extends StatelessWidget {
                 ),
               ),
             ),
-            if (showBadge)
+            if (badgeCount > 0)
               PositionedDirectional(
-                top: AppSpacing.sm,
-                end: AppSpacing.sm,
+                top: -4,
+                end: -4,
                 child: Container(
-                  width: _badgeSize,
-                  height: _badgeSize,
+                  constraints: const BoxConstraints(
+                    minWidth: _badgeSize,
+                    minHeight: _badgeSize,
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.xs,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColors.primary,
-                    shape: BoxShape.circle,
+                    borderRadius: BorderRadius.circular(_badgeSize),
                     border: Border.all(
                       color: Theme.of(context).colorScheme.surface,
                       width: 2,
+                    ),
+                  ),
+                  child: Center(
+                    child: Text(
+                      badgeCount > _badgeMaxCount
+                          ? '$_badgeMaxCount+'
+                          : '$badgeCount',
+                      textAlign: TextAlign.center,
+                      style: AppTextStyles.tinyBold.copyWith(
+                        color: AppColors.white,
+                        height: 1,
+                      ),
                     ),
                   ),
                 ),
