@@ -19,10 +19,15 @@ import '../../subscribers/models/subscriber_model.dart';
 import '../../subscribers/widgets/client_picker_field.dart';
 import '../cubit/measurements_cubit.dart';
 import '../cubit/measurements_state.dart';
+import '../helper/measurement_validators.dart';
 import '../models/measurement.dart';
 
 class AddMeasurementScreen extends StatefulWidget {
-  const AddMeasurementScreen({super.key, this.subscriberId, this.subscriberName});
+  const AddMeasurementScreen({
+    super.key,
+    this.subscriberId,
+    this.subscriberName,
+  });
 
   final String? subscriberId;
 
@@ -33,6 +38,8 @@ class AddMeasurementScreen extends StatefulWidget {
 }
 
 class _AddMeasurementScreenState extends State<AddMeasurementScreen> {
+  final _formKey = GlobalKey<FormState>();
+
   final _weightController = TextEditingController();
   final _waistController = TextEditingController();
   final _abdomenController = TextEditingController();
@@ -42,9 +49,12 @@ class _AddMeasurementScreenState extends State<AddMeasurementScreen> {
   File? _photoAfter;
   SubscriberModel? _selectedSubscriber;
 
+  bool _autovalidate = false;
+
   late DateTime _measurementMonth = _firstOfMonth(DateTime.now());
 
-  static DateTime _firstOfMonth(DateTime date) => DateTime(date.year, date.month);
+  static DateTime _firstOfMonth(DateTime date) =>
+      DateTime(date.year, date.month);
 
   @override
   void initState() {
@@ -80,6 +90,11 @@ class _AddMeasurementScreenState extends State<AddMeasurementScreen> {
   }
 
   void _save(BuildContext context) {
+    setState(() => _autovalidate = true);
+
+    final isFormValid = _formKey.currentState?.validate() ?? false;
+    if (!isFormValid) return;
+
     final subscriberId = widget.subscriberId ?? _selectedSubscriber?.id;
     if (subscriberId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -91,15 +106,15 @@ class _AddMeasurementScreenState extends State<AddMeasurementScreen> {
     final measurement = Measurement(
       subscriberId: subscriberId,
       measurementMonth: _measurementMonth,
-      weight: double.tryParse(_weightController.text) ?? 0,
-      waistSize: double.tryParse(_waistController.text) ?? 0,
-      abdomenSize: double.tryParse(_abdomenController.text) ?? 0,
+      weight: double.parse(_weightController.text.trim()),
+      waistSize: double.parse(_waistController.text.trim()),
+      abdomenSize: double.parse(_abdomenController.text.trim()),
     );
     context.read<MeasurementsCubit>().saveMeasurement(
-          measurement,
-          photoBefore: _photoBefore,
-          photoAfter: _photoAfter,
-        );
+      measurement,
+      photoBefore: _photoBefore,
+      photoAfter: _photoAfter,
+    );
   }
 
   @override
@@ -125,7 +140,9 @@ class _AddMeasurementScreenState extends State<AddMeasurementScreen> {
               extra: subscriberName,
             );
           } else if (state is MeasurementsError) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message)));
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(state.message)));
           }
         },
         builder: (context, state) {
@@ -133,93 +150,122 @@ class _AddMeasurementScreenState extends State<AddMeasurementScreen> {
 
           return SingleChildScrollView(
             padding: const EdgeInsets.all(AppSpacing.screenPadding),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                if (widget.subscriberId == null) ...[
-                  BlocBuilder<SubscriberCubit, SubscriberState>(
-                    builder: (context, subscriberState) {
-                      final subscribers = switch (subscriberState) {
-                        SubscriberLoaded(:final subscribers) => subscribers,
-                        SubscriberActionSuccess(:final subscribers) => subscribers,
-                        SubscriberActionInProgress(:final subscribers) => subscribers,
-                        _ => const <SubscriberModel>[],
-                      };
-                      return ClientPickerField(
-                        subscribers: subscribers,
-                        value: _selectedSubscriber,
-                        onChanged: (subscriber) =>
-                            setState(() => _selectedSubscriber = subscriber),
-                      );
-                    },
+            child: Form(
+              key: _formKey,
+              autovalidateMode:
+                  _autovalidate
+                      ? AutovalidateMode.onUserInteraction
+                      : AutovalidateMode.disabled,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  if (widget.subscriberId == null) ...[
+                    BlocBuilder<SubscriberCubit, SubscriberState>(
+                      builder: (context, subscriberState) {
+                        final subscribers = switch (subscriberState) {
+                          SubscriberLoaded(:final subscribers) => subscribers,
+                          SubscriberActionSuccess(:final subscribers) =>
+                            subscribers,
+                          SubscriberActionInProgress(:final subscribers) =>
+                            subscribers,
+                          _ => const <SubscriberModel>[],
+                        };
+                        return ClientPickerField(
+                          subscribers: subscribers,
+                          value: _selectedSubscriber,
+                          onChanged:
+                              (subscriber) => setState(
+                                () => _selectedSubscriber = subscriber,
+                              ),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                  ],
+                  InkWell(
+                    onTap: _pickMonth,
+                    child: InputDecorator(
+                      decoration: InputDecoration(
+                        labelText: AppStrings.addMeasurementMonthLabel,
+                        suffixIcon: const Icon(Icons.calendar_today_outlined),
+                      ),
+                      child: Text(
+                        DateFormat.yMMMM(
+                          AppLocale.code,
+                        ).format(_measurementMonth),
+                      ),
+                    ),
                   ),
                   const SizedBox(height: AppSpacing.md),
-                ],
-                InkWell(
-                  onTap: _pickMonth,
-                  child: InputDecorator(
+                  TextFormField(
+                    controller: _weightController,
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
                     decoration: InputDecoration(
-                      labelText: AppStrings.addMeasurementMonthLabel,
-                      suffixIcon: const Icon(Icons.calendar_today_outlined),
+                      labelText: AppStrings.measurementsWeightLabel,
                     ),
-                    child: Text(
-                      DateFormat.yMMMM(AppLocale.code).format(_measurementMonth),
-                    ),
+                    validator: MeasurementValidators.weight,
                   ),
-                ),
-                const SizedBox(height: AppSpacing.md),
-                TextField(
-                  controller: _weightController,
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                  decoration: InputDecoration(labelText: AppStrings.measurementsWeightLabel),
-                ),
-                const SizedBox(height: AppSpacing.md),
-                TextField(
-                  controller: _waistController,
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                  decoration: InputDecoration(labelText: AppStrings.measurementsWaistLabel),
-                ),
-                const SizedBox(height: AppSpacing.md),
-                TextField(
-                  controller: _abdomenController,
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                  decoration: InputDecoration(labelText: AppStrings.measurementsBellyLabel),
-                ),
-                const SizedBox(height: AppSpacing.xl),
-                Row(
-                  children: [
-                    Expanded(
-                      child: PhotoUploadBox(
-                        label: AppStrings.measurementsPhotoBefore,
-                        imageFile: _photoBefore,
-                        onTap: () => _pickPhoto(isBefore: true),
-                      ),
+                  const SizedBox(height: AppSpacing.md),
+                  TextFormField(
+                    controller: _waistController,
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
                     ),
-                    const SizedBox(width: AppSpacing.md),
-                    Expanded(
-                      child: PhotoUploadBox(
-                        label: AppStrings.measurementsPhotoAfter,
-                        imageFile: _photoAfter,
-                        onTap: () => _pickPhoto(isBefore: false),
-                      ),
+                    decoration: InputDecoration(
+                      labelText: AppStrings.measurementsWaistLabel,
                     ),
-                  ],
-                ),
-                const SizedBox(height: AppSpacing.xxl),
-                ElevatedButton(
-                  onPressed: isSaving ? null : () => _save(context),
-                  child: isSaving
-                      ? const SizedBox(
-                          width: AppSizes.icon,
-                          height: AppSizes.icon,
-                          child: CircularProgressIndicator(
-                            strokeWidth: AppBorders.regular,
-                            color: AppColors.white,
-                          ),
-                        )
-                      : Text(AppStrings.saveMeasurementCta),
-                ),
-              ],
+                    validator: MeasurementValidators.waist,
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                  TextFormField(
+                    controller: _abdomenController,
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
+                    decoration: InputDecoration(
+                      labelText: AppStrings.measurementsBellyLabel,
+                    ),
+                    validator: MeasurementValidators.abdomen,
+                  ),
+                  const SizedBox(height: AppSpacing.xl),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: PhotoUploadBox(
+                          label: AppStrings.measurementsPhotoBefore,
+                          imageFile: _photoBefore,
+                          onTap: () => _pickPhoto(isBefore: true),
+                        ),
+                      ),
+                      const SizedBox(width: AppSpacing.md),
+                      Expanded(
+                        child: PhotoUploadBox(
+                          label: AppStrings.measurementsPhotoAfter,
+                          imageFile: _photoAfter,
+                          onTap: () => _pickPhoto(isBefore: false),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: AppSpacing.xxl),
+                  ElevatedButton(
+                    onPressed: isSaving ? null : () => _save(context),
+                    child:
+                        isSaving
+                            ? const SizedBox(
+                              width: AppSizes.icon,
+                              height: AppSizes.icon,
+                              child: CircularProgressIndicator(
+                                strokeWidth: AppBorders.regular,
+                                color: AppColors.white,
+                              ),
+                            )
+                            : Text(AppStrings.saveMeasurementCta),
+                  ),
+                ],
+              ),
             ),
           );
         },

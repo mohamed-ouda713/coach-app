@@ -115,6 +115,8 @@ class AppStrings {
   static String get measurementsPickClientLabel => _t('العميلة', 'Client');
   static String get measurementsPickClientRequired =>
       _t('يرجى اختيار العميلة', 'Please select a client');
+  static String get measurementsValueInvalid =>
+      _t('قيمة غير منطقية', 'Invalid value');
   static String get measurementsDuplicateMonth => _t(
     'يوجد قياس مسجّل لهذه العميلة بنفس الشهر — اختاري شهراً آخر',
     'A measurement already exists for this client in the same month — pick another month',
@@ -170,8 +172,10 @@ class AppStrings {
   );
 
   static String get notificationTypeGeneral => _t('عام', 'General');
-  static String get notificationTypeSubscription => _t('اشتراك', 'Subscription');
-  static String get notificationTypeMeasurements => _t('قياسات', 'Measurements');
+  static String get notificationTypeSubscription =>
+      _t('اشتراك', 'Subscription');
+  static String get notificationTypeMeasurements =>
+      _t('قياسات', 'Measurements');
   static String get notificationTypeProgram => _t('برنامج', 'Program');
   static String get notificationTypeProgress => _t('تقدم', 'Progress');
   // أمثلة نصوص إشعارات فعلية (تبقى Templates بتتبني ديناميك من الباك إند)

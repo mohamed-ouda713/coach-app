@@ -34,7 +34,8 @@ class ClientMeasurementsScreen extends StatefulWidget {
   final bool justAdded;
 
   @override
-  State<ClientMeasurementsScreen> createState() => _ClientMeasurementsScreenState();
+  State<ClientMeasurementsScreen> createState() =>
+      _ClientMeasurementsScreenState();
 }
 
 class _ClientMeasurementsScreenState extends State<ClientMeasurementsScreen> {
@@ -146,10 +147,15 @@ class _ClientMeasurementsScreenState extends State<ClientMeasurementsScreen> {
     );
   }
 
-  Widget _buildProgressCard(BuildContext context, List<Measurement> measurements) {
+  Widget _buildProgressCard(
+    BuildContext context,
+    List<Measurement> measurements,
+  ) {
     final threeMonthsAgo = DateTime.now().subtract(const Duration(days: 90));
     final inRange =
-        measurements.where((m) => m.measurementMonth.isAfter(threeMonthsAgo)).toList()
+        measurements
+            .where((m) => m.measurementMonth.isAfter(threeMonthsAgo))
+            .toList()
           ..sort((a, b) => a.measurementMonth.compareTo(b.measurementMonth));
 
     if (inRange.length < 2) {
@@ -221,9 +227,7 @@ class _ClientMeasurementsScreenState extends State<ClientMeasurementsScreen> {
       padding: const EdgeInsets.symmetric(vertical: AppSpacing.smMd),
       decoration: BoxDecoration(
         border:
-            isLast
-                ? null
-                : Border(bottom: BorderSide(color: appColors.border)),
+            isLast ? null : Border(bottom: BorderSide(color: appColors.border)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -238,7 +242,9 @@ class _ClientMeasurementsScreenState extends State<ClientMeasurementsScreen> {
               const SizedBox(width: AppSpacing.sm),
               Text(
                 previous.toStringAsFixed(1),
-                style: AppTextStyles.bodyS.copyWith(color: appColors.textTertiary),
+                style: AppTextStyles.bodyS.copyWith(
+                  color: appColors.textTertiary,
+                ),
               ),
               const SizedBox(width: AppSpacing.xs),
               const Icon(Icons.arrow_back, size: AppSizes.iconXs),
@@ -258,13 +264,32 @@ class _ClientMeasurementsScreenState extends State<ClientMeasurementsScreen> {
   }
 }
 
-class _MonthlyEntryCard extends StatelessWidget {
+class _MonthlyEntryCard extends StatefulWidget {
   const _MonthlyEntryCard({required this.measurement});
 
   final Measurement measurement;
 
   @override
+  State<_MonthlyEntryCard> createState() => _MonthlyEntryCardState();
+}
+
+class _MonthlyEntryCardState extends State<_MonthlyEntryCard> {
+  Future<String>? _beforeUrlFuture;
+  Future<String>? _afterUrlFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    final cubit = context.read<MeasurementsCubit>();
+    final beforeUrl = widget.measurement.photoBeforeUrl;
+    final afterUrl = widget.measurement.photoAfterUrl;
+    _beforeUrlFuture = beforeUrl == null ? null : cubit.photoUrl(beforeUrl);
+    _afterUrlFuture = afterUrl == null ? null : cubit.photoUrl(afterUrl);
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final measurement = widget.measurement;
     final appColors = context.appColors;
     final hasPhotos =
         measurement.photoBeforeUrl != null || measurement.photoAfterUrl != null;
@@ -280,7 +305,9 @@ class _MonthlyEntryCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            DateFormat.yMMMM(AppLocale.code).format(measurement.measurementMonth),
+            DateFormat.yMMMM(
+              AppLocale.code,
+            ).format(measurement.measurementMonth),
             style: AppTextStyles.h5.copyWith(
               color: Theme.of(context).colorScheme.onSurface,
             ),
@@ -288,20 +315,44 @@ class _MonthlyEntryCard extends StatelessWidget {
           const SizedBox(height: AppSpacing.smMd),
           Row(
             children: [
-              _stat(context, measurement.weight, AppStrings.measurementsStatWeight),
+              _stat(
+                context,
+                measurement.weight,
+                AppStrings.measurementsStatWeight,
+              ),
               const SizedBox(width: AppSpacing.sm),
-              _stat(context, measurement.waistSize, AppStrings.measurementsStatWaist),
+              _stat(
+                context,
+                measurement.waistSize,
+                AppStrings.measurementsStatWaist,
+              ),
               const SizedBox(width: AppSpacing.sm),
-              _stat(context, measurement.abdomenSize, AppStrings.measurementsStatBelly),
+              _stat(
+                context,
+                measurement.abdomenSize,
+                AppStrings.measurementsStatBelly,
+              ),
             ],
           ),
           if (hasPhotos) ...[
             const SizedBox(height: AppSpacing.sm),
             Row(
               children: [
-                Expanded(child: _photo(context, measurement.photoBeforeUrl, AppStrings.measurementsPhotoBefore)),
+                Expanded(
+                  child: _photo(
+                    context,
+                    _beforeUrlFuture,
+                    AppStrings.measurementsPhotoBefore,
+                  ),
+                ),
                 const SizedBox(width: AppSpacing.sm),
-                Expanded(child: _photo(context, measurement.photoAfterUrl, AppStrings.measurementsPhotoAfter)),
+                Expanded(
+                  child: _photo(
+                    context,
+                    _afterUrlFuture,
+                    AppStrings.measurementsPhotoAfter,
+                  ),
+                ),
               ],
             ),
           ],
@@ -323,28 +374,31 @@ class _MonthlyEntryCard extends StatelessWidget {
   void _openFullImage(BuildContext context, String url, String label) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => Scaffold(
-          backgroundColor: AppColors.photoViewerBackground,
-          appBar: AppBar(
-            title: Text(label),
-            backgroundColor: AppColors.photoViewerBackground,
-            foregroundColor: AppColors.white,
-          ),
-          body: Center(
-            child: InteractiveViewer(
-              minScale: 1,
-              maxScale: 4,
-              child: Image.network(
-                url,
-                fit: BoxFit.contain,
-                loadingBuilder: (context, child, progress) {
-                  if (progress == null) return child;
-                  return const CircularProgressIndicator(color: AppColors.white);
-                },
+        builder:
+            (context) => Scaffold(
+              backgroundColor: AppColors.photoViewerBackground,
+              appBar: AppBar(
+                title: Text(label),
+                backgroundColor: AppColors.photoViewerBackground,
+                foregroundColor: AppColors.white,
+              ),
+              body: Center(
+                child: InteractiveViewer(
+                  minScale: 1,
+                  maxScale: 4,
+                  child: Image.network(
+                    url,
+                    fit: BoxFit.contain,
+                    loadingBuilder: (context, child, progress) {
+                      if (progress == null) return child;
+                      return const CircularProgressIndicator(
+                        color: AppColors.white,
+                      );
+                    },
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
       ),
     );
   }
@@ -362,7 +416,7 @@ class _MonthlyEntryCard extends StatelessWidget {
     );
   }
 
-  Widget _photo(BuildContext context, String? storedValue, String label) {
+  Widget _photo(BuildContext context, Future<String>? urlFuture, String label) {
     final appColors = context.appColors;
 
     final empty = _photoBox(
@@ -373,7 +427,7 @@ class _MonthlyEntryCard extends StatelessWidget {
       ),
     );
 
-    if (storedValue == null) return empty;
+    if (urlFuture == null) return empty;
 
     final loading = Shimmer.fromColors(
       baseColor: appColors.bgSubtle,
@@ -389,13 +443,13 @@ class _MonthlyEntryCard extends StatelessWidget {
     );
 
     return FutureBuilder<String>(
-      future: context.read<MeasurementsCubit>().photoUrl(storedValue),
+      future: urlFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
           return loading;
         }
         if (snapshot.hasError || snapshot.data == null) {
-          debugPrint('DEBUG signed url error for $storedValue: ${snapshot.error}');
+          debugPrint('DEBUG signed url error: ${snapshot.error}');
           return empty;
         }
 
@@ -423,5 +477,4 @@ class _MonthlyEntryCard extends StatelessWidget {
       },
     );
   }
-
 }
