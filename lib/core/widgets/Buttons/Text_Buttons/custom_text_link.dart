@@ -4,23 +4,29 @@ import 'package:glow_up/core/constants/app_spacing.dart';
 import 'package:glow_up/core/theme/app_text_styles.dart';
 
 class CustomTextLink extends StatelessWidget {
-  const CustomTextLink({
+  CustomTextLink({
     super.key,
     this.color,
     required this.title,
     this.icon,
     this.onPressed,
-    this.textButton = '',
+    this.textButton,
     this.textColor,
     this.iconColor,
     this.textButtonColor,
-  });
+  }) : assert(
+         title.trim().isNotEmpty ||
+             (textButton != null && textButton.trim().isNotEmpty) ||
+             icon != null,
+         'CustomTextLink بحاجة لمحتوى مرئي واحد ع الأقل: title غير فاضي، '
+         'أو textButton غير فاضي، أو icon.',
+       );
 
   final Color? color;
   final Color? textColor;
   final Color? iconColor;
   final String title;
-  final String textButton;
+  final String? textButton;
   final IconData? icon;
   final Color? textButtonColor;
   final void Function()? onPressed;
@@ -32,19 +38,23 @@ class CustomTextLink extends StatelessWidget {
     final effectiveTextColor = textColor ?? defaultColor;
     final effectiveIconColor = iconColor ?? defaultColor;
 
+    final hasTextButton = textButton != null && textButton!.isNotEmpty;
+
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: onPressed,
       child: Row(
         mainAxisSize: MainAxisSize.min, // 👈 يمنع الزر من أخذ مساحة أكبر من محتواه
-        children: [if (icon != null) ...[
+        children: [
+          if (icon != null) ...[
             const SizedBox(width: AppSpacing.xs),
             Icon(icon, color: effectiveIconColor, size: AppSizes.icon),
           ],
+
           // 1. النص الفرعي (إن وجد)
-          if (textButton.isNotEmpty) ...[
+          if (hasTextButton) ...[
             Text(
-              textButton,
+              textButton!,
               style: AppTextStyles.buttonM.copyWith(
                 color: effectiveTextButtonColor,
               ),
@@ -57,9 +67,6 @@ class CustomTextLink extends StatelessWidget {
             title,
             style: AppTextStyles.buttonM.copyWith(color: effectiveTextColor),
           ),
-
-          // 3. الأيقونة (تأتي بعد النص بدون SizedBox قيادي في البداية)
-          
         ],
       ),
     );

@@ -395,4 +395,59 @@ class AppStrings {
       _t('لا يوجد عملاء مطابقين', 'No matching clients');
   static String get loadSubscriberError =>
       _t('تعذر تحميل بيانات العميلة', "Couldn't load the client's data");
+
+  // نصوص فورم "مصروف جديد"
+  static String get financeAddExpenseTitle => _t('مصروف جديد', 'New expense');
+  static String get financeExpenseDescriptionLabel =>
+      _t('الوصف', 'Description');
+  static String get financeExpenseDescriptionHint =>
+      _t('مثال: إيجار الصالة', 'e.g. Gym rent');
+  static String get financeDateLabel => _t('التاريخ', 'Date');
+  static String get financeAddExpenseCta => _t('إضافة المصروف', 'Add expense');
+  static String get financeExpenseDescriptionRequired => _t(
+    'يرجى إدخال وصف المصروف',
+    'Please enter the expense description',
+  );
+  static String get financeDateRequired =>
+      _t('يرجى اختيار التاريخ', 'Please select a date');
+  static String get financeExpenseAddedMessage =>
+      _t('تمت إضافة المصروف بنجاح', 'Expense added successfully');
+  static String get financeNoExpensesMessage =>
+      _t('لا يوجد مصروفات هذا الشهر', 'No expenses this month');
+
+  // نصوص فورم "طرف جديد" / تعديل طرف
+  static String get financeAddPartnerTitle => _t('طرف جديد', 'New partner');
+  static String get financeEditPartnerTitle =>
+      _t('تعديل الطرف', 'Edit partner');
+  static String get financePartnerNameLabel => _t('الاسم', 'Name');
+  static String get financePartnerNameRequired =>
+      _t('يرجى إدخال الاسم', 'Please enter the name');
+  static String get financeSharePercentageLabel =>
+      _t('نسبة الحصة (%)', 'Share percentage (%)');
+  static String get financeSharePercentageRequired =>
+      _t('يرجى إدخال النسبة', 'Please enter the percentage');
+  static String get financeSharePercentageInvalid => _t(
+    'النسبة يجب أن تكون بين 0 و100',
+    'Percentage must be between 0 and 100',
+  );
+  static String get financePartnerSavedMessage =>
+      _t('تم الحفظ بنجاح', 'Saved successfully');
+  static String get financeNoPartnersMessage =>
+      _t('لا يوجد شركاء بعد', 'No partners yet');
+
+  // نصوص تأكيد السحب
+  static String get financeWithdrawConfirmTitle =>
+      _t('تأكيد السحب', 'Confirm withdrawal');
+  static String get financeWithdrawConfirmMessageTemplate => _t(
+    'هل أنتِ متأكدة من سحب رصيد {name} بالكامل ({amount} ريال)؟',
+    "Are you sure you want to withdraw {name}'s full balance ({amount} SAR)?",
+  );
+  static String get financeWithdrawSuccessMessage =>
+      _t('تم سحب الرصيد بنجاح', 'Balance withdrawn successfully');
+  static String get financeNoBalanceToWithdraw =>
+      _t('لا يوجد رصيد للسحب حالياً', 'No balance available to withdraw');
+  static String get financeSharePercentageSumExceeded => _t(
+    'مجموع نسب الشركاء ما بيقدر يتخطى 100%',
+    "Partners' share percentages can't exceed 100%",
+  );
 }

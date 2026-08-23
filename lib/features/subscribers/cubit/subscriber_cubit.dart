@@ -2,6 +2,7 @@
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:glow_up/core/errors/exception_mapper.dart';
+import 'package:glow_up/core/errors/exceptions/database_exception.dart';
 import '../data/subscriber_repository.dart';
 import '../models/subscriber_model.dart';
 import 'subscriber_state.dart';
@@ -72,8 +73,17 @@ class SubscriberCubit extends Cubit<SubscriberState> {
     }
   }
 
-  Future<SubscriberModel> fetchSubscriberById(String id) {
-    return _repository.getSubscriberById(id);
+  /// بترجع الـ Future مباشرة (مش state) لأنها بتُستخدم مع
+  /// AppFutureBuilder بشاشات الملف الشخصي والتعديل — بس زي أي عملية
+  /// تانية بهاد الـ Cubit، أي استثناء لازم يمر عبر ExceptionMapper
+  /// قبل ما يوصل للواجهة، عشان ما يبين رسالة خام غير مُترجمة ولا
+  /// يعتمد على مين استدعاها يمسك الاستثناء صح.
+  Future<SubscriberModel> fetchSubscriberById(String id) async {
+    try {
+      return await _repository.getSubscriberById(id);
+    } catch (e) {
+      throw DatabaseException(ExceptionMapper.mapToMessage(e));
+    }
   }
 
   List<SubscriberModel> _currentSubscribers() {

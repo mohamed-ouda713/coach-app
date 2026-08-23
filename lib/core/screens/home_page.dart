@@ -2,15 +2,18 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:glow_up/core/constants/app_sizes.dart';
-import 'package:glow_up/core/constants/app_spacing.dart';
 import 'package:glow_up/core/constants/app_strings.dart';
-import 'package:glow_up/core/theme/app_text_styles.dart';
-import 'package:glow_up/core/theme/context_extensions.dart';
+import 'package:glow_up/core/widgets/Buttons/Text_Buttons/custom_text_link.dart';
 import 'package:glow_up/core/widgets/layout/bottom_nav_bar.dart';
+import 'package:glow_up/core/widgets/layout/custom_app_bar.dart';
 import 'package:glow_up/core/widgets/layout/home_top_bar.dart';
 import 'package:glow_up/features/auth/cubit/auth_cubit.dart';
 import 'package:glow_up/features/auth/cubit/auth_state.dart';
+import 'package:glow_up/features/financial/cubit/financial_cubit.dart';
+import 'package:glow_up/features/financial/cubit/financial_state.dart';
+import 'package:glow_up/features/financial/helper/finance_formatters.dart';
+import 'package:glow_up/features/financial/screens/financial_screen.dart';
+import 'package:glow_up/features/financial/screens/widgets/add_expense_dialog.dart';
 import 'package:glow_up/features/measurements/screens/measurements_client_picker_screen.dart';
 import 'package:glow_up/features/notifications/cubit/notification_cubit.dart';
 import 'package:glow_up/features/notifications/data/notification_repository.dart';
@@ -30,23 +33,72 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
 
-  static List<({IconData icon, String label})> get _tabs => [
-    (icon: Icons.people, label: AppStrings.navClients),
-    (icon: Icons.bar_chart, label: AppStrings.navMeasurements),
-    (icon: Icons.notifications, label: AppStrings.navNotifications),
-    (icon: Icons.attach_money, label: AppStrings.navFinances),
-  ];
-
   static const _notificationsTabIndex = 2;
+  static const _financesTabIndex = 3;
 
-  /// التبويبات كلها بتتبنى مرة وحدة جوا IndexedStack، فجلب الإشعارات
-  /// بيصير لحظة فتح الشاشة الرئيسية. لهيك منعيد الجلب كل ما ينفتح
-  /// التبويب عشان تظهر الإشعارات يلي وصلت بعد ما فتح التطبيق.
+  /// التبويبات كلها بتتبنى مرة وحدة جوا IndexedStack (مش بتنعاد بناها
+  /// كل ما تتنقلي بينها) — فمنجدّد بيانات الإشعارات/المالية يدويًا كل
+  /// ما توصل المستخدمة لتبويبهم، بدل ما تعتمد فقط على initState (يلي
+  /// بينفّذ مرة وحدة بعمر الشاشة كله).
   void _onTabSelected(BuildContext context, int index) {
     setState(() => _currentIndex = index);
     if (index == _notificationsTabIndex) {
       context.read<NotificationCubit>().fetchNotifications();
+    } else if (index == _financesTabIndex) {
+      context.read<FinancialCubit>().loadMonth();
     }
+  }
+
+  PreferredSizeWidget _buildAppBar() {
+    if (_currentIndex == _financesTabIndex) {
+      return PreferredSize(
+        preferredSize: const Size.fromHeight(78),
+        child: BlocBuilder<FinancialCubit, FinancialState>(
+          builder: (context, state) {
+            final month = state is FinancialLoaded
+                ? state.month
+                : context.read<FinancialCubit>().currentMonth;
+            return CustomAppBar(
+              title: AppStrings.navFinances,
+              subtitle: FinanceFormatters.monthYear(month),
+              height: 78,
+              leading: CustomTextLink(
+                textButton: '',
+                title: AppStrings.actionAdd,
+                onPressed: () => AddExpenseDialog.show(context),
+              ),
+            );
+          },
+        ),
+      );
+    }
+
+    return PreferredSize(
+      preferredSize: const Size.fromHeight(HomeTopBar.height),
+      child: BlocBuilder<AuthCubit, AuthState>(
+        builder: (context, state) {
+          final fullName = state is AuthAuthenticated
+              ? (state.user.userMetadata?['full_name'] as String?)
+              : null;
+          final userName = (fullName != null && fullName.trim().isNotEmpty)
+              ? fullName.trim()
+              : AppStrings.appName;
+          return HomeTopBar(
+            userName: userName,
+            onProfileTap: () => context.push(AppRoutes.profile),
+            onAddTap: () {
+              if (_currentIndex == 1) {
+                context.push(AppRoutes.addMeasurementPickClient);
+              } else {
+                context.push(AppRoutes.addSubscriber);
+              }
+            },
+            onNotificationsTap:
+                () => _onTabSelected(context, _notificationsTabIndex),
+          );
+        },
+      ),
+    );
   }
 
   @override
@@ -60,41 +112,14 @@ class _HomePageState extends State<HomePage> {
                 ..fetchNotifications(),
       child: Builder(
         builder: (context) => Scaffold(
-          appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(HomeTopBar.height),
-            child: BlocBuilder<AuthCubit, AuthState>(
-              builder: (context, state) {
-                final fullName =
-                    state is AuthAuthenticated
-                        ? (state.user.userMetadata?['full_name'] as String?)
-                        : null;
-                final userName =
-                    (fullName != null && fullName.trim().isNotEmpty)
-                        ? fullName.trim()
-                        : AppStrings.appName;
-                return HomeTopBar(
-                  userName: userName,
-                  onProfileTap: () => context.push(AppRoutes.profile),
-                  onAddTap: () {
-                    if (_currentIndex == 1) {
-                      context.push(AppRoutes.addMeasurementPickClient);
-                    } else {
-                      context.push(AppRoutes.addSubscriber);
-                    }
-                  },
-                  onNotificationsTap:
-                      () => _onTabSelected(context, _notificationsTabIndex),
-                );
-              },
-            ),
-          ),
+          appBar: _buildAppBar(),
           body: IndexedStack(
             index: _currentIndex,
             children: [
               const SubscribersListScreen(),
               const MeasurementsClientPickerScreen(),
               const NotificationsScreen(),
-              _PlaceholderTab(icon: _tabs[3].icon, label: _tabs[3].label),
+              const FinancialScreen(),
             ],
           ),
           bottomNavigationBar: BottomNavBar(
@@ -102,36 +127,6 @@ class _HomePageState extends State<HomePage> {
             onTap: (index) => _onTabSelected(context, index),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _PlaceholderTab extends StatelessWidget {
-  const _PlaceholderTab({required this.icon, required this.label});
-
-  final IconData icon;
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            icon,
-            size: AppSizes.iconDisplay,
-            color: context.appColors.textTertiary,
-          ),
-          const SizedBox(height: AppSpacing.md),
-          Text(
-            '$label — ${AppStrings.comingSoon}',
-            style: AppTextStyles.bodyM.copyWith(
-              color: context.appColors.textSecondary,
-            ),
-          ),
-        ],
       ),
     );
   }

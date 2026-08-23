@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:glow_up/features/subscribers/cubit/subscriber_cubit.dart';
-import 'package:glow_up/features/subscribers/data/subscriber_repository.dart';
+import 'package:glow_up/features/financial/cubit/financial_cubit.dart';
+import 'package:glow_up/features/financial/data/financial_repository.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -56,7 +56,7 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (_) => AuthCubit(AuthRepository(supabaseClient))),
         BlocProvider(
-          create: (_) => SubscriberCubit(SubscriberRepository(supabaseClient)),
+          create: (_) => FinancialCubit(FinancialRepository(supabaseClient)),
         ),
         BlocProvider(create: (_) => ThemeCubit(prefs)),
         BlocProvider(create: (_) => LocaleCubit(prefs)),

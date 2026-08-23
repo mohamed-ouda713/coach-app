@@ -1,8 +1,11 @@
 // lib/core/widgets/inputs/search_widget.dart
 
 import 'package:flutter/material.dart';
+import 'package:glow_up/core/constants/app_radius.dart';
+import 'package:glow_up/core/constants/app_sizes.dart';
 import 'package:glow_up/core/constants/app_spacing.dart';
 import 'package:glow_up/core/constants/app_strings.dart';
+import 'package:glow_up/core/theme/app_text_styles.dart';
 import 'package:glow_up/core/theme/context_extensions.dart';
 
 class SearchWidget extends StatelessWidget {
@@ -17,6 +20,18 @@ class SearchWidget extends StatelessWidget {
   final ValueChanged<String>? onChanged;
   final TextEditingController? controller;
 
+  /// شكل هالحقل (pill كامل، بدون حدود) مختلف قصداً عن
+  /// AppTheme.inputDecorationTheme العام (المستطيل بحدود، مستخدم بـ
+  /// CustomTextFormField) — فمش هون مكانه الصح بالثيم المشترك.
+  /// لو ظهر حقل بحث تاني بنفس الشكل بمكان تاني بالتطبيق، وقتها ينقل
+  /// لهيلبر/ثيم مشترك؛ حالياً استخدام واحد بس فمنسيبه محلي هون.
+  static const _noBorder = OutlineInputBorder(
+    borderRadius: BorderRadius.all(Radius.circular(AppRadius.pill)),
+    borderSide: BorderSide.none,
+  );
+
+  static const _iconTapSize = 40.0;
+
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
@@ -25,18 +40,14 @@ class SearchWidget extends StatelessWidget {
       controller: controller,
       onChanged: onChanged,
       textAlign: TextAlign.start,
-      style: TextStyle(
-        color: Theme.of(context).colorScheme.onSurface, // 👈 النص المكتوب باللون الأسود/الأساسي للتطبيق
-        fontSize: 14,
+      style: AppTextStyles.bodyM.copyWith(
+        color: Theme.of(context).colorScheme.onSurface,
       ),
       decoration: InputDecoration(
         hintText: hintText ?? AppStrings.clientsSearchHint,
-        hintStyle: TextStyle(
-          color: colors.textSecondary,
-          fontSize: 14,
-        ),
+        hintStyle: AppTextStyles.bodyM.copyWith(color: colors.textSecondary),
         filled: true,
-        fillColor: Theme.of(context).colorScheme.surface, // خلفية بيضاء صافية
+        fillColor: Theme.of(context).colorScheme.surface,
         isDense: true,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: AppSpacing.lg,
@@ -50,25 +61,16 @@ class SearchWidget extends StatelessWidget {
           child: Icon(
             Icons.search,
             color: colors.textSecondary,
-            size: 20,
+            size: AppSizes.icon,
           ),
         ),
         prefixIconConstraints: const BoxConstraints(
-          minWidth: 40,
-          minHeight: 40,
+          minWidth: _iconTapSize,
+          minHeight: _iconTapSize,
         ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(100),
-          borderSide: BorderSide.none,
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(100),
-          borderSide: BorderSide.none,
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(100),
-          borderSide: BorderSide.none,
-        ),
+        border: _noBorder,
+        enabledBorder: _noBorder,
+        focusedBorder: _noBorder,
       ),
     );
   }

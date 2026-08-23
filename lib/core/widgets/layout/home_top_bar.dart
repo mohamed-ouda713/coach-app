@@ -146,9 +146,9 @@ class _TopBarActionButton extends StatelessWidget {
               ),
             ),
             if (showBadge)
-              Positioned(
+              PositionedDirectional(
                 top: AppSpacing.sm,
-                right: AppSpacing.sm,
+                end: AppSpacing.sm,
                 child: Container(
                   width: _badgeSize,
                   height: _badgeSize,

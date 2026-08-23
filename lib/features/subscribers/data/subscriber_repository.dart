@@ -79,11 +79,21 @@ class SubscriberRepository {
         .from(SupabaseTables.subscribers)
         .select()
         .eq(SupabaseColumns.trainerId, _currentTrainerId)
-        .ilike(SupabaseColumns.fullName, '%$query%')
+        .ilike(SupabaseColumns.fullName, '%${_escapeLikePattern(query)}%')
         .order(SupabaseColumns.createdAt, ascending: false);
 
     return (response as List)
         .map((row) => SubscriberModel.fromJson(row as Map<String, dynamic>))
         .toList();
+  }
+
+  /// بترجّع نص البحث كما هو، بس بعد ما تعمل escape لرموز LIKE
+  /// الخاصة (%, _, \) — عشان لو المستخدمة كتبت واحد منهم بالصدفة
+  /// بالاسم يلي بتدوّر عليه، ينحسب كنص حرفي مش كـ wildcard.
+  String _escapeLikePattern(String query) {
+    return query.replaceAllMapped(
+      RegExp(r'[%_\\]'),
+      (match) => '\\${match[0]}',
+    );
   }
 }

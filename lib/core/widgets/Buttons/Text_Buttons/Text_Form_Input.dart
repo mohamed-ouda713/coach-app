@@ -18,7 +18,7 @@ class CustomTextFormField extends StatefulWidget {
     this.suffixIcon,
     required this.hintText,
     this.fillColor,
-    this.borderColor, // 👈 أضفنا خاصية لون الحدود
+    this.borderColor, // 👈 لتخصيص لون الحدود بحالات معيّنة (وضع التعديل مثلاً)
     this.controller,
     this.obscureText = false,
     this.keyboardType,
@@ -35,7 +35,7 @@ class CustomTextFormField extends StatefulWidget {
   final Widget? prefixIcon;
   final Widget? suffixIcon;
   final Color? fillColor;
-  final Color? borderColor; // 👈 المتغير الجديد
+  final Color? borderColor;
   final TextEditingController? controller;
   final bool obscureText;
   final TextInputType? keyboardType;
@@ -54,9 +54,6 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    // إن تم تمرير borderColor نستخدمه، وإلا نرجع للون الافتراضي
-    final effectiveBorderColor = widget.borderColor ?? context.appColors.border;
     final textSecondaryColor = context.appColors.textSecondary;
 
     final Widget? effectivePrefixIcon = widget.obscureText
@@ -76,6 +73,19 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
                 child: widget.prefixIcon!,
               )
             : null);
+
+    // لو ما تم تمرير borderColor مخصص، منسيب border/enabledBorder فاضيين
+    // (null) عشان يجيبوا الافتراضي من AppTheme.inputDecorationTheme —
+    // هيك أي تعديل مستقبلي عالثيم بينعكس تلقائيًا هون بدون تغيير الـ widget.
+    final OutlineInputBorder? customBorder = widget.borderColor != null
+        ? OutlineInputBorder(
+            borderRadius: BorderRadius.circular(AppRadius.md),
+            borderSide: BorderSide(
+              color: widget.borderColor!,
+              width: AppBorders.regular,
+            ),
+          )
+        : null;
 
     return Column(
       crossAxisAlignment: widget.textAlign == TextAlign.center
@@ -104,62 +114,14 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
           textAlign: widget.textAlign,
           inputFormatters: widget.inputFormatters,
           decoration: InputDecoration(
-            hintStyle: AppTextStyles.bodyM.copyWith(color: textSecondaryColor),
             helperText: widget.helperText,
-            helperMaxLines: 2,
-            helperStyle: AppTextStyles.bodyS.copyWith(
-              color: textSecondaryColor,
-            ),
-            filled: true,
-            fillColor: widget.fillColor ?? Theme.of(context).colorScheme.surface,
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.sm,
-              vertical: AppSpacing.xl,
-            ),
-            suffixIconConstraints: const BoxConstraints(
-              minWidth: 0,
-              minHeight: 0,
-            ),
+            fillColor: widget.fillColor,
             suffixIcon: widget.suffixIcon,
             prefixIcon: effectivePrefixIcon,
             labelText: widget.label,
             hintText: widget.hintText,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppRadius.md),
-              borderSide: BorderSide(
-                color: effectiveBorderColor,
-                width: widget.borderColor != null ? 1.5 : 1.0,
-              ),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppRadius.md),
-              borderSide: BorderSide(
-                color: effectiveBorderColor,
-                width: widget.borderColor != null ? 1.5 : 1.0,
-              ),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppRadius.md),
-              borderSide: BorderSide(
-                color: colorScheme.primary,
-                width: AppBorders.regular,
-              ),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppRadius.md),
-              borderSide: BorderSide(color: colorScheme.error),
-            ),
-            focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppRadius.md),
-              borderSide: BorderSide(
-                color: colorScheme.error,
-                width: AppBorders.regular,
-              ),
-            ),
-            errorStyle: AppTextStyles.bodyS.copyWith(
-              color: colorScheme.error,
-              fontWeight: FontWeight.w500,
-            ),
+            border: customBorder,
+            enabledBorder: customBorder,
           ),
         ),
       ],

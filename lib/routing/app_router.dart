@@ -6,6 +6,8 @@ import 'package:glow_up/core/screens/splash_screen.dart';
 import 'package:glow_up/features/auth/screens/login/login_screen.dart';
 import 'package:glow_up/features/auth/screens/signup/signup_screen.dart';
 import 'package:glow_up/features/notifications/screens/notifications_screen.dart';
+import 'package:glow_up/features/subscribers/cubit/subscriber_cubit.dart';
+import 'package:glow_up/features/subscribers/data/subscriber_repository.dart';
 import 'package:glow_up/features/subscribers/screens/add_subscriber_screen.dart';
 import 'package:glow_up/features/subscribers/screens/client_profile_screen.dart';
 import 'package:glow_up/features/subscribers/screens/edit_subscriber_screen.dart';
@@ -124,33 +126,6 @@ GoRouter buildAppRouter(AuthCubit authCubit) {
         builder: (context, state) => const ResetPasswordScreen(),
       ),
       GoRoute(
-        path: AppRoutes.clientsList,
-        builder: (context, state) => const SubscribersListScreen(),
-      ),
-      GoRoute(
-        path: AppRoutes.addSubscriber,
-        builder: (context, state) => const AddSubscriberScreen(),
-      ),
-      GoRoute(
-        path: AppRoutes.editSubscriber,
-        builder: (context, state) {
-          final id = state.pathParameters['id']!;
-          return EditSubscriberScreen(subscriberId: id);
-        },
-      ),
-      GoRoute(
-        path: AppRoutes.clientProfile,
-        builder: (context, state) {
-          final clientId = state.pathParameters['id']!;
-          return ClientProfileScreen(clientId: clientId);
-        },
-      ),
-
-      GoRoute(
-        path: AppRoutes.home,
-        builder: (context, state) => const HomePage(),
-      ),
-      GoRoute(
         path: AppRoutes.profile,
         builder: (context, state) => const ProfileScreen(),
       ),
@@ -170,14 +145,6 @@ GoRouter buildAppRouter(AuthCubit authCubit) {
             ),
       ),
       GoRoute(
-        path: AppRoutes.addMeasurementPickClient,
-        builder:
-            (context, state) => BlocProvider(
-              create: (_) => _measurementsCubit(),
-              child: const AddMeasurementScreen(),
-            ),
-      ),
-      GoRoute(
         path: AppRoutes.clientMeasurements,
         builder:
             (context, state) => BlocProvider(
@@ -188,6 +155,59 @@ GoRouter buildAppRouter(AuthCubit authCubit) {
                 justAdded: state.uri.queryParameters['added'] == '1',
               ),
             ),
+      ),
+
+      // كل مسارات فيتشر Subscribers، وأي شاشة تانية بتحتاج SubscriberCubit
+      // (متل اختيار عميلة لتسجيل قياس)، مغلّفة بـ SubscriberCubit واحد
+      // مشترك بينها — بيتخلق أول مرة تُفتح فيها أي شاشة منهم، وينحذف
+      // تلقائيًا لما نطلع منهم كلهم (بدل Cubit عالمي بـ main.dart عايش
+      // طول عمر التطبيق حتى لو المدربة ما فتحت تبويب العميلات أبدًا).
+      ShellRoute(
+        builder: (context, state, child) {
+          return BlocProvider(
+            create:
+                (_) => SubscriberCubit(
+                  SubscriberRepository(Supabase.instance.client),
+                ),
+            child: child,
+          );
+        },
+        routes: [
+          GoRoute(
+            path: AppRoutes.home,
+            builder: (context, state) => const HomePage(),
+          ),
+          GoRoute(
+            path: AppRoutes.clientsList,
+            builder: (context, state) => const SubscribersListScreen(),
+          ),
+          GoRoute(
+            path: AppRoutes.addSubscriber,
+            builder: (context, state) => const AddSubscriberScreen(),
+          ),
+          GoRoute(
+            path: AppRoutes.editSubscriber,
+            builder: (context, state) {
+              final id = state.pathParameters['id']!;
+              return EditSubscriberScreen(subscriberId: id);
+            },
+          ),
+          GoRoute(
+            path: AppRoutes.clientProfile,
+            builder: (context, state) {
+              final clientId = state.pathParameters['id']!;
+              return ClientProfileScreen(clientId: clientId);
+            },
+          ),
+          GoRoute(
+            path: AppRoutes.addMeasurementPickClient,
+            builder:
+                (context, state) => BlocProvider(
+                  create: (_) => _measurementsCubit(),
+                  child: const AddMeasurementScreen(),
+                ),
+          ),
+        ],
       ),
     ],
   );

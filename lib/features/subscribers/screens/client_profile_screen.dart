@@ -1,18 +1,17 @@
-import 'package:glow_up/core/localization/app_locale.dart';
 // lib/features/subscribers/screens/client_profile_screen.dart
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 
+import 'package:glow_up/core/constants/app_date_formats.dart';
 import 'package:glow_up/core/constants/app_radius.dart';
 import 'package:glow_up/core/constants/app_spacing.dart';
 import 'package:glow_up/core/constants/app_strings.dart';
 import 'package:glow_up/core/theme/app_text_styles.dart';
 import 'package:glow_up/core/theme/context_extensions.dart';
-import 'package:glow_up/core/widgets/async/app_future_builder.dart';
 import 'package:glow_up/core/widgets/cards/stat_card.dart';
+import 'package:glow_up/core/widgets/error_widgets/app_error_view.dart';
 import 'package:glow_up/core/widgets/layout/custom_app_bar.dart';
 import 'package:glow_up/core/widgets/media/app_avatar.dart';
 import 'package:glow_up/core/widgets/status/badges.dart';
@@ -20,38 +19,37 @@ import 'package:glow_up/core/widgets/Buttons/Primary_Buttons/primary_Buttons.dar
 import 'package:glow_up/core/widgets/Buttons/Text_Buttons/custom_text_link.dart';
 
 import '../cubit/subscriber_cubit.dart';
+import '../cubit/subscriber_detail_cubit.dart';
+import '../cubit/subscriber_detail_state.dart';
 import '../models/subscriber_model.dart';
 
-class ClientProfileScreen extends StatefulWidget {
+class ClientProfileScreen extends StatelessWidget {
   const ClientProfileScreen({super.key, required this.clientId});
 
   final String clientId;
 
   @override
-  State<ClientProfileScreen> createState() => _ClientProfileScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create:
+          (context) => SubscriberDetailCubit(
+            context.read<SubscriberCubit>(),
+          )..load(clientId),
+      child: _ClientProfileView(clientId: clientId),
+    );
+  }
 }
 
-class _ClientProfileScreenState extends State<ClientProfileScreen> {
-  late Future<SubscriberModel> _subscriberFuture;
+class _ClientProfileView extends StatelessWidget {
+  const _ClientProfileView({required this.clientId});
 
-  @override
-  void initState() {
-    super.initState();
-    _loadSubscriber();
-  }
-
-  void _loadSubscriber() {
-    setState(() {
-      _subscriberFuture = context.read<SubscriberCubit>().fetchSubscriberById(
-        widget.clientId,
-      );
-    });
-  }
+  final String clientId;
 
   Future<void> _navigateToEdit(BuildContext context) async {
-    final result = await context.push('/clients/${widget.clientId}/edit');
-    if (mounted) {
-      _loadSubscriber();
+    final detailCubit = context.read<SubscriberDetailCubit>();
+    await context.push('/clients/$clientId/edit');
+    if (context.mounted) {
+      detailCubit.load(clientId);
     }
   }
 
@@ -77,27 +75,36 @@ class _ClientProfileScreenState extends State<ClientProfileScreen> {
       ),
       body: SafeArea(
         top: false,
-        child: AppFutureBuilder<SubscriberModel>(
-          future: _subscriberFuture,
-          errorMessage: AppStrings.defaultErrorMessage,
-          onRetry: _loadSubscriber,
-          builder: (context, subscriber) {
-            return RefreshIndicator(
-              onRefresh: () async => _loadSubscriber(),
-              child: ListView(
-                padding: const EdgeInsets.all(AppSpacing.lgAlt),
-                children: [
-                  _ProfileHeroCard(subscriber: subscriber),
-                  const SizedBox(height: AppSpacing.mdLg),
-                  _SubscriptionCard(subscriber: subscriber),
-                  const SizedBox(height: AppSpacing.lgAlt),
-                  _ActionsRow(
-                    subscriber: subscriber,
-                    onEditTap: () => _navigateToEdit(context),
-                  ),
-                ],
+        child: BlocBuilder<SubscriberDetailCubit, SubscriberDetailState>(
+          builder: (context, state) {
+            return switch (state) {
+              SubscriberDetailInitial() ||
+              SubscriberDetailLoading() => const Center(
+                child: CircularProgressIndicator(),
               ),
-            );
+              SubscriberDetailError(:final message) => AppErrorView(
+                message: message,
+                onRetry:
+                    () => context.read<SubscriberDetailCubit>().load(clientId),
+              ),
+              SubscriberDetailLoaded(:final subscriber) => RefreshIndicator(
+                onRefresh:
+                    () => context.read<SubscriberDetailCubit>().load(clientId),
+                child: ListView(
+                  padding: const EdgeInsets.all(AppSpacing.lgAlt),
+                  children: [
+                    _ProfileHeroCard(subscriber: subscriber),
+                    const SizedBox(height: AppSpacing.mdLg),
+                    _SubscriptionCard(subscriber: subscriber),
+                    const SizedBox(height: AppSpacing.lgAlt),
+                    _ActionsRow(
+                      subscriber: subscriber,
+                      onEditTap: () => _navigateToEdit(context),
+                    ),
+                  ],
+                ),
+              ),
+            };
           },
         ),
       ),
@@ -200,8 +207,6 @@ class _SubscriptionCard extends StatelessWidget {
 
   final SubscriberModel subscriber;
 
-  DateFormat get _dateFormat => DateFormat('d MMMM yyyy', AppLocale.code);
-
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -239,13 +244,13 @@ class _SubscriptionCard extends StatelessWidget {
           _row(
             context,
             label: AppStrings.subscriptionEndDate,
-            value: _dateFormat.format(subscriber.subscriptionEndDate),
+            value: AppDateFormats.fullDate.format(subscriber.subscriptionEndDate),
             showDivider: true,
           ),
           _row(
             context,
             label: AppStrings.subscriptionStartDate,
-            value: _dateFormat.format(subscriber.subscriptionStartDate),
+            value: AppDateFormats.fullDate.format(subscriber.subscriptionStartDate),
             showDivider: true,
           ),
           _row(
@@ -330,7 +335,7 @@ class _ActionsRow extends StatelessWidget {
               child: PrimaryButton(
                 title: AppStrings.addMeasurementCta,
                 backgroundColor: Theme.of(context).colorScheme.primary,
-                textColor: Colors.white,
+                textColor: Theme.of(context).colorScheme.onPrimary,
                 onTap:
                     () => context.push(
                       '/subscribers/${subscriber.id}/measurements/add',
