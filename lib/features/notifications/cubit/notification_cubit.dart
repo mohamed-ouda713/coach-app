@@ -11,8 +11,11 @@ class NotificationCubit extends Cubit<NotificationState> {
 
   final NotificationRepository _repository;
 
+  /// الـ spinner بيظهر بس لما ما يكون في إشعارات معروضة أصلاً. لو في
+  /// قائمة على الشاشة (تحديث بعد "تعليم كمقروء" مثلاً) بنحدّثها بمكانها
+  /// بدل ما نمسحها ونرجّع شاشة تحميل.
   Future<void> fetchNotifications() async {
-    emit(NotificationLoading());
+    if (state is! NotificationLoaded) emit(NotificationLoading());
     try {
       final notifications = await _repository.getNotifications();
       final unreadCount = notifications.where((n) => !n.isRead).length;
