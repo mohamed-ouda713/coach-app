@@ -404,10 +404,8 @@ class AppStrings {
       _t('مثال: إيجار الصالة', 'e.g. Gym rent');
   static String get financeDateLabel => _t('التاريخ', 'Date');
   static String get financeAddExpenseCta => _t('إضافة المصروف', 'Add expense');
-  static String get financeExpenseDescriptionRequired => _t(
-    'يرجى إدخال وصف المصروف',
-    'Please enter the expense description',
-  );
+  static String get financeExpenseDescriptionRequired =>
+      _t('يرجى إدخال وصف المصروف', 'Please enter the expense description');
   static String get financeDateRequired =>
       _t('يرجى اختيار التاريخ', 'Please select a date');
   static String get financeExpenseAddedMessage =>

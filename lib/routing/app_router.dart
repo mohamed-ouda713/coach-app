@@ -85,7 +85,8 @@ String? _redirect(
   final isAuthenticated = authState is AuthAuthenticated;
   final isOnAuthRoute = _authRoutes.contains(state.matchedLocation);
 
-  if (!isAuthenticated && (isOnSplash || !isOnAuthRoute)) return AppRoutes.login;
+  if (!isAuthenticated && (isOnSplash || !isOnAuthRoute))
+    return AppRoutes.login;
   if (isAuthenticated && (isOnSplash || isOnAuthRoute)) return AppRoutes.home;
 
   return null;

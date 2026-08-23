@@ -55,9 +55,10 @@ class _HomePageState extends State<HomePage> {
         preferredSize: const Size.fromHeight(78),
         child: BlocBuilder<FinancialCubit, FinancialState>(
           builder: (context, state) {
-            final month = state is FinancialLoaded
-                ? state.month
-                : context.read<FinancialCubit>().currentMonth;
+            final month =
+                state is FinancialLoaded
+                    ? state.month
+                    : context.read<FinancialCubit>().currentMonth;
             return CustomAppBar(
               title: AppStrings.navFinances,
               subtitle: FinanceFormatters.monthYear(month),
@@ -77,12 +78,14 @@ class _HomePageState extends State<HomePage> {
       preferredSize: const Size.fromHeight(HomeTopBar.height),
       child: BlocBuilder<AuthCubit, AuthState>(
         builder: (context, state) {
-          final fullName = state is AuthAuthenticated
-              ? (state.user.userMetadata?['full_name'] as String?)
-              : null;
-          final userName = (fullName != null && fullName.trim().isNotEmpty)
-              ? fullName.trim()
-              : AppStrings.appName;
+          final fullName =
+              state is AuthAuthenticated
+                  ? (state.user.userMetadata?['full_name'] as String?)
+                  : null;
+          final userName =
+              (fullName != null && fullName.trim().isNotEmpty)
+                  ? fullName.trim()
+                  : AppStrings.appName;
           return HomeTopBar(
             userName: userName,
             onProfileTap: () => context.push(AppRoutes.profile),
@@ -105,28 +108,27 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create:
-          (_) =>
-              NotificationCubit(
-                  NotificationRepository(Supabase.instance.client),
-                )
-                ..fetchNotifications(),
+          (_) => NotificationCubit(
+            NotificationRepository(Supabase.instance.client),
+          )..fetchNotifications(),
       child: Builder(
-        builder: (context) => Scaffold(
-          appBar: _buildAppBar(),
-          body: IndexedStack(
-            index: _currentIndex,
-            children: [
-              const SubscribersListScreen(),
-              const MeasurementsClientPickerScreen(),
-              const NotificationsScreen(),
-              const FinancialScreen(),
-            ],
-          ),
-          bottomNavigationBar: BottomNavBar(
-            currentIndex: _currentIndex,
-            onTap: (index) => _onTabSelected(context, index),
-          ),
-        ),
+        builder:
+            (context) => Scaffold(
+              appBar: _buildAppBar(),
+              body: IndexedStack(
+                index: _currentIndex,
+                children: [
+                  const SubscribersListScreen(),
+                  const MeasurementsClientPickerScreen(),
+                  const NotificationsScreen(),
+                  const FinancialScreen(),
+                ],
+              ),
+              bottomNavigationBar: BottomNavBar(
+                currentIndex: _currentIndex,
+                onTap: (index) => _onTabSelected(context, index),
+              ),
+            ),
       ),
     );
   }
