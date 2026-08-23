@@ -20,15 +20,29 @@ class SubscriberDetailCubit extends Cubit<SubscriberDetailState> {
 
   final SubscriberCubit _subscriberCubit;
 
+  /// بترسم فورًا من القائمة المحمّلة بالذاكرة لو العميلة موجودة فيها،
+  /// وبعدين بتجدّد من السيرفر بالخلفية. قبل هيك كانت كل مرة تنفتح فيها
+  /// الشاشة تعرض spinner وتستنى رحلة شبكة كاملة لبيانات معروضة أصلاً
+  /// بالقائمة يلي إجت منها.
   Future<void> load(String id) async {
-    emit(const SubscriberDetailLoading());
+    final cached = _subscriberCubit.findLoadedSubscriber(id);
+    if (cached != null) {
+      emit(SubscriberDetailLoaded(cached));
+    } else if (state is! SubscriberDetailLoaded) {
+      emit(const SubscriberDetailLoading());
+    }
+
     try {
       final subscriber = await _subscriberCubit.fetchSubscriberById(id);
-      emit(SubscriberDetailLoaded(subscriber));
+      if (!isClosed) emit(SubscriberDetailLoaded(subscriber));
     } catch (e) {
       // fetchSubscriberById بترمي AppException برسالة مُترجمة أصلاً —
       // ExceptionMapper بترجعها زي ما هي (fast path)، وبتضل شغالة
       // بأمان لو صار أي استثناء آخر غير متوقع.
+      //
+      // لو في نسخة معروضة أصلاً (من الكاش أو من تحميل سابق)، ما منمسح
+      // الشاشة بخطأ — التحديث بالخلفية فشل بس البيانات لسا صالحة.
+      if (isClosed || state is SubscriberDetailLoaded) return;
       emit(SubscriberDetailError(ExceptionMapper.mapToMessage(e)));
     }
   }

@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:glow_up/core/errors/exception_mapper.dart';
 import '../data/financial_repository.dart';
 import '../models/partner_model.dart';
+import '../models/transaction_model.dart';
 import 'financial_state.dart';
 
 class FinancialCubit extends Cubit<FinancialState> {
@@ -16,21 +17,31 @@ class FinancialCubit extends Cubit<FinancialState> {
 
   DateTime get currentMonth => _month;
 
+  /// الطلبات التلاتة مستقلة عن بعض، فبتنبعت مع بعض بدل واحد ورا التاني
+  /// (كانت بتاخد وقت تلات رحلات شبكة متتالية بدل رحلة وحدة).
+  ///
+  /// وطالما في بيانات معروضة أصلًا، ما بنرجع لشاشة تحميل فاضية —
+  /// بنحدّثها بالخلفية. الـ spinner بيظهر بس أول مرة قبل ما يكون في
+  /// أي بيانات (قبل هيك كل انتقال لتبويب المالية كان يمسح الشاشة).
   Future<void> loadMonth([DateTime? month]) async {
     _month = month ?? _month;
-    emit(const FinancialLoading());
+    if (state is! FinancialLoaded) emit(const FinancialLoading());
     try {
-      final income = await _repository.getMonthlyIncome(_month);
-      final expenses = await _repository.getExpensesForMonth(_month);
-      final partners = await _repository.getPartners();
+      final results = await Future.wait([
+        _repository.getMonthlyIncome(_month),
+        _repository.getExpensesForMonth(_month),
+        _repository.getPartners(),
+      ]);
 
       if (isClosed) return;
-      emit(FinancialLoaded(
-        month: _month,
-        income: income,
-        expenses: expenses,
-        partners: partners,
-      ));
+      emit(
+        FinancialLoaded(
+          month: _month,
+          income: results[0] as double,
+          expenses: results[1] as List<TransactionModel>,
+          partners: results[2] as List<PartnerModel>,
+        ),
+      );
     } catch (e, stackTrace) {
       _logError('loadMonth', e, stackTrace);
       if (!isClosed) emit(FinancialError(ExceptionMapper.mapToMessage(e)));
@@ -48,10 +59,12 @@ class FinancialCubit extends Cubit<FinancialState> {
         amount: amount,
         date: date,
       );
-      final isSameMonth = expense.date.year == current.month.year &&
+      final isSameMonth =
+          expense.date.year == current.month.year &&
           expense.date.month == current.month.month;
       return current.copyWith(
-        expenses: isSameMonth ? [expense, ...current.expenses] : current.expenses,
+        expenses:
+            isSameMonth ? [expense, ...current.expenses] : current.expenses,
       );
     }, logTag: 'addExpense');
   }
