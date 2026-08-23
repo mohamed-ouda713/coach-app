@@ -2,23 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:glow_up/core/constants/app_borders.dart';
 import 'package:glow_up/core/constants/app_radius.dart';
 import 'package:glow_up/core/constants/app_spacing.dart';
-import 'package:glow_up/core/theme/app_colors.dart';
 import 'package:glow_up/core/theme/app_text_styles.dart';
 
 class SelectedButton extends StatelessWidget {
   final String title;
   final VoidCallback? onTap;
-  final Color borderColor;
-  final Color textColor;
-  final Color backgroundColor;
+  final Color? borderColor;
+  final Color? textColor;
+  final Color? backgroundColor;
 
   const SelectedButton({
     super.key,
     required this.title,
     this.onTap,
-    this.borderColor = const Color(0xFF0082C8),
-    this.textColor = const Color(0xFF0082C8),
-    this.backgroundColor = const Color(0xFF0B1E2D),
+    this.borderColor,
+    this.textColor,
+    this.backgroundColor,
   });
 
   @override

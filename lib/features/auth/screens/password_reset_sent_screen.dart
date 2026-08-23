@@ -18,7 +18,7 @@ class PasswordResetSentScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text(AppStrings.forgotPasswordLinkSentTitle)),
+      appBar: AppBar(title: Text(AppStrings.forgotPasswordLinkSentTitle)),
       body: BlocListener<AuthCubit, AuthState>(
         listener: (context, state) {
           if (state is AuthError) {
@@ -47,7 +47,7 @@ class PasswordResetSentScreen extends StatelessWidget {
               const SizedBox(height: AppSpacing.xxl),
               ElevatedButton(
                 onPressed: () {},
-                child: const Text(AppStrings.forgotPasswordOpenEmailCta),
+                child: Text(AppStrings.forgotPasswordOpenEmailCta),
               ),
               const SizedBox(height: AppSpacing.xl),
               Row(
@@ -60,13 +60,13 @@ class PasswordResetSentScreen extends StatelessWidget {
                   TextButton(
                     onPressed:
                         () => context.read<AuthCubit>().resetPassword(email),
-                    child: const Text(AppStrings.forgotPasswordResend),
+                    child: Text(AppStrings.forgotPasswordResend),
                   ),
                 ],
               ),
               TextButton(
                 onPressed: () => context.go(AppRoutes.login),
-                child: const Text(AppStrings.forgotPasswordBackToLogin),
+                child: Text(AppStrings.forgotPasswordBackToLogin),
               ),
             ],
           ),

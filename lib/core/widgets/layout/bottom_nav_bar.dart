@@ -19,7 +19,7 @@ class BottomNavBar extends StatelessWidget {
   final int currentIndex;
   final ValueChanged<int> onTap;
 
-  static const _items = [
+  static List<({IconData icon, String label})> get _items => [
     (icon: Icons.people, label: AppStrings.navClients),
     (icon: Icons.bar_chart, label: AppStrings.navMeasurements),
     (icon: Icons.notifications, label: AppStrings.navNotifications),

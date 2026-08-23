@@ -9,13 +9,13 @@ class AppFutureBuilder<T> extends StatelessWidget {
     super.key,
     required this.future,
     required this.builder,
-    this.errorMessage = AppStrings.defaultErrorMessage,
+    this.errorMessage,
     this.onRetry,
   });
 
   final Future<T> future;
   final Widget Function(BuildContext context, T data) builder;
-  final String errorMessage;
+  final String? errorMessage;
   final VoidCallback? onRetry;
 
   @override
@@ -26,8 +26,11 @@ class AppFutureBuilder<T> extends StatelessWidget {
         if (snapshot.connectionState != ConnectionState.done) {
           return const Center(child: CircularProgressIndicator());
         }
-        if (snapshot.hasError) {
-          return AppErrorView(message: errorMessage, onRetry: onRetry);
+        if (snapshot.hasError || !snapshot.hasData) {
+          return AppErrorView(
+            message: errorMessage ?? AppStrings.defaultErrorMessage,
+            onRetry: onRetry,
+          );
         }
         return builder(context, snapshot.data as T);
       },

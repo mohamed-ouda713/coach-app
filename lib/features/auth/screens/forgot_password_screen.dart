@@ -33,7 +33,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text(AppStrings.forgotPasswordTitle)),
+      appBar: AppBar(title: Text(AppStrings.forgotPasswordTitle)),
       body: BlocConsumer<AuthCubit, AuthState>(
         listener: (context, state) {
           if (state is AuthPasswordResetEmailSent) {
@@ -85,14 +85,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                               color: AppColors.white,
                             ),
                           )
-                          : const Text(
-                            AppStrings.forgotPasswordSendResetLinkCta,
-                          ),
+                          : Text(AppStrings.forgotPasswordSendResetLinkCta),
                 ),
                 const SizedBox(height: AppSpacing.md),
                 TextButton(
                   onPressed: () => context.pop(),
-                  child: const Text(AppStrings.forgotPasswordBackToLogin),
+                  child: Text(AppStrings.forgotPasswordBackToLogin),
                 ),
               ],
             ),

@@ -71,9 +71,15 @@ app.*.map.json
 **/android/**/*.jks
 **/android/.gradle/
 **/android/captures/
+**/android/build/
 
 # FVM Version Cache
 .fvm/
 
 # Xcode Swift Package Manager
 **/xcshareddata/swiftpm/
+
+# Design tool exports
+*.dc.html
+# Supabase CLI local state
+supabase/.temp/

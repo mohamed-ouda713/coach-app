@@ -39,7 +39,16 @@ class AuthRepository {
     await _client.auth.signOut();
   }
 
-  Future<void> resetPasswordForEmail(String email) async {
-    await _client.auth.resetPasswordForEmail(email);
+  Future<void> resetPasswordForEmail(String email, {String? redirectTo}) async {
+    await _client.auth.resetPasswordForEmail(email, redirectTo: redirectTo);
+  }
+
+  /// بتستدعى بعد ما يفتح المستخدم رابط الاستعادة — الجلسة المؤقتة
+  /// (recovery session) هي يلي بتسمح بهاد التحديث بدون كلمة مرور قديمة.
+  Future<User> updatePassword(String newPassword) async {
+    final response = await _client.auth.updateUser(
+      UserAttributes(password: newPassword),
+    );
+    return response.user!;
   }
 }

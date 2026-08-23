@@ -32,9 +32,9 @@ class ClientProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create:
-          (context) => SubscriberDetailCubit(
-            context.read<SubscriberCubit>(),
-          )..load(clientId),
+          (context) =>
+              SubscriberDetailCubit(context.read<SubscriberCubit>())
+                ..load(clientId),
       child: _ClientProfileView(clientId: clientId),
     );
   }
@@ -78,10 +78,8 @@ class _ClientProfileView extends StatelessWidget {
         child: BlocBuilder<SubscriberDetailCubit, SubscriberDetailState>(
           builder: (context, state) {
             return switch (state) {
-              SubscriberDetailInitial() ||
-              SubscriberDetailLoading() => const Center(
-                child: CircularProgressIndicator(),
-              ),
+              SubscriberDetailInitial() || SubscriberDetailLoading() =>
+                const Center(child: CircularProgressIndicator()),
               SubscriberDetailError(:final message) => AppErrorView(
                 message: message,
                 onRetry:
@@ -244,13 +242,17 @@ class _SubscriptionCard extends StatelessWidget {
           _row(
             context,
             label: AppStrings.subscriptionEndDate,
-            value: AppDateFormats.fullDate.format(subscriber.subscriptionEndDate),
+            value: AppDateFormats.fullDate.format(
+              subscriber.subscriptionEndDate,
+            ),
             showDivider: true,
           ),
           _row(
             context,
             label: AppStrings.subscriptionStartDate,
-            value: AppDateFormats.fullDate.format(subscriber.subscriptionStartDate),
+            value: AppDateFormats.fullDate.format(
+              subscriber.subscriptionStartDate,
+            ),
             showDivider: true,
           ),
           _row(
@@ -327,27 +329,43 @@ class _ActionsRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
       children: [
-        Expanded(
-          child: PrimaryButton(
-            title: AppStrings.addMeasurementCta,
-            backgroundColor: Theme.of(context).colorScheme.primary,
-            textColor: Theme.of(context).colorScheme.onPrimary,
-            onTap: () {
-              // لاحقًا: context.push(AppRoutes.addMeasurement(subscriber.id))
-            },
-          ),
+        Row(
+          children: [
+            Expanded(
+              child: PrimaryButton(
+                title: AppStrings.addMeasurementCta,
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                textColor: Theme.of(context).colorScheme.onPrimary,
+                onTap:
+                    () => context.push(
+                      '/subscribers/${subscriber.id}/measurements/add',
+                      extra: subscriber.fullName,
+                    ),
+              ),
+            ),
+            const SizedBox(width: AppSpacing.mdLg),
+            SizedBox(
+              width: 88,
+              child: PrimaryButton(
+                title: AppStrings.actionEdit,
+                backgroundColor: context.appColors.bgSubtle,
+                textColor: context.appColors.textSecondary,
+                onTap: onEditTap,
+              ),
+            ),
+          ],
         ),
-        const SizedBox(width: AppSpacing.mdLg),
-        SizedBox(
-          width: 88,
-          child: PrimaryButton(
-            title: AppStrings.actionEdit,
-            backgroundColor: context.appColors.bgSubtle,
-            textColor: context.appColors.textSecondary,
-            onTap: onEditTap,
-          ),
+        const SizedBox(height: AppSpacing.mdLg),
+        CustomTextLink(
+          title: AppStrings.navMeasurements,
+          icon: Icons.bar_chart,
+          onPressed:
+              () => context.push(
+                '/subscribers/${subscriber.id}/measurements',
+                extra: subscriber.fullName,
+              ),
         ),
       ],
     );

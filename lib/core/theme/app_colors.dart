@@ -28,6 +28,8 @@ class AppColors {
   static const Color financeExpense = Color(0xFFB91C1C);
   static const Color financeNet = Color(0xFF0369A1);
   static const Color white = Color(0xFFFFFFFF);
+
+  static const Color photoViewerBackground = Color(0xFF000000);
 }
 
 class AppColorsLight {
@@ -53,29 +55,4 @@ class AppColorsLight {
   static const Color dangerBg = Color(0xFFFEF2F2);
   static const Color info = Color(0xFF4F46E5);
   static const Color infoBg = Color(0xFFF0F4FF);
-}
-
-class AppColorsDark {
-  AppColorsDark._();
-
-  static const Color textPrimary = Color(0xFFF1F5F9);
-  static const Color textSecondary = Color(0xFF94A3B8);
-  static const Color textTertiary = Color(0xFF64748B);
-  static const Color textDisabled = Color(0xFF475569);
-
-  static const Color bgScreen = Color(0xFF0F172A);
-  static const Color bgCard = Color(0xFF1E293B);
-  static const Color bgSubtle = Color(0xFF273449);
-
-  static const Color border = Color(0xFF334155);
-  static const Color primarySoftBg = Color(0xFF0C4A6E);
-
-  static const Color success = Color(0xFF4ADE80);
-  static const Color successBg = Color(0xFF14532D);
-  static const Color warning = Color(0xFFFBBF24);
-  static const Color warningBg = Color(0xFF78350F);
-  static const Color danger = Color(0xFFF87171);
-  static const Color dangerBg = Color(0xFF7F1D1D);
-  static const Color info = Color(0xFF818CF8);
-  static const Color infoBg = Color(0xFF312E81);
 }
