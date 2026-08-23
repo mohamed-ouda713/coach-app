@@ -34,14 +34,15 @@ class ClientPickerField extends StatelessWidget {
         DropdownButtonFormField<SubscriberModel>(
           initialValue: value,
           isExpanded: true,
-          items: subscribers
-              .map(
-                (subscriber) => DropdownMenuItem(
-                  value: subscriber,
-                  child: Text(subscriber.fullName),
-                ),
-              )
-              .toList(),
+          items:
+              subscribers
+                  .map(
+                    (subscriber) => DropdownMenuItem(
+                      value: subscriber,
+                      child: Text(subscriber.fullName),
+                    ),
+                  )
+                  .toList(),
           onChanged: onChanged,
           hint: Text(AppStrings.measurementsPickClientLabel),
           decoration: InputDecoration(

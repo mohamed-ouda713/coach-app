@@ -12,7 +12,9 @@ class MeasurementRepository {
   final SupabaseClient _client;
 
   Future<void> addMeasurement(Measurement measurement) async {
-    await _client.from(SupabaseTables.measurements).insert(measurement.toJson());
+    await _client
+        .from(SupabaseTables.measurements)
+        .insert(measurement.toJson());
   }
 
   Future<List<Measurement>> getMeasurementHistory(String subscriberId) async {
@@ -28,7 +30,9 @@ class MeasurementRepository {
   }
 
   Future<String> uploadPhoto(File file, String fileName) async {
-    await _client.storage.from(SupabaseBuckets.measurementPhotos).upload(fileName, file);
+    await _client.storage
+        .from(SupabaseBuckets.measurementPhotos)
+        .upload(fileName, file);
     return fileName;
   }
 

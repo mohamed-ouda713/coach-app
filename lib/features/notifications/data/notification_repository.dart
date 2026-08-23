@@ -34,23 +34,25 @@ class NotificationRepository {
   /// بترجع عدد الصفوف يلي فعليًا انعدّلت — صفر معناها الصف مش موجود
   /// أو سياسة RLS مانعة التحديث.
   Future<int> markAsRead(String notificationId) async {
-    final updated = await _client
-        .from(SupabaseTables.notifications)
-        .update({SupabaseColumns.isRead: true})
-        .eq(SupabaseColumns.id, notificationId)
-        .eq(SupabaseColumns.trainerId, _currentTrainerId)
-        .select();
+    final updated =
+        await _client
+            .from(SupabaseTables.notifications)
+            .update({SupabaseColumns.isRead: true})
+            .eq(SupabaseColumns.id, notificationId)
+            .eq(SupabaseColumns.trainerId, _currentTrainerId)
+            .select();
 
     return updated.length;
   }
 
   Future<int> markAllAsRead() async {
-    final updated = await _client
-        .from(SupabaseTables.notifications)
-        .update({SupabaseColumns.isRead: true})
-        .eq(SupabaseColumns.trainerId, _currentTrainerId)
-        .eq(SupabaseColumns.isRead, false)
-        .select();
+    final updated =
+        await _client
+            .from(SupabaseTables.notifications)
+            .update({SupabaseColumns.isRead: true})
+            .eq(SupabaseColumns.trainerId, _currentTrainerId)
+            .eq(SupabaseColumns.isRead, false)
+            .select();
 
     return updated.length;
   }

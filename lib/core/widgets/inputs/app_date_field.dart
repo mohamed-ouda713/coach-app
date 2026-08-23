@@ -70,7 +70,8 @@ class AppDateField extends StatelessWidget {
                 Text(
                   hasValue ? dateFormat.format(date!) : placeholder,
                   style: AppTextStyles.bodyS.copyWith(
-                    fontWeight: isHighlighted ? FontWeight.w600 : FontWeight.w400,
+                    fontWeight:
+                        isHighlighted ? FontWeight.w600 : FontWeight.w400,
                     color: isHighlighted ? primary : appColors.textTertiary,
                   ),
                 ),

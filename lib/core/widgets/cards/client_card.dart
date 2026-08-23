@@ -48,18 +48,31 @@ class ClientCard extends StatelessWidget {
           color: colorScheme.surface,
           borderRadius: BorderRadius.circular(AppRadius.clientCard),
           boxShadow: [
-            BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 12, offset: const Offset(0, 2)),
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 12,
+              offset: const Offset(0, 2),
+            ),
           ],
         ),
         child: Row(
           children: [
-            AppAvatar(name: name, imageUrl: imageUrl, gradientColors: gradientColors),
+            AppAvatar(
+              name: name,
+              imageUrl: imageUrl,
+              gradientColors: gradientColors,
+            ),
             const SizedBox(width: AppSpacing.mdLg),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(name, style: AppTextStyles.h5.copyWith(color: colorScheme.onSurface)),
+                  Text(
+                    name,
+                    style: AppTextStyles.h5.copyWith(
+                      color: colorScheme.onSurface,
+                    ),
+                  ),
                   const SizedBox(height: AppSpacing.xs),
                   Row(
                     children: [
@@ -71,7 +84,11 @@ class ClientCard extends StatelessWidget {
                 ],
               ),
             ),
-            Icon(Icons.chevron_right, size: AppSizes.iconMd, color: appColors.textDisabled),
+            Icon(
+              Icons.chevron_right,
+              size: AppSizes.iconMd,
+              color: appColors.textDisabled,
+            ),
           ],
         ),
       ),

@@ -207,7 +207,7 @@ class _SubscriberFormScreenState extends State<SubscriberFormScreen> {
       return;
     }
 
-     context.go(AppRoutes.home);
+    context.go(AppRoutes.home);
   }
 
   @override

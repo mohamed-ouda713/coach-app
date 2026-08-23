@@ -40,13 +40,31 @@ class MeasurementEntryCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(monthLabel, style: AppTextStyles.h5.copyWith(color: colorScheme.onSurface)),
+            Text(
+              monthLabel,
+              style: AppTextStyles.h5.copyWith(color: colorScheme.onSurface),
+            ),
             const SizedBox(height: AppSpacing.smMd),
             Row(
               children: [
-                _measure(weight.toStringAsFixed(1), AppStrings.measurementsWeightLabel, colorScheme.onSurface, appColors.textSecondary),
-                _measure(waist.toStringAsFixed(1), AppStrings.measurementsWaistLabel, colorScheme.onSurface, appColors.textSecondary),
-                _measure(belly.toStringAsFixed(1), AppStrings.measurementsBellyLabel, colorScheme.onSurface, appColors.textSecondary),
+                _measure(
+                  weight.toStringAsFixed(1),
+                  AppStrings.measurementsWeightLabel,
+                  colorScheme.onSurface,
+                  appColors.textSecondary,
+                ),
+                _measure(
+                  waist.toStringAsFixed(1),
+                  AppStrings.measurementsWaistLabel,
+                  colorScheme.onSurface,
+                  appColors.textSecondary,
+                ),
+                _measure(
+                  belly.toStringAsFixed(1),
+                  AppStrings.measurementsBellyLabel,
+                  colorScheme.onSurface,
+                  appColors.textSecondary,
+                ),
               ],
             ),
           ],
@@ -55,11 +73,22 @@ class MeasurementEntryCard extends StatelessWidget {
     );
   }
 
-  Widget _measure(String value, String label, Color textPrimary, Color textSecondary) {
+  Widget _measure(
+    String value,
+    String label,
+    Color textPrimary,
+    Color textSecondary,
+  ) {
     return Expanded(
       child: Column(
         children: [
-          Text(value, style: AppTextStyles.bodyM.copyWith(fontWeight: FontWeight.w600, color: textPrimary)),
+          Text(
+            value,
+            style: AppTextStyles.bodyM.copyWith(
+              fontWeight: FontWeight.w600,
+              color: textPrimary,
+            ),
+          ),
           const SizedBox(height: AppSpacing.xs / 2),
           Text(label, style: AppTextStyles.tiny.copyWith(color: textSecondary)),
         ],

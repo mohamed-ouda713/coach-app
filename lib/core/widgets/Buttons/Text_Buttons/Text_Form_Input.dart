@@ -56,46 +56,50 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
   Widget build(BuildContext context) {
     final textSecondaryColor = context.appColors.textSecondary;
 
-    final Widget? effectivePrefixIcon = widget.obscureText
-        ? IconButton(
-            icon: Icon(
-              _obscured
-                  ? Icons.visibility_off_outlined
-                  : Icons.visibility_outlined,
-              size: AppSizes.icon,
-              color: textSecondaryColor,
-            ),
-            onPressed: () => setState(() => _obscured = !_obscured),
-          )
-        : (widget.prefixIcon != null
-            ? IconTheme(
-                data: IconThemeData(color: textSecondaryColor),
-                child: widget.prefixIcon!,
-              )
-            : null);
+    final Widget? effectivePrefixIcon =
+        widget.obscureText
+            ? IconButton(
+              icon: Icon(
+                _obscured
+                    ? Icons.visibility_off_outlined
+                    : Icons.visibility_outlined,
+                size: AppSizes.icon,
+                color: textSecondaryColor,
+              ),
+              onPressed: () => setState(() => _obscured = !_obscured),
+            )
+            : (widget.prefixIcon != null
+                ? IconTheme(
+                  data: IconThemeData(color: textSecondaryColor),
+                  child: widget.prefixIcon!,
+                )
+                : null);
 
     // لو ما تم تمرير borderColor مخصص، منسيب border/enabledBorder فاضيين
     // (null) عشان يجيبوا الافتراضي من AppTheme.inputDecorationTheme —
     // هيك أي تعديل مستقبلي عالثيم بينعكس تلقائيًا هون بدون تغيير الـ widget.
-    final OutlineInputBorder? customBorder = widget.borderColor != null
-        ? OutlineInputBorder(
-            borderRadius: BorderRadius.circular(AppRadius.md),
-            borderSide: BorderSide(
-              color: widget.borderColor!,
-              width: AppBorders.regular,
-            ),
-          )
-        : null;
+    final OutlineInputBorder? customBorder =
+        widget.borderColor != null
+            ? OutlineInputBorder(
+              borderRadius: BorderRadius.circular(AppRadius.md),
+              borderSide: BorderSide(
+                color: widget.borderColor!,
+                width: AppBorders.regular,
+              ),
+            )
+            : null;
 
     return Column(
-      crossAxisAlignment: widget.textAlign == TextAlign.center
-          ? CrossAxisAlignment.center
-          : CrossAxisAlignment.start,
+      crossAxisAlignment:
+          widget.textAlign == TextAlign.center
+              ? CrossAxisAlignment.center
+              : CrossAxisAlignment.start,
       children: [
         Row(
-          mainAxisAlignment: widget.textAlign == TextAlign.center
-              ? MainAxisAlignment.center
-              : MainAxisAlignment.start,
+          mainAxisAlignment:
+              widget.textAlign == TextAlign.center
+                  ? MainAxisAlignment.center
+                  : MainAxisAlignment.start,
           children: [
             Text(
               widget.title,

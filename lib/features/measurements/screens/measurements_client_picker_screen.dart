@@ -85,8 +85,10 @@ class _MeasurementsClientPickerScreenState
 
                       final subscribers = switch (state) {
                         SubscriberLoaded(:final subscribers) => subscribers,
-                        SubscriberActionSuccess(:final subscribers) => subscribers,
-                        SubscriberActionInProgress(:final subscribers) => subscribers,
+                        SubscriberActionSuccess(:final subscribers) =>
+                          subscribers,
+                        SubscriberActionInProgress(:final subscribers) =>
+                          subscribers,
                         _ => const <SubscriberModel>[],
                       };
 

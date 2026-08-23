@@ -57,9 +57,10 @@ class AppErrorDialog extends StatelessWidget {
 
     final Color headerIconColor =
         isDestructive ? colorScheme.error : colorScheme.primary;
-    final Color headerBgColor = isDestructive
-        ? appColors.dangerBg
-        : colorScheme.primary.withOpacity(0.12);
+    final Color headerBgColor =
+        isDestructive
+            ? appColors.dangerBg
+            : colorScheme.primary.withOpacity(0.12);
 
     final hasCancel = cancelLabel != null;
 
@@ -152,7 +153,9 @@ class AppErrorDialog extends StatelessWidget {
                       onPressed: () => Navigator.of(context).pop(true),
                       style: ElevatedButton.styleFrom(
                         backgroundColor:
-                            isDestructive ? colorScheme.error : colorScheme.primary,
+                            isDestructive
+                                ? colorScheme.error
+                                : colorScheme.primary,
                         foregroundColor: Colors.white,
                         elevation: 0,
                         shape: RoundedRectangleBorder(

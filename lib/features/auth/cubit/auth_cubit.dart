@@ -18,9 +18,8 @@ class AuthCubit extends Cubit<AuthState> {
   AuthCubit(this._repository) : super(const AuthInitial()) {
     _checkInitialSession();
     _authSubscription = _repository.authStateChanges.listen(_onAuthChange);
-    _tokenRefreshSubscription = FirebaseMessaging.instance.onTokenRefresh.listen(
-      _onFcmTokenRefresh,
-    );
+    _tokenRefreshSubscription = FirebaseMessaging.instance.onTokenRefresh
+        .listen(_onFcmTokenRefresh);
   }
 
   final AuthRepository _repository;
@@ -63,7 +62,7 @@ class AuthCubit extends Cubit<AuthState> {
     try {
       await _repository.signIn(email: email, password: password);
       final currentUser = _repository.currentUser;
-      if(currentUser != null && currentUser.emailConfirmedAt == null) {
+      if (currentUser != null && currentUser.emailConfirmedAt == null) {
         await _repository.signOut();
         emit(const AuthSignUpEmailConfirmationRequired());
       }

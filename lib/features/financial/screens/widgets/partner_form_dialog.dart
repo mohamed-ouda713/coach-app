@@ -28,10 +28,11 @@ class PartnerFormDialog extends StatefulWidget {
   static Future<void> show(BuildContext context, {PartnerModel? partner}) {
     return showDialog<void>(
       context: context,
-      builder: (dialogContext) => BlocProvider.value(
-        value: context.read<FinancialCubit>(),
-        child: PartnerFormDialog(initialPartner: partner),
-      ),
+      builder:
+          (dialogContext) => BlocProvider.value(
+            value: context.read<FinancialCubit>(),
+            child: PartnerFormDialog(initialPartner: partner),
+          ),
     );
   }
 
@@ -148,10 +149,11 @@ class _PartnerFormDialogState extends State<PartnerFormDialog> {
                   FilteringTextInputFormatter.digitsOnly,
                   LengthLimitingTextInputFormatter(3),
                 ],
-                validator: (value) => FinancialValidators.sharePercentage(
-                  value,
-                  othersTotal: _othersTotal,
-                ),
+                validator:
+                    (value) => FinancialValidators.sharePercentage(
+                      value,
+                      othersTotal: _othersTotal,
+                    ),
               ),
               const SizedBox(height: AppSpacing.xxl),
               PrimaryButton(

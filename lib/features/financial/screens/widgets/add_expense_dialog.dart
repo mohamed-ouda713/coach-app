@@ -24,10 +24,11 @@ class AddExpenseDialog extends StatefulWidget {
   static Future<void> show(BuildContext context) {
     return showDialog<void>(
       context: context,
-      builder: (dialogContext) => BlocProvider.value(
-        value: context.read<FinancialCubit>(),
-        child: const AddExpenseDialog(),
-      ),
+      builder:
+          (dialogContext) => BlocProvider.value(
+            value: context.read<FinancialCubit>(),
+            child: const AddExpenseDialog(),
+          ),
     );
   }
 

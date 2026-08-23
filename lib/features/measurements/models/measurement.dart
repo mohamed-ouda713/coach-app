@@ -28,15 +28,18 @@ class Measurement {
     return Measurement(
       id: json[SupabaseColumns.id] as String?,
       subscriberId: json[SupabaseColumns.subscriberId] as String,
-      measurementMonth: DateTime.parse(json[SupabaseColumns.measurementMonth] as String),
+      measurementMonth: DateTime.parse(
+        json[SupabaseColumns.measurementMonth] as String,
+      ),
       weight: (json[SupabaseColumns.weight] as num).toDouble(),
       waistSize: (json[SupabaseColumns.waistSize] as num).toDouble(),
       abdomenSize: (json[SupabaseColumns.abdomenSize] as num).toDouble(),
       photoBeforeUrl: json[SupabaseColumns.photoBeforeUrl] as String?,
       photoAfterUrl: json[SupabaseColumns.photoAfterUrl] as String?,
-      createdAt: json[SupabaseColumns.createdAt] == null
-          ? null
-          : DateTime.parse(json[SupabaseColumns.createdAt] as String),
+      createdAt:
+          json[SupabaseColumns.createdAt] == null
+              ? null
+              : DateTime.parse(json[SupabaseColumns.createdAt] as String),
     );
   }
 

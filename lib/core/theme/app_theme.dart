@@ -94,10 +94,7 @@ class AppTheme {
           horizontal: AppSpacing.sm,
           vertical: AppSpacing.xl,
         ),
-        suffixIconConstraints: const BoxConstraints(
-          minWidth: 0,
-          minHeight: 0,
-        ),
+        suffixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
         hintStyle: AppTextStyles.bodyM.copyWith(color: textSecondary),
         helperMaxLines: 2,
         helperStyle: AppTextStyles.bodyS.copyWith(color: textSecondary),

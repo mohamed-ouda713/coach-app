@@ -47,12 +47,12 @@ class _FinancialScreenState extends State<FinancialScreen> {
           builder: (context, state) {
             return switch (state) {
               FinancialInitial() || FinancialLoading() => const Center(
-                  child: CircularProgressIndicator(),
-                ),
+                child: CircularProgressIndicator(),
+              ),
               FinancialError(:final message) => AppErrorView(
-                  message: message,
-                  onRetry: () => context.read<FinancialCubit>().loadMonth(),
-                ),
+                message: message,
+                onRetry: () => context.read<FinancialCubit>().loadMonth(),
+              ),
               FinancialLoaded() => _FinancialContent(state: state),
             };
           },
@@ -152,20 +152,14 @@ class _FinancialContent extends StatelessWidget {
           ),
         ),
         const SizedBox(height: AppSpacing.mdLg),
-        _PartnersCard(
-          partners: state.partners,
-          netProfit: state.netProfit,
-        ),
+        _PartnersCard(partners: state.partners, netProfit: state.netProfit),
       ],
     );
   }
 }
 
 class _PartnersCard extends StatelessWidget {
-  const _PartnersCard({
-    required this.partners,
-    required this.netProfit,
-  });
+  const _PartnersCard({required this.partners, required this.netProfit});
 
   final List<PartnerModel> partners;
   final double netProfit;
@@ -204,8 +198,8 @@ class _PartnersCard extends StatelessWidget {
                     i == 0 ? colorScheme.primary : appColors.textSecondary,
                 accentBackgroundColor:
                     i == 0 ? appColors.primarySoftBg : appColors.bgSubtle,
-                onEdit: () =>
-                    PartnerFormDialog.show(context, partner: partners[i]),
+                onEdit:
+                    () => PartnerFormDialog.show(context, partner: partners[i]),
                 // سلوك السحب لسا مش محدد (بند 4) — الزر بيترسم
                 // بحالة معطّلة جوا PartnerSplitCard لما onWithdraw تكون
                 // null.

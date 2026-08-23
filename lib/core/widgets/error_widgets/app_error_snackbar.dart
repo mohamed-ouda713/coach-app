@@ -32,8 +32,8 @@ class AppErrorSnackbar {
           content: Row(
             children: [
               Icon(
-                Icons.error_outline_rounded, 
-                size: AppSizes.icon, 
+                Icons.error_outline_rounded,
+                size: AppSizes.icon,
                 color: colorScheme.error,
               ),
               const SizedBox(width: AppSpacing.smMd),

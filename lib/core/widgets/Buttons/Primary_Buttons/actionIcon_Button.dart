@@ -9,9 +9,9 @@ class ActionIconButton extends StatelessWidget {
     super.key,
     required this.icon,
     this.onPressed,
-     this.containerColor,
+    this.containerColor,
     this.iconSize = AppSizes.icon,
-     this.iconColor,
+    this.iconColor,
   });
   final IconData icon;
   final VoidCallback? onPressed;
@@ -19,10 +19,10 @@ class ActionIconButton extends StatelessWidget {
   final double iconSize;
   final Color? iconColor;
   @override
-
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final effectiveContainerColor = containerColor ?? theme.colorScheme.surfaceContainerHigh;
+    final effectiveContainerColor =
+        containerColor ?? theme.colorScheme.surfaceContainerHigh;
     final effectiveIconColor = iconColor ?? theme.colorScheme.onSurface;
     return Container(
       padding: const EdgeInsets.all(AppSpacing.md),

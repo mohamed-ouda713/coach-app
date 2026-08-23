@@ -34,7 +34,9 @@ class CustomTextForm extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: AppTextStyles.bodyM.copyWith(color: colors.textSecondary),
+                style: AppTextStyles.bodyM.copyWith(
+                  color: colors.textSecondary,
+                ),
               ),
             ],
           ),

@@ -31,37 +31,41 @@ class SubscriberRepository {
   }
 
   Future<SubscriberModel> getSubscriberById(String id) async {
-    final response = await _client
-        .from(SupabaseTables.subscribers)
-        .select()
-        .eq(SupabaseColumns.id, id)
-        .eq(SupabaseColumns.trainerId, _currentTrainerId)
-        .single();
+    final response =
+        await _client
+            .from(SupabaseTables.subscribers)
+            .select()
+            .eq(SupabaseColumns.id, id)
+            .eq(SupabaseColumns.trainerId, _currentTrainerId)
+            .single();
 
     return SubscriberModel.fromJson(response);
   }
 
   Future<SubscriberModel> addSubscriber(SubscriberModel subscriber) async {
-    final payload = subscriber.toInsertJson()
-      ..[SupabaseColumns.trainerId] = _currentTrainerId;
+    final payload =
+        subscriber.toInsertJson()
+          ..[SupabaseColumns.trainerId] = _currentTrainerId;
 
-    final response = await _client
-        .from(SupabaseTables.subscribers)
-        .insert(payload)
-        .select()
-        .single();
+    final response =
+        await _client
+            .from(SupabaseTables.subscribers)
+            .insert(payload)
+            .select()
+            .single();
 
     return SubscriberModel.fromJson(response);
   }
 
   Future<SubscriberModel> updateSubscriber(SubscriberModel subscriber) async {
-    final response = await _client
-        .from(SupabaseTables.subscribers)
-        .update(subscriber.toInsertJson())
-        .eq(SupabaseColumns.id, subscriber.id)
-        .eq(SupabaseColumns.trainerId, _currentTrainerId)
-        .select()
-        .single();
+    final response =
+        await _client
+            .from(SupabaseTables.subscribers)
+            .update(subscriber.toInsertJson())
+            .eq(SupabaseColumns.id, subscriber.id)
+            .eq(SupabaseColumns.trainerId, _currentTrainerId)
+            .select()
+            .single();
 
     return SubscriberModel.fromJson(response);
   }

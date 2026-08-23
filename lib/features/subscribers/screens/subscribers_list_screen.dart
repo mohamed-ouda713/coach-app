@@ -73,7 +73,6 @@ class _SubscribersListScreenState extends State<SubscribersListScreen> {
       child: SafeArea(
         child: BlocBuilder<SubscriberCubit, SubscriberState>(
           builder: (context, state) {
-
             switch (state) {
               case SubscriberLoaded(:final subscribers):
                 _lastKnownSubscribers = subscribers;
@@ -97,13 +96,17 @@ class _SubscribersListScreenState extends State<SubscribersListScreen> {
             if (state is SubscriberError && _lastKnownSubscribers.isEmpty) {
               return AppErrorView(
                 message: state.message,
-                onRetry: () => context.read<SubscriberCubit>().loadSubscribers(),
+                onRetry:
+                    () => context.read<SubscriberCubit>().loadSubscribers(),
               );
             }
 
             final isRefreshing = state is SubscriberActionInProgress;
 
-            return _buildContent(_lastKnownSubscribers, isRefreshing: isRefreshing);
+            return _buildContent(
+              _lastKnownSubscribers,
+              isRefreshing: isRefreshing,
+            );
           },
         ),
       ),
@@ -117,9 +120,10 @@ class _SubscribersListScreenState extends State<SubscribersListScreen> {
     final total = subscribers.length;
     final active =
         subscribers.where((s) => s.status == SubscriptionStatus.active).length;
-    final expiring = subscribers
-        .where((s) => s.status == SubscriptionStatus.expiringSoon)
-        .length;
+    final expiring =
+        subscribers
+            .where((s) => s.status == SubscriptionStatus.expiringSoon)
+            .length;
 
     final filtered = _applyFilter(subscribers);
 
@@ -149,50 +153,53 @@ class _SubscribersListScreenState extends State<SubscribersListScreen> {
 
         SizedBox(
           height: 3,
-          child: isRefreshing
-              ? const LinearProgressIndicator(
-                  backgroundColor: Colors.transparent,
-                )
-              : null,
+          child:
+              isRefreshing
+                  ? const LinearProgressIndicator(
+                    backgroundColor: Colors.transparent,
+                  )
+                  : null,
         ),
         const SizedBox(height: AppSpacing.sm),
 
         Expanded(
           child: RefreshIndicator(
             onRefresh: _refresh,
-            child: filtered.isEmpty
-                ? ListView(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    children: [
-                      const SizedBox(height: AppSpacing.xxl),
-                      AppErrorView(
-                        message: AppStrings.noMatchingClients,
-                        icon: Icons.people_outline,
+            child:
+                filtered.isEmpty
+                    ? ListView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      children: [
+                        const SizedBox(height: AppSpacing.xxl),
+                        AppErrorView(
+                          message: AppStrings.noMatchingClients,
+                          icon: Icons.people_outline,
+                        ),
+                      ],
+                    )
+                    : ListView.separated(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.lgAlt,
                       ),
-                    ],
-                  )
-                : ListView.separated(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.lgAlt,
-                    ),
-                    itemCount: filtered.length,
-                    separatorBuilder: (_, __) =>
-                        const SizedBox(height: AppSpacing.smMd),
-                    itemBuilder: (context, index) {
-                      final subscriber = filtered[index];
-                      final card = ClientCard(
-                        name: subscriber.fullName,
-                        goal: subscriber.goal,
-                        status: subscriber.status,
-                        onTap: () => context.push('/clients/${subscriber.id}'),
-                      );
+                      itemCount: filtered.length,
+                      separatorBuilder:
+                          (_, __) => const SizedBox(height: AppSpacing.smMd),
+                      itemBuilder: (context, index) {
+                        final subscriber = filtered[index];
+                        final card = ClientCard(
+                          name: subscriber.fullName,
+                          goal: subscriber.goal,
+                          status: subscriber.status,
+                          onTap:
+                              () => context.push('/clients/${subscriber.id}'),
+                        );
 
-                      return subscriber.status == SubscriptionStatus.expired
-                          ? Opacity(opacity: 0.45, child: card)
-                          : card;
-                    },
-                  ),
+                        return subscriber.status == SubscriptionStatus.expired
+                            ? Opacity(opacity: 0.45, child: card)
+                            : card;
+                      },
+                    ),
           ),
         ),
       ],
@@ -258,18 +265,21 @@ class _SubscribersListScreenState extends State<SubscribersListScreen> {
       child: ListView(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lgAlt),
-        children: filters.entries
-            .map(
-              (entry) => Padding(
-                padding: const EdgeInsetsDirectional.only(end: AppSpacing.sm),
-                child: SelectableChip(
-                  label: entry.value,
-                  isSelected: _activeFilter == entry.key,
-                  onTap: () => setState(() => _activeFilter = entry.key),
-                ),
-              ),
-            )
-            .toList(),
+        children:
+            filters.entries
+                .map(
+                  (entry) => Padding(
+                    padding: const EdgeInsetsDirectional.only(
+                      end: AppSpacing.sm,
+                    ),
+                    child: SelectableChip(
+                      label: entry.value,
+                      isSelected: _activeFilter == entry.key,
+                      onTap: () => setState(() => _activeFilter = entry.key),
+                    ),
+                  ),
+                )
+                .toList(),
       ),
     );
   }
@@ -277,15 +287,18 @@ class _SubscribersListScreenState extends State<SubscribersListScreen> {
   List<SubscriberModel> _applyFilter(List<SubscriberModel> subscribers) {
     return switch (_activeFilter) {
       _StatusFilter.all => subscribers,
-      _StatusFilter.active => subscribers
-          .where((s) => s.status == SubscriptionStatus.active)
-          .toList(),
-      _StatusFilter.expiringSoon => subscribers
-          .where((s) => s.status == SubscriptionStatus.expiringSoon)
-          .toList(),
-      _StatusFilter.expired => subscribers
-          .where((s) => s.status == SubscriptionStatus.expired)
-          .toList(),
+      _StatusFilter.active =>
+        subscribers
+            .where((s) => s.status == SubscriptionStatus.active)
+            .toList(),
+      _StatusFilter.expiringSoon =>
+        subscribers
+            .where((s) => s.status == SubscriptionStatus.expiringSoon)
+            .toList(),
+      _StatusFilter.expired =>
+        subscribers
+            .where((s) => s.status == SubscriptionStatus.expired)
+            .toList(),
     };
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:glow_up/core/constants/app_spacing.dart';
-import 'package:glow_up/core/theme/context_extensions.dart'; 
+import 'package:glow_up/core/theme/context_extensions.dart';
 import '../../constants/app_borders.dart';
 import '../../constants/app_radius.dart';
 import '../../constants/app_sizes.dart';
@@ -55,7 +55,7 @@ class BottomNavBar extends StatelessWidget {
               onTap: () => onTap(index),
               borderRadius: BorderRadius.circular(AppRadius.md),
               highlightColor: Colors.transparent,
-              splashColor: colorScheme.primary.withOpacity(0.08), 
+              splashColor: colorScheme.primary.withOpacity(0.08),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -78,9 +78,7 @@ class BottomNavBar extends StatelessWidget {
                   const SizedBox(height: AppSpacing.xs / 2),
                   Text(
                     item.label,
-                    style: AppTextStyles.tiny.copyWith(
-                      color: currentColor,
-                    ),
+                    style: AppTextStyles.tiny.copyWith(color: currentColor),
                   ),
                 ],
               ),

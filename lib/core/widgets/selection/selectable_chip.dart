@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:glow_up/core/constants/app_spacing.dart';
-import 'package:glow_up/core/theme/context_extensions.dart'; 
+import 'package:glow_up/core/theme/context_extensions.dart';
 import '../../constants/app_borders.dart';
 import '../../constants/app_radius.dart';
 import '../../theme/app_text_styles.dart';
@@ -33,15 +33,16 @@ class SelectableChip extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 150),
         padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.lg, 
+          horizontal: AppSpacing.lg,
           vertical: AppSpacing.sm,
         ),
         decoration: BoxDecoration(
           color: isSelected ? colorScheme.primary : surfaceColor,
           borderRadius: BorderRadius.circular(AppRadius.badge),
-          border: isSelected
-              ? null
-              : Border.all(color: borderColor, width: AppBorders.thin),
+          border:
+              isSelected
+                  ? null
+                  : Border.all(color: borderColor, width: AppBorders.thin),
         ),
         child: Text(
           label,

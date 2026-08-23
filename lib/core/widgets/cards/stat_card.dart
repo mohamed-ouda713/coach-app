@@ -28,7 +28,8 @@ class StatCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final appColors = context.appColors;
-    final numberStyle = size == StatCardSize.small ? AppTextStyles.h3 : AppTextStyles.h4;
+    final numberStyle =
+        size == StatCardSize.small ? AppTextStyles.h3 : AppTextStyles.h4;
 
     return Container(
       padding: const EdgeInsets.symmetric(
@@ -44,10 +45,15 @@ class StatCard extends StatelessWidget {
         children: [
           Text(
             value,
-            style: numberStyle.copyWith(color: valueColor ?? colorScheme.onSurface),
+            style: numberStyle.copyWith(
+              color: valueColor ?? colorScheme.onSurface,
+            ),
           ),
           const SizedBox(height: AppSpacing.xs / 2),
-          Text(label, style: AppTextStyles.tiny.copyWith(color: appColors.textSecondary)),
+          Text(
+            label,
+            style: AppTextStyles.tiny.copyWith(color: appColors.textSecondary),
+          ),
         ],
       ),
     );
