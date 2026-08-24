@@ -60,13 +60,10 @@ class FinancialRepository {
         .gte(SupabaseColumns.subscriptionStartDate, _isoDate(start))
         .lt(SupabaseColumns.subscriptionStartDate, _isoDate(end));
 
-    return (response as List).fold<double>(
-      0,
-      (sum, row) {
-        final fee = (row as Map)[SupabaseColumns.subscriptionFee];
-        return sum + (fee is num ? fee.toDouble() : 0.0);
-      },
-    );
+    return (response as List).fold<double>(0, (sum, row) {
+      final fee = (row as Map)[SupabaseColumns.subscriptionFee];
+      return sum + (fee is num ? fee.toDouble() : 0.0);
+    });
   }
 
   Future<TransactionModel> addExpense({
@@ -81,11 +78,12 @@ class FinancialRepository {
       SupabaseColumns.date: _isoDate(date),
     };
 
-    final response = await _client
-        .from(SupabaseTables.expenses)
-        .insert(payload)
-        .select()
-        .single();
+    final response =
+        await _client
+            .from(SupabaseTables.expenses)
+            .insert(payload)
+            .select()
+            .single();
 
     return TransactionModel.fromJson({
       ...response,
@@ -115,11 +113,12 @@ class FinancialRepository {
       SupabaseColumns.sharePercentage: sharePercentage,
     };
 
-    final response = await _client
-        .from(SupabaseTables.partners)
-        .insert(payload)
-        .select()
-        .single();
+    final response =
+        await _client
+            .from(SupabaseTables.partners)
+            .insert(payload)
+            .select()
+            .single();
 
     return PartnerModel.fromJson(response);
   }
@@ -129,16 +128,17 @@ class FinancialRepository {
     required String name,
     required double sharePercentage,
   }) async {
-    final response = await _client
-        .from(SupabaseTables.partners)
-        .update({
-          SupabaseColumns.name: name,
-          SupabaseColumns.sharePercentage: sharePercentage,
-        })
-        .eq(SupabaseColumns.id, id)
-        .eq(SupabaseColumns.trainerId, _currentTrainerId)
-        .select()
-        .single();
+    final response =
+        await _client
+            .from(SupabaseTables.partners)
+            .update({
+              SupabaseColumns.name: name,
+              SupabaseColumns.sharePercentage: sharePercentage,
+            })
+            .eq(SupabaseColumns.id, id)
+            .eq(SupabaseColumns.trainerId, _currentTrainerId)
+            .select()
+            .single();
 
     return PartnerModel.fromJson(response);
   }

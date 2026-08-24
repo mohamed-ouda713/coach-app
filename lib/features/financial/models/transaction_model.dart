@@ -49,23 +49,23 @@ class TransactionModel extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        trainerId,
-        amount,
-        description,
-        date,
-        type,
-        createdAt,
-      ];
+    id,
+    trainerId,
+    amount,
+    description,
+    date,
+    type,
+    createdAt,
+  ];
 }
 
 TransactionType _typeFromDb(String value) => switch (value) {
-      'income' => TransactionType.income,
-      'expense' => TransactionType.expense,
-      _ => throw FormatException('Unknown transaction type: $value'),
-    };
+  'income' => TransactionType.income,
+  'expense' => TransactionType.expense,
+  _ => throw FormatException('Unknown transaction type: $value'),
+};
 
 String _typeToDb(TransactionType type) => switch (type) {
-      TransactionType.income => 'income',
-      TransactionType.expense => 'expense',
-    };
+  TransactionType.income => 'income',
+  TransactionType.expense => 'expense',
+};

@@ -29,42 +29,43 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     final Color textPrimary = colorScheme.onSurface;
     final Color textTertiary = appColors.textTertiary;
 
-    final titleWidget = subtitle == null
-        ? Text(
-            title,
-            textAlign: TextAlign.center,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: AppTextStyles.h4.copyWith(
-              color: textPrimary,
-              fontSize: 17,
-              fontWeight: FontWeight.w700,
-            ),
-          )
-        : Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                title,
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: AppTextStyles.h4.copyWith(
-                  color: textPrimary,
-                  fontSize: 17,
-                  fontWeight: FontWeight.w700,
+    final titleWidget =
+        subtitle == null
+            ? Text(
+              title,
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTextStyles.h4.copyWith(
+                color: textPrimary,
+                fontSize: 17,
+                fontWeight: FontWeight.w700,
+              ),
+            )
+            : Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  title,
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyles.h4.copyWith(
+                    color: textPrimary,
+                    fontSize: 17,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
-              ),
-              const SizedBox(height: AppSpacing.xs / 2),
-              Text(
-                subtitle!,
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: AppTextStyles.tiny.copyWith(color: textTertiary),
-              ),
-            ],
-          );
+                const SizedBox(height: AppSpacing.xs / 2),
+                Text(
+                  subtitle!,
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyles.tiny.copyWith(color: textTertiary),
+                ),
+              ],
+            );
 
     const double sidePadding = AppSpacing.lgAlt;
 
@@ -109,13 +110,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               bottom: 0,
               child: Align(
                 alignment: AlignmentDirectional.centerEnd,
-                child: actions != null && actions!.isNotEmpty
-                    ? Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: actions!,
-                      )
-                    : const SizedBox.shrink(),
+                child:
+                    actions != null && actions!.isNotEmpty
+                        ? Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: actions!,
+                        )
+                        : const SizedBox.shrink(),
               ),
             ),
           ],

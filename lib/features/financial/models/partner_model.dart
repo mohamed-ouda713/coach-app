@@ -40,10 +40,7 @@ class PartnerModel extends Equatable {
     };
   }
 
-  PartnerModel copyWith({
-    String? name,
-    double? sharePercentage,
-  }) {
+  PartnerModel copyWith({String? name, double? sharePercentage}) {
     return PartnerModel(
       id: id,
       trainerId: trainerId,

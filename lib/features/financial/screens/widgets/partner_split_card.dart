@@ -31,10 +31,10 @@ class PartnerSplitCard extends StatelessWidget {
   final Color accentColor;
   final Color accentBackgroundColor;
   final VoidCallback onEdit;
-   // كانت: required this.onWithdraw
+  // كانت: required this.onWithdraw
   final VoidCallback? onWithdraw;
 
-   /// رصيد الشريك = صافي الربح الشهري × نسبته. مافي رصيد مخزّن أو
+  /// رصيد الشريك = صافي الربح الشهري × نسبته. مافي رصيد مخزّن أو
   /// متراكم — هاد المصدر الوحيد للرقم بكل الشاشة.
   double get _calculatedBalance {
     if (netProfit <= 0) return 0;
@@ -122,9 +122,10 @@ class _WithdrawButton extends StatelessWidget {
         child: Text(
           AppStrings.financeWithdraw,
           style: AppTextStyles.buttonS.copyWith(
-            color: isEnabled
-                ? appColors.textSecondary
-                : appColors.textSecondary.withOpacity(0.4),
+            color:
+                isEnabled
+                    ? appColors.textSecondary
+                    : appColors.textSecondary.withOpacity(0.4),
           ),
         ),
       ),

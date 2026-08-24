@@ -33,29 +33,39 @@ class PhotoUploadBox extends StatelessWidget {
           decoration: BoxDecoration(
             color: appColors.bgSubtle,
             borderRadius: BorderRadius.circular(AppRadius.card),
-            border: Border.all(color: appColors.border, width: AppBorders.regular),
-            image: imageFile != null
-                ? DecorationImage(image: FileImage(imageFile!), fit: BoxFit.cover)
-                : null,
+            border: Border.all(
+              color: appColors.border,
+              width: AppBorders.regular,
+            ),
+            image:
+                imageFile != null
+                    ? DecorationImage(
+                      image: FileImage(imageFile!),
+                      fit: BoxFit.cover,
+                    )
+                    : null,
           ),
           alignment: Alignment.center,
-          child: imageFile == null
-              ? Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.add_a_photo_outlined,
-                      color: appColors.textSecondary,
-                      size: AppSizes.icon,
-                    ),
-                    const SizedBox(height: AppSpacing.sm),
-                    Text(
-                      label,
-                      style: AppTextStyles.caption.copyWith(color: appColors.textSecondary),
-                    ),
-                  ],
-                )
-              : null,
+          child:
+              imageFile == null
+                  ? Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.add_a_photo_outlined,
+                        color: appColors.textSecondary,
+                        size: AppSizes.icon,
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+                      Text(
+                        label,
+                        style: AppTextStyles.caption.copyWith(
+                          color: appColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  )
+                  : null,
         ),
       ),
     );

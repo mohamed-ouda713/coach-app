@@ -57,14 +57,20 @@ class SubscriberModel extends Equatable {
       height: (json[SupabaseColumns.height] as num?)?.toDouble(),
       goal: _goalFromDb(json[SupabaseColumns.goal] as String),
       program: _programFromDb(json[SupabaseColumns.program] as String),
-      subscriptionStartDate:
-          DateTime.parse(json[SupabaseColumns.subscriptionStartDate] as String),
-      subscriptionEndDate:
-          DateTime.parse(json[SupabaseColumns.subscriptionEndDate] as String),
-      subscriptionFee: (json[SupabaseColumns.subscriptionFee] as num).toDouble(),
-      lastProgramUpdate: json[SupabaseColumns.lastProgramUpdate] != null
-          ? DateTime.parse(json[SupabaseColumns.lastProgramUpdate] as String)
-          : null,
+      subscriptionStartDate: DateTime.parse(
+        json[SupabaseColumns.subscriptionStartDate] as String,
+      ),
+      subscriptionEndDate: DateTime.parse(
+        json[SupabaseColumns.subscriptionEndDate] as String,
+      ),
+      subscriptionFee:
+          (json[SupabaseColumns.subscriptionFee] as num).toDouble(),
+      lastProgramUpdate:
+          json[SupabaseColumns.lastProgramUpdate] != null
+              ? DateTime.parse(
+                json[SupabaseColumns.lastProgramUpdate] as String,
+              )
+              : null,
       note: json[SupabaseColumns.note] as String?,
       createdAt: DateTime.parse(json[SupabaseColumns.createdAt] as String),
     );
@@ -112,7 +118,8 @@ class SubscriberModel extends Equatable {
       height: height ?? this.height,
       goal: goal ?? this.goal,
       program: program ?? this.program,
-      subscriptionStartDate: subscriptionStartDate ?? this.subscriptionStartDate,
+      subscriptionStartDate:
+          subscriptionStartDate ?? this.subscriptionStartDate,
       subscriptionEndDate: subscriptionEndDate ?? this.subscriptionEndDate,
       subscriptionFee: subscriptionFee ?? this.subscriptionFee,
       lastProgramUpdate: lastProgramUpdate ?? this.lastProgramUpdate,
@@ -123,45 +130,45 @@ class SubscriberModel extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        trainerId,
-        fullName,
-        age,
-        weight,
-        height,
-        goal,
-        program,
-        subscriptionStartDate,
-        subscriptionEndDate,
-        subscriptionFee,
-        lastProgramUpdate,
-        note,
-        createdAt,
-      ];
+    id,
+    trainerId,
+    fullName,
+    age,
+    weight,
+    height,
+    goal,
+    program,
+    subscriptionStartDate,
+    subscriptionEndDate,
+    subscriptionFee,
+    lastProgramUpdate,
+    note,
+    createdAt,
+  ];
 }
 
 FitnessGoal _goalFromDb(String value) => switch (value) {
-      'weight_loss' => FitnessGoal.weightLoss,
-      'muscle_gain' => FitnessGoal.muscleGain,
-      'general_fitness' => FitnessGoal.generalFitness,
-      'recovery' => FitnessGoal.recovery,
-      _ => throw FormatException('Unknown goal value: $value'),
-    };
+  'weight_loss' => FitnessGoal.weightLoss,
+  'muscle_gain' => FitnessGoal.muscleGain,
+  'general_fitness' => FitnessGoal.generalFitness,
+  'recovery' => FitnessGoal.recovery,
+  _ => throw FormatException('Unknown goal value: $value'),
+};
 
 String _goalToDb(FitnessGoal goal) => switch (goal) {
-      FitnessGoal.weightLoss => 'weight_loss',
-      FitnessGoal.muscleGain => 'muscle_gain',
-      FitnessGoal.generalFitness => 'general_fitness',
-      FitnessGoal.recovery => 'recovery',
-    };
+  FitnessGoal.weightLoss => 'weight_loss',
+  FitnessGoal.muscleGain => 'muscle_gain',
+  FitnessGoal.generalFitness => 'general_fitness',
+  FitnessGoal.recovery => 'recovery',
+};
 
 ProgramType _programFromDb(String value) => switch (value) {
-      'gym' => ProgramType.gym,
-      'home' => ProgramType.home,
-      _ => throw FormatException('Unknown program value: $value'),
-    };
+  'gym' => ProgramType.gym,
+  'home' => ProgramType.home,
+  _ => throw FormatException('Unknown program value: $value'),
+};
 
 String _programToDb(ProgramType program) => switch (program) {
-      ProgramType.gym => 'gym',
-      ProgramType.home => 'home',
-    };
+  ProgramType.gym => 'gym',
+  ProgramType.home => 'home',
+};

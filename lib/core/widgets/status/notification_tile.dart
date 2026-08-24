@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:glow_up/core/constants/app_spacing.dart';
-import 'package:glow_up/core/theme/context_extensions.dart'; 
+import 'package:glow_up/core/theme/context_extensions.dart';
 import '../../constants/app_enums.dart';
 import '../../constants/app_radius.dart';
 import '../../theme/app_text_styles.dart';
@@ -35,38 +35,38 @@ class NotificationTile extends StatelessWidget {
 
     final (icon, iconColor, iconBg) = switch (type) {
       NotificationType.subscriptionExpiry => (
-          Icons.notifications,
-          colorScheme.primary,
-          appColors.primarySoftBg,
-        ),
+        Icons.notifications,
+        colorScheme.primary,
+        appColors.primarySoftBg,
+      ),
       NotificationType.overdueMeasurement => (
-          Icons.show_chart,
-          appColors.warning,
-          appColors.warningBg,
-        ),
+        Icons.show_chart,
+        appColors.warning,
+        appColors.warningBg,
+      ),
       NotificationType.newProgramNeeded => (
-          Icons.account_box,
-          appColors.info,
-          appColors.infoBg,
-        ),
+        Icons.account_box,
+        appColors.info,
+        appColors.infoBg,
+      ),
       NotificationType.progressUpdate => (
-          Icons.check,
-          appColors.success,
-          appColors.successBg,
-        ),
+        Icons.check,
+        appColors.success,
+        appColors.successBg,
+      ),
     };
 
     final double currentOpacity = isRead ? 0.55 : 1.0;
 
     return Container(
-      padding: const EdgeInsets.all(AppSpacing.md), 
+      padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
         color: cardBg.withOpacity(currentOpacity),
         borderRadius: BorderRadius.circular(AppRadius.clientCard),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: isRead ? 0.02 : 0.05), 
-            blurRadius: 12, 
+            color: Colors.black.withValues(alpha: isRead ? 0.02 : 0.05),
+            blurRadius: 12,
             offset: const Offset(0, 2),
           ),
         ],
@@ -78,16 +78,16 @@ class NotificationTile extends StatelessWidget {
             width: 46,
             height: 46,
             decoration: BoxDecoration(
-              color: iconBg.withOpacity(currentOpacity), 
+              color: iconBg.withOpacity(currentOpacity),
               shape: BoxShape.circle,
             ),
             child: Icon(
-              icon, 
-              size: 20, 
+              icon,
+              size: 20,
               color: iconColor.withOpacity(currentOpacity),
             ),
           ),
-          const SizedBox(width: AppSpacing.md), 
+          const SizedBox(width: AppSpacing.md),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,7 +98,7 @@ class NotificationTile extends StatelessWidget {
                     color: textPrimary.withOpacity(currentOpacity),
                   ),
                 ),
-                const SizedBox(height: AppSpacing.xs), 
+                const SizedBox(height: AppSpacing.xs),
                 Text(
                   timeAgo,
                   style: AppTextStyles.caption.copyWith(
@@ -109,13 +109,13 @@ class NotificationTile extends StatelessWidget {
             ),
           ),
           if (!isRead) ...[
-            const SizedBox(width: AppSpacing.md), 
+            const SizedBox(width: AppSpacing.md),
             Container(
               width: 8,
               height: 8,
-              margin: const EdgeInsets.only(top: AppSpacing.xs / 2), 
+              margin: const EdgeInsets.only(top: AppSpacing.xs / 2),
               decoration: BoxDecoration(
-                color: iconColor, 
+                color: iconColor,
                 shape: BoxShape.circle,
               ),
             ),

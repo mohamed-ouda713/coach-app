@@ -12,7 +12,8 @@ class SubscriberCubit extends Cubit<SubscriberState> {
 
   final SubscriberRepository _repository;
 
-  Future<void> loadSubscribers() => _fetchAndEmit(_repository.getAllSubscribers);
+  Future<void> loadSubscribers() =>
+      _fetchAndEmit(_repository.getAllSubscribers);
 
   Future<void> searchSubscribers(String query) {
     if (query.trim().isEmpty) return loadSubscribers();
@@ -51,9 +52,10 @@ class SubscriberCubit extends Cubit<SubscriberState> {
     emit(SubscriberActionInProgress(currentList));
     try {
       final updatedSubscriber = await _repository.updateSubscriber(subscriber);
-      final updated = currentList
-          .map((s) => s.id == updatedSubscriber.id ? updatedSubscriber : s)
-          .toList();
+      final updated =
+          currentList
+              .map((s) => s.id == updatedSubscriber.id ? updatedSubscriber : s)
+              .toList();
       emit(SubscriberActionSuccess(updated));
     } catch (e) {
       emit(SubscriberError(ExceptionMapper.mapToMessage(e)));
@@ -65,9 +67,9 @@ class SubscriberCubit extends Cubit<SubscriberState> {
     emit(SubscriberActionInProgress(currentList));
     try {
       await _repository.deleteSubscriber(id);
-      emit(SubscriberActionSuccess(
-        currentList.where((s) => s.id != id).toList(),
-      ));
+      emit(
+        SubscriberActionSuccess(currentList.where((s) => s.id != id).toList()),
+      );
     } catch (e) {
       emit(SubscriberError(ExceptionMapper.mapToMessage(e)));
     }
@@ -84,6 +86,17 @@ class SubscriberCubit extends Cubit<SubscriberState> {
     } catch (e) {
       throw DatabaseException(ExceptionMapper.mapToMessage(e));
     }
+  }
+
+  /// بترجع العميلة من القائمة المحمّلة أصلاً بالذاكرة، أو null لو مش
+  /// موجودة (مثلاً القائمة لسا ما انجلبت، أو انفتحت الشاشة من رابط
+  /// مباشر). بتستخدمها شاشة الملف الشخصي عشان ترسم فورًا بدل ما
+  /// تستنى رحلة شبكة لبيانات موجودة عندها.
+  SubscriberModel? findLoadedSubscriber(String id) {
+    for (final subscriber in _currentSubscribers()) {
+      if (subscriber.id == id) return subscriber;
+    }
+    return null;
   }
 
   List<SubscriberModel> _currentSubscribers() {

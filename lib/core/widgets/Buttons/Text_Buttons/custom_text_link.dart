@@ -44,7 +44,8 @@ class CustomTextLink extends StatelessWidget {
       behavior: HitTestBehavior.opaque,
       onTap: onPressed,
       child: Row(
-        mainAxisSize: MainAxisSize.min, // 👈 يمنع الزر من أخذ مساحة أكبر من محتواه
+        mainAxisSize:
+            MainAxisSize.min, // 👈 يمنع الزر من أخذ مساحة أكبر من محتواه
         children: [
           if (icon != null) ...[
             const SizedBox(width: AppSpacing.xs),

@@ -18,26 +18,25 @@ class EditSubscriberScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create:
-          (context) => SubscriberDetailCubit(
-            context.read<SubscriberCubit>(),
-          )..load(subscriberId),
+          (context) =>
+              SubscriberDetailCubit(context.read<SubscriberCubit>())
+                ..load(subscriberId),
       child: Scaffold(
         body: BlocBuilder<SubscriberDetailCubit, SubscriberDetailState>(
           builder: (context, state) {
             return switch (state) {
-              SubscriberDetailInitial() ||
-              SubscriberDetailLoading() => const Center(
-                child: CircularProgressIndicator(),
-              ),
+              SubscriberDetailInitial() || SubscriberDetailLoading() =>
+                const Center(child: CircularProgressIndicator()),
               SubscriberDetailError(:final message) => AppErrorView(
                 message: message,
                 onRetry:
-                    () => context
-                        .read<SubscriberDetailCubit>()
-                        .load(subscriberId),
+                    () => context.read<SubscriberDetailCubit>().load(
+                      subscriberId,
+                    ),
               ),
-              SubscriberDetailLoaded(:final subscriber) =>
-                SubscriberFormScreen(initialSubscriber: subscriber),
+              SubscriberDetailLoaded(:final subscriber) => SubscriberFormScreen(
+                initialSubscriber: subscriber,
+              ),
             };
           },
         ),

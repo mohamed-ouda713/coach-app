@@ -31,7 +31,7 @@ class AuthRepository {
     return _client.auth.signUp(
       email: email,
       password: password,
-      data: {UserMetadataKeys.fullName: fullName,},
+      data: {UserMetadataKeys.fullName: fullName},
     );
   }
 

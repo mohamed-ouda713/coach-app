@@ -16,7 +16,6 @@ class AppErrorView extends StatelessWidget {
     this.icon = Icons.error_outline_rounded,
   });
 
- 
   final String message;
 
   final VoidCallback? onRetry;
@@ -44,23 +43,24 @@ class AppErrorView extends StatelessWidget {
                 color: appColors.dangerBg,
                 borderRadius: BorderRadius.circular(AppRadius.iconCircleXl),
               ),
-              child: Icon(icon, size: AppSizes.iconDisplay, color: colorScheme.error),
+              child: Icon(
+                icon,
+                size: AppSizes.iconDisplay,
+                color: colorScheme.error,
+              ),
             ),
             const SizedBox(height: AppSpacing.xl),
-            
+
             Text(
               message,
               textAlign: TextAlign.center,
               style: AppTextStyles.h4.copyWith(color: colorScheme.onSurface),
             ),
-            
+
             if (onRetry != null) ...[
               const SizedBox(height: AppSpacing.xxl),
               ConstrainedBox(
-                constraints: const BoxConstraints(
-                  minWidth: 160, 
-                  maxWidth: 240, 
-                ),
+                constraints: const BoxConstraints(minWidth: 160, maxWidth: 240),
                 child: SizedBox(
                   height: AppSizes.buttonHeightSm,
                   child: ElevatedButton.icon(
@@ -69,12 +69,17 @@ class AppErrorView extends StatelessWidget {
                       backgroundColor: appColors.primarySoftBg,
                       foregroundColor: appColors.onPrimarySoftBg,
                       elevation: 0,
-                      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.xl,
+                      ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(AppRadius.card),
                       ),
                     ),
-                    icon: const Icon(Icons.refresh_rounded, size: AppSizes.icon),
+                    icon: const Icon(
+                      Icons.refresh_rounded,
+                      size: AppSizes.icon,
+                    ),
                     label: Text(
                       retryLabel ?? AppStrings.errorViewRetry,
                       style: AppTextStyles.buttonM,

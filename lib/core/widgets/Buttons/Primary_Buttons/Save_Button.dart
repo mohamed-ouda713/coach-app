@@ -8,9 +8,9 @@ class SaveButton extends StatelessWidget {
   const SaveButton({
     super.key,
     required this.title,
-     this.backgroundColor,
+    this.backgroundColor,
     this.onTap,
-     this.textColor,
+    this.textColor,
   });
   final String title;
   final Color? backgroundColor;
@@ -19,7 +19,8 @@ class SaveButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final effectiveBackgroundColor = backgroundColor ?? theme.colorScheme.primary;
+    final effectiveBackgroundColor =
+        backgroundColor ?? theme.colorScheme.primary;
     final effectiveTextColor = textColor ?? theme.colorScheme.onPrimary;
     return GestureDetector(
       onTap: onTap,

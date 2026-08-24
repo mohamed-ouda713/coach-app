@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:glow_up/core/constants/app_spacing.dart';
-import 'package:glow_up/core/theme/context_extensions.dart'; 
+import 'package:glow_up/core/theme/context_extensions.dart';
 import '../../constants/app_enums.dart';
 import '../../constants/app_radius.dart';
 import '../../constants/app_strings.dart';
@@ -10,10 +10,10 @@ import '../../theme/app_text_styles.dart';
 /// نفس البنية بالضبط (padding + radius + نص)، بس بألوان مختلفة حسب الحالة.
 class _Badge extends StatelessWidget {
   const _Badge({
-    required this.label, 
-    required this.background, 
+    required this.label,
+    required this.background,
     required this.foreground,
-    this.textStyle, 
+    this.textStyle,
   });
 
   final String label;
@@ -25,8 +25,8 @@ class _Badge extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.md, 
-        vertical: AppSpacing.xs / 2, 
+        horizontal: AppSpacing.md,
+        vertical: AppSpacing.xs / 2,
       ),
       decoration: BoxDecoration(
         color: background,
@@ -34,10 +34,12 @@ class _Badge extends StatelessWidget {
       ),
       child: Text(
         label,
-        style: textStyle ?? AppTextStyles.tiny.copyWith(
-          color: foreground, 
-          fontWeight: FontWeight.w500,
-        ),
+        style:
+            textStyle ??
+            AppTextStyles.tiny.copyWith(
+              color: foreground,
+              fontWeight: FontWeight.w500,
+            ),
       ),
     );
   }
@@ -56,20 +58,20 @@ class StatusBadge extends StatelessWidget {
 
     final (Color bg, Color fg, String label) = switch (status) {
       SubscriptionStatus.active => (
-          appColors.successBg,
-          appColors.success,
-          AppStrings.statusActive,
-        ),
+        appColors.successBg,
+        appColors.success,
+        AppStrings.statusActive,
+      ),
       SubscriptionStatus.expiringSoon => (
-          appColors.warningBg,
-          appColors.warning,
-          AppStrings.statusExpiringSoon,
-        ),
+        appColors.warningBg,
+        appColors.warning,
+        AppStrings.statusExpiringSoon,
+      ),
       SubscriptionStatus.expired => (
-          appColors.dangerBg,
-          colorScheme.error,
-          AppStrings.statusExpired,
-        ),
+        appColors.dangerBg,
+        colorScheme.error,
+        AppStrings.statusExpired,
+      ),
     };
 
     return _Badge(label: label, background: bg, foreground: fg);
@@ -88,15 +90,15 @@ class ProgramBadge extends StatelessWidget {
 
     final (Color bg, Color fg, String label) = switch (program) {
       ProgramType.gym => (
-          appColors.infoBg,
-          appColors.info,
-          AppStrings.programGym,
-        ),
+        appColors.infoBg,
+        appColors.info,
+        AppStrings.programGym,
+      ),
       ProgramType.home => (
-          appColors.infoBg,
-          appColors.info,
-          AppStrings.programHome,
-        ),
+        appColors.infoBg,
+        appColors.info,
+        AppStrings.programHome,
+      ),
     };
 
     return _Badge(label: label, background: bg, foreground: fg);
@@ -115,25 +117,25 @@ class GoalBadge extends StatelessWidget {
 
     final (Color bg, Color fg, String label) = switch (goal) {
       FitnessGoal.weightLoss => (
-          appColors.primarySoftBg,
-          appColors.primaryOnSoftBg,
-          AppStrings.goalWeightLoss,
-        ),
+        appColors.primarySoftBg,
+        appColors.primaryOnSoftBg,
+        AppStrings.goalWeightLoss,
+      ),
       FitnessGoal.generalFitness => (
-          appColors.primarySoftBg,
-          appColors.primaryOnSoftBg,
-          AppStrings.goalGeneralFitness,
-        ),
+        appColors.primarySoftBg,
+        appColors.primaryOnSoftBg,
+        AppStrings.goalGeneralFitness,
+      ),
       FitnessGoal.muscleGain => (
-          appColors.infoBg,
-          appColors.info,
-          AppStrings.goalMuscleGain,
-        ),
+        appColors.infoBg,
+        appColors.info,
+        AppStrings.goalMuscleGain,
+      ),
       FitnessGoal.recovery => (
-          appColors.warningBg,
-          appColors.warning,
-          AppStrings.goalRecovery,
-        ),
+        appColors.warningBg,
+        appColors.warning,
+        AppStrings.goalRecovery,
+      ),
     };
 
     return _Badge(label: label, background: bg, foreground: fg);
@@ -142,7 +144,11 @@ class GoalBadge extends StatelessWidget {
 
 /// شارة صغيرة توضح مقدار التغيّر بقياس معيّن (وزن/خصر/بطن) بين شهرين.
 class MeasurementDeltaBadge extends StatelessWidget {
-  const MeasurementDeltaBadge({super.key, required this.value, required this.unit});
+  const MeasurementDeltaBadge({
+    super.key,
+    required this.value,
+    required this.unit,
+  });
 
   final double value;
   final String unit;
@@ -164,7 +170,7 @@ class MeasurementDeltaBadge extends StatelessWidget {
       background: bg,
       foreground: fg,
       textStyle: AppTextStyles.buttonS.copyWith(
-        color: fg, 
+        color: fg,
         fontWeight: FontWeight.w700,
       ),
     );

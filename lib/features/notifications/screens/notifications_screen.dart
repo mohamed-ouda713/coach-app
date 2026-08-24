@@ -39,7 +39,9 @@ class NotificationsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<NotificationCubit, NotificationState>(
       builder: (context, state) {
-        if (state is NotificationLoading) {
+        // NotificationInitial كمان بتعني "لسا عم نجيب" — قبل هيك كانت
+        // بتوقع بآخر return وتعرض شاشة فاضية بدون أي مؤشر تحميل.
+        if (state is NotificationLoading || state is NotificationInitial) {
           return const NotificationsLoading();
         }
 

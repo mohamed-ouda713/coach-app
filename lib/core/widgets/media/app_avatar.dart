@@ -23,10 +23,10 @@ class AppAvatar extends StatelessWidget {
   final List<Color> gradientColors;
 
   double get _diameter => switch (size) {
-        AvatarSize.small => AppSizes.avatarSm,
-        AvatarSize.medium => AppSizes.avatarMd,
-        AvatarSize.large => AppSizes.avatarLogo,
-      };
+    AvatarSize.small => AppSizes.avatarSm,
+    AvatarSize.medium => AppSizes.avatarMd,
+    AvatarSize.large => AppSizes.avatarLogo,
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -37,29 +37,35 @@ class AppAvatar extends StatelessWidget {
       height: _diameter,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        gradient: hasImage
-            ? null
-            : LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: gradientColors,
-              ),
-        image: hasImage
-            ? DecorationImage(image: NetworkImage(imageUrl!), fit: BoxFit.cover)
-            : null,
+        gradient:
+            hasImage
+                ? null
+                : LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: gradientColors,
+                ),
+        image:
+            hasImage
+                ? DecorationImage(
+                  image: NetworkImage(imageUrl!),
+                  fit: BoxFit.cover,
+                )
+                : null,
       ),
       alignment: Alignment.center,
-      child: hasImage
-          ? null
-          : Text(
-              name.trim().isNotEmpty ? name.trim()[0] : '؟',
-              style: TextStyle(
-                fontFamily: 'IBMPlexSansArabic',
-                fontWeight: FontWeight.w700,
-                fontSize: _diameter * 0.36,
-                color: Colors.white,
+      child:
+          hasImage
+              ? null
+              : Text(
+                name.trim().isNotEmpty ? name.trim()[0] : '؟',
+                style: TextStyle(
+                  fontFamily: 'IBMPlexSansArabic',
+                  fontWeight: FontWeight.w700,
+                  fontSize: _diameter * 0.36,
+                  color: Colors.white,
+                ),
               ),
-            ),
     );
   }
 }

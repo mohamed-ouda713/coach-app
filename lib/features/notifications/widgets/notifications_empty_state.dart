@@ -11,7 +11,10 @@ class NotificationsEmptyState extends StatelessWidget {
     return Center(
       child: Text(
         AppStrings.notificationsEmpty,
-        style: TextStyle(color: context.appColors.textSecondary, fontSize: AppSizes.iconXxs),
+        style: TextStyle(
+          color: context.appColors.textSecondary,
+          fontSize: AppSizes.iconXxs,
+        ),
       ),
     );
   }

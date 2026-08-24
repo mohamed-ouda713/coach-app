@@ -22,13 +22,7 @@ enum NotificationType {
 }
 
 /// نوع البرنامج التدريبي — Post-MVP (Feature: Exercise Programs Module)
-enum ProgramType {
-  gym,
-  home,
-}
+enum ProgramType { gym, home }
 
 /// نوع الحركة المالية — Feature 5 (Financial)
-enum TransactionType {
-  income,
-  expense,
-}
+enum TransactionType { income, expense }

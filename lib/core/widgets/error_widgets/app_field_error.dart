@@ -19,7 +19,7 @@ class AppFieldError extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsetsDirectional.only(
-        top: AppSpacing.xs, 
+        top: AppSpacing.xs,
         start: AppSpacing.xs,
       ),
       child: Row(
@@ -29,15 +29,15 @@ class AppFieldError extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 1.5),
             child: Icon(
-              Icons.error_outline_rounded, 
-              size: AppSizes.iconXs, 
+              Icons.error_outline_rounded,
+              size: AppSizes.iconXs,
               color: danger,
             ),
           ),
           const SizedBox(width: AppSpacing.xs),
           Flexible(
             child: Text(
-              message!, 
+              message!,
               style: AppTextStyles.caption.copyWith(color: danger),
             ),
           ),

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:glow_up/core/errors/exception_mapper.dart';
 
 import '../data/notification_repository.dart';
+import '../services/app_badge_service.dart';
 import 'notification_state.dart';
 
 class NotificationCubit extends Cubit<NotificationState> {
@@ -10,14 +11,19 @@ class NotificationCubit extends Cubit<NotificationState> {
 
   final NotificationRepository _repository;
 
+  /// الـ spinner بيظهر بس لما ما يكون في إشعارات معروضة أصلاً. لو في
+  /// قائمة على الشاشة (تحديث بعد "تعليم كمقروء" مثلاً) بنحدّثها بمكانها
+  /// بدل ما نمسحها ونرجّع شاشة تحميل.
   Future<void> fetchNotifications() async {
-    emit(NotificationLoading());
+    if (state is! NotificationLoaded) emit(NotificationLoading());
     try {
       final notifications = await _repository.getNotifications();
+      final unreadCount = notifications.where((n) => !n.isRead).length;
+      await AppBadgeService.update(unreadCount);
       emit(
         NotificationLoaded(
           notifications: notifications,
-          unreadCount: notifications.where((n) => !n.isRead).length,
+          unreadCount: unreadCount,
         ),
       );
     } catch (e) {

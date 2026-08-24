@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:glow_up/core/theme/context_extensions.dart';
 
 class NotificationsLoading extends StatelessWidget {
   const NotificationsLoading({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // اللون لازم يكون الأساسي مش primarySoftBg — هداك لون خلفية باهت
+    // للشارات، والمؤشر فيه بيصير شبه مخفي على الخلفية الفاتحة.
     return Center(
-      child: CircularProgressIndicator(color: context.appColors.primarySoftBg),
+      child: CircularProgressIndicator(
+        color: Theme.of(context).colorScheme.primary,
+      ),
     );
   }
 }

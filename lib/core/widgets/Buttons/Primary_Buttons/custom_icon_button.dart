@@ -38,11 +38,7 @@ class CustomIconButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(AppRadius.md),
           ),
           child: Center(
-            child: Icon(
-              icon,
-              size: iconSize,
-              color: effectiveIconColor,
-            ),
+            child: Icon(icon, size: iconSize, color: effectiveIconColor),
           ),
         ),
       ),

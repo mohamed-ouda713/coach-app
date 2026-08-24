@@ -19,7 +19,9 @@ class MeasurementsCubit extends Cubit<MeasurementsState> {
   Future<void> loadHistory(String subscriberId) async {
     emit(const MeasurementsLoading());
     try {
-      final measurements = await _repository.getMeasurementHistory(subscriberId);
+      final measurements = await _repository.getMeasurementHistory(
+        subscriberId,
+      );
       emit(MeasurementsLoaded(measurements));
     } catch (e) {
       emit(MeasurementsError(ExceptionMapper.mapToMessage(e)));
@@ -55,11 +57,13 @@ class MeasurementsCubit extends Cubit<MeasurementsState> {
       await _repository.addMeasurement(toSave);
       emit(const MeasurementSaved());
     } on supabase.PostgrestException catch (e) {
-      emit(MeasurementsError(
-        e.code == '23505'
-            ? AppStrings.measurementsDuplicateMonth
-            : ExceptionMapper.mapToMessage(e),
-      ));
+      emit(
+        MeasurementsError(
+          e.code == '23505'
+              ? AppStrings.measurementsDuplicateMonth
+              : ExceptionMapper.mapToMessage(e),
+        ),
+      );
     } catch (e) {
       emit(MeasurementsError(ExceptionMapper.mapToMessage(e)));
     }

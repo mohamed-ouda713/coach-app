@@ -108,9 +108,7 @@ class NotificationListItem extends StatelessWidget {
                 body,
                 style: TextStyle(
                   color:
-                      isRead
-                          ? appColors.textTertiary
-                          : appColors.textSecondary,
+                      isRead ? appColors.textTertiary : appColors.textSecondary,
                 ),
               ),
               const SizedBox(height: AppSpacing.xs),

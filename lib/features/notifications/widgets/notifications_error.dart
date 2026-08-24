@@ -8,7 +8,10 @@ class NotificationsError extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-    child: Text(message, style: TextStyle(color: Theme.of(context).colorScheme.error)),
+      child: Text(
+        message,
+        style: TextStyle(color: Theme.of(context).colorScheme.error),
+      ),
     );
   }
 }
