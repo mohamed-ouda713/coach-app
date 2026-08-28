@@ -1,5 +1,6 @@
 plugins {
     id("com.android.application")
+    id("com.google.gms.google-services")
     id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
@@ -11,6 +12,9 @@ android {
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
+        // 1. تفعيل Desugaring لحل مشكلة flutter_local_notifications
+        isCoreLibraryDesugaringEnabled = true
+
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
@@ -41,4 +45,9 @@ android {
 
 flutter {
     source = "../.."
+}
+
+// 2. تحديث نسخة المكتبة المطلوبة لـ 2.1.4
+dependencies {
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 }

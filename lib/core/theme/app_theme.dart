@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import '../constants/app_borders.dart';
 import '../constants/app_radius.dart';
 import '../constants/app_sizes.dart';
+import '../constants/app_spacing.dart';
 import 'app_colors.dart';
+import 'app_colors_dark.dart';
+import 'app_colors_extension.dart';
 import 'app_text_styles.dart';
 
 class AppTheme {
@@ -17,6 +20,7 @@ class AppTheme {
     textPrimary: AppColorsLight.textPrimary,
     textSecondary: AppColorsLight.textSecondary,
     danger: AppColorsLight.danger,
+    extension: AppColorsExtension.light,
   );
 
   static ThemeData get dark => _build(
@@ -28,6 +32,7 @@ class AppTheme {
     textPrimary: AppColorsDark.textPrimary,
     textSecondary: AppColorsDark.textSecondary,
     danger: AppColorsDark.danger,
+    extension: AppColorsExtension.dark,
   );
 
   static ThemeData _build({
@@ -39,6 +44,7 @@ class AppTheme {
     required Color textPrimary,
     required Color textSecondary,
     required Color danger,
+    required AppColorsExtension extension,
   }) {
     return ThemeData(
       useMaterial3: true,
@@ -58,6 +64,9 @@ class AppTheme {
         surface: bgCard,
         onSurface: textPrimary,
       ),
+      // Custom colors that don't have a standard ColorScheme role
+      // Access via `context.appColors`
+      extensions: [extension],
       textTheme: TextTheme(
         displayLarge: AppTextStyles.displayXL.copyWith(color: textPrimary),
         headlineLarge: AppTextStyles.h1.copyWith(color: textPrimary),
@@ -76,20 +85,53 @@ class AppTheme {
           ),
         ),
       ),
+      // مصدر واحد لشكل كل حقول الإدخال بالتطبيق (يشمل CustomTextFormField).
+      // أي تعديل هون بينعكس تلقائيًا على كل الحقول بدون ما نلمس أي widget.
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: bgSubtle,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 14),
+        fillColor: bgCard,
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.sm,
+          vertical: AppSpacing.xl,
+        ),
+        suffixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
+        hintStyle: AppTextStyles.bodyM.copyWith(color: textSecondary),
+        helperMaxLines: 2,
+        helperStyle: AppTextStyles.bodyS.copyWith(color: textSecondary),
+        labelStyle: TextStyle(
+          color: textSecondary,
+          fontWeight: FontWeight.bold,
+        ),
+        floatingLabelStyle: const TextStyle(
+          color: AppColors.primary,
+          fontWeight: FontWeight.bold,
+        ),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppRadius.card),
-          borderSide: BorderSide(color: border, width: AppBorders.regular),
+          borderRadius: BorderRadius.circular(AppRadius.md),
+          borderSide: BorderSide(color: border, width: AppBorders.thin),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadius.md),
+          borderSide: BorderSide(color: border, width: AppBorders.thin),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppRadius.card),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           borderSide: BorderSide(
             color: AppColors.primary,
             width: AppBorders.regular,
           ),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadius.md),
+          borderSide: BorderSide(color: danger),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadius.md),
+          borderSide: BorderSide(color: danger, width: AppBorders.regular),
+        ),
+        errorStyle: AppTextStyles.bodyS.copyWith(
+          color: danger,
+          fontWeight: FontWeight.w500,
         ),
       ),
     );

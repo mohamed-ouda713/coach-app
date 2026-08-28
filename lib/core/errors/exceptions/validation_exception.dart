@@ -1,4 +1,3 @@
-
 import 'package:glow_up/core/errors/error_messages.dart';
 
 import 'app_exception.dart';
@@ -9,17 +8,17 @@ class ValidationException extends AppException {
   const ValidationException(super.message);
 
   factory ValidationException.requiredField() =>
-      const ValidationException(ErrorMessages.requiredField);
+      ValidationException(ErrorMessages.requiredField);
 
   factory ValidationException.invalidEmail() =>
-      const ValidationException(ErrorMessages.invalidEmail);
+      ValidationException(ErrorMessages.invalidEmail);
 
   factory ValidationException.invalidPhone() =>
-      const ValidationException(ErrorMessages.invalidPhone);
+      ValidationException(ErrorMessages.invalidPhone);
 
   factory ValidationException.passwordTooShort() =>
-      const ValidationException(ErrorMessages.passwordTooShort);
+      ValidationException(ErrorMessages.passwordTooShort);
 
   factory ValidationException.generic() =>
-      const ValidationException(ErrorMessages.validationGeneric);
+      ValidationException(ErrorMessages.validationGeneric);
 }

@@ -1,5 +1,3 @@
-
-
 import 'package:glow_up/core/errors/error_messages.dart';
 
 import 'app_exception.dart';
@@ -12,14 +10,14 @@ class AppStorageException extends AppException {
   const AppStorageException(super.message);
 
   factory AppStorageException.fileTooLarge() =>
-      const AppStorageException(ErrorMessages.fileTooLarge);
+      AppStorageException(ErrorMessages.fileTooLarge);
 
   factory AppStorageException.uploadFailed() =>
-      const AppStorageException(ErrorMessages.uploadFailed);
+      AppStorageException(ErrorMessages.uploadFailed);
 
   factory AppStorageException.fileNotFound() =>
-      const AppStorageException(ErrorMessages.fileNotFound);
+      AppStorageException(ErrorMessages.fileNotFound);
 
   factory AppStorageException.generic() =>
-      const AppStorageException(ErrorMessages.storageGeneric);
+      AppStorageException(ErrorMessages.storageGeneric);
 }
