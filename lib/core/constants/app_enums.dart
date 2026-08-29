@@ -1,11 +1,23 @@
-/// حالة اشتراك المشتركة — تستخدم بالـ Home + الإشعارات
+/// حالة اشتراك المشترك — تستخدم بالـ Home + الإشعارات
 enum SubscriptionStatus {
   active,
-  expiringSoon, // قبل الانتهاء بيوم واحد
+
+  /// باقي [SubscriptionThresholds.expiringSoonDays] أيام أو أقل على
+  /// الانتهاء. ملاحظة مقصودة: الـ push بينبعت قبل يوم واحد بس
+  /// (supabase/functions/send-notifications) — الشارة تنبيه مبكر
+  /// بتشوفه المدرب وهي بالتطبيق، والإشعار تذكير أخير.
+  expiringSoon,
   expired,
 }
 
-/// هدف المشتركة — Feature 3 (بروفايل المشتركة)
+/// حدود حساب حالة الاشتراك — مكان واحد بدل رقم مبعثر بالكود.
+class SubscriptionThresholds {
+  SubscriptionThresholds._();
+
+  static const int expiringSoonDays = 3;
+}
+
+/// هدف المشترك — Feature 3 (بروفايل المشترك)
 enum FitnessGoal {
   weightLoss, // خسارة وزن
   muscleGain, // زيادة كتلة
