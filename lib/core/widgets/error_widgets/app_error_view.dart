@@ -7,6 +7,9 @@ import '../../constants/app_sizes.dart';
 import '../../constants/app_spacing.dart';
 import '../../theme/app_text_styles.dart';
 
+/// نبرة العرض — خطأ (أحمر) أو حالة فاضية محايدة.
+enum AppErrorViewTone { error, empty }
+
 class AppErrorView extends StatelessWidget {
   const AppErrorView({
     super.key,
@@ -14,6 +17,7 @@ class AppErrorView extends StatelessWidget {
     this.onRetry,
     this.retryLabel,
     this.icon = Icons.error_outline_rounded,
+    this.tone = AppErrorViewTone.error,
   });
 
   final String message;
@@ -23,10 +27,21 @@ class AppErrorView extends StatelessWidget {
   final String? retryLabel;
   final IconData icon;
 
+  /// نفس الودجت بتستخدم لحالتين مختلفتين: خطأ حقيقي، و"ما في نتائج".
+  /// الأحمر مناسب للأول بس — بحالة القائمة الفاضية بيوحي إنه صار خطأ
+  /// وما في خطأ.
+  final AppErrorViewTone tone;
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final appColors = context.appColors;
+
+    final isError = tone == AppErrorViewTone.error;
+    final iconBg = isError ? appColors.dangerBg : appColors.bgSubtle;
+    final iconColor = isError ? colorScheme.error : appColors.textTertiary;
+    final messageColor =
+        isError ? colorScheme.onSurface : appColors.textSecondary;
 
     return Center(
       child: Padding(
@@ -40,21 +55,17 @@ class AppErrorView extends StatelessWidget {
               width: AppSizes.avatarLogo,
               height: AppSizes.avatarLogo,
               decoration: BoxDecoration(
-                color: appColors.dangerBg,
+                color: iconBg,
                 borderRadius: BorderRadius.circular(AppRadius.iconCircleXl),
               ),
-              child: Icon(
-                icon,
-                size: AppSizes.iconDisplay,
-                color: colorScheme.error,
-              ),
+              child: Icon(icon, size: AppSizes.iconDisplay, color: iconColor),
             ),
             const SizedBox(height: AppSpacing.xl),
 
             Text(
               message,
               textAlign: TextAlign.center,
-              style: AppTextStyles.h4.copyWith(color: colorScheme.onSurface),
+              style: AppTextStyles.h4.copyWith(color: messageColor),
             ),
 
             if (onRetry != null) ...[

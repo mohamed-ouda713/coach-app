@@ -36,9 +36,19 @@ class BottomNavBar extends StatelessWidget {
     final Color activeBg = appColors.primarySoftBg;
     final Color inactiveColor = appColors.textTertiary;
 
+    // الشريط بينحط كـ bottomNavigationBar، والـ Scaffold ما بيضيف
+    // مساحة الـ home indicator تلقائيًا لودجت مخصصة زي هاي — فكان
+    // المحتوى ينزل تحت الشريط الأبيض وتنقص أسماء التبويبات. منزيد
+    // الارتفاع بمقدار الـ inset ومنحط الحشوة تحت.
+    final bottomInset = MediaQuery.viewPaddingOf(context).bottom;
+
     return Container(
-      height: AppSizes.bottomNavHeight,
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+      height: AppSizes.bottomNavHeight + bottomInset,
+      padding: EdgeInsets.only(
+        left: AppSpacing.sm,
+        right: AppSpacing.sm,
+        bottom: bottomInset,
+      ),
       decoration: BoxDecoration(
         color: bg,
         border: Border(top: BorderSide(color: border, width: AppBorders.thin)),
@@ -55,7 +65,7 @@ class BottomNavBar extends StatelessWidget {
               onTap: () => onTap(index),
               borderRadius: BorderRadius.circular(AppRadius.md),
               highlightColor: Colors.transparent,
-              splashColor: colorScheme.primary.withOpacity(0.08),
+              splashColor: colorScheme.primary.withValues(alpha: 0.08),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -63,7 +73,7 @@ class BottomNavBar extends StatelessWidget {
                   AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
                     curve: Curves.easeInOut,
-                    width: 48,
+                    width: AppSizes.navItemWidth,
                     height: AppSizes.toggleHeight,
                     decoration: BoxDecoration(
                       color: isActive ? activeBg : Colors.transparent,

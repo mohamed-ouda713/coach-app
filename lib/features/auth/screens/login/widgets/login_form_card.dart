@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:glow_up/core/constants/app_sizes.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:glow_up/core/constants/app_radius.dart';
 import 'package:glow_up/core/constants/app_spacing.dart';
@@ -51,7 +52,9 @@ class _LoginFormCardState extends State<LoginFormCard> {
         return Stack(
           children: [
             Positioned(
-              top: MediaQuery.of(context).size.height * 0.32,
+              top:
+                  MediaQuery.of(context).size.height *
+                  AppSizes.authCardTopFraction,
               bottom: 0,
               left: 0,
               right: 0,
