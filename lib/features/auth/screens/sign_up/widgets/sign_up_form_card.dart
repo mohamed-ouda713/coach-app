@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:glow_up/core/constants/app_sizes.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:glow_up/core/constants/app_radius.dart';
 import 'package:glow_up/core/constants/app_spacing.dart';
@@ -6,9 +7,9 @@ import 'package:glow_up/core/constants/app_strings.dart';
 import 'package:glow_up/core/widgets/status/app_success_snackbar.dart';
 import 'package:glow_up/features/auth/cubit/auth_cubit.dart';
 import 'package:glow_up/features/auth/cubit/auth_state.dart';
-import 'package:glow_up/features/auth/screens/signup/widgets/signup_fields.dart';
-import 'package:glow_up/features/auth/screens/signup/widgets/signUp_footer.dart';
-import 'package:glow_up/features/auth/screens/signup/widgets/signUp_form_heading.dart';
+import 'package:glow_up/features/auth/screens/sign_up/widgets/sign_up_fields.dart';
+import 'package:glow_up/features/auth/screens/sign_up/widgets/sign_up_footer.dart';
+import 'package:glow_up/features/auth/screens/sign_up/widgets/sign_up_form_heading.dart';
 import 'package:glow_up/routing/app_router.dart';
 import 'package:go_router/go_router.dart';
 
@@ -47,7 +48,8 @@ class _SignupFormCardState extends State<SignupFormCard> {
     return Stack(
       children: [
         Positioned(
-          top: MediaQuery.of(context).size.height * 0.32,
+          top:
+              MediaQuery.of(context).size.height * AppSizes.authCardTopFraction,
           bottom: 0,
           left: 0,
           right: 0,

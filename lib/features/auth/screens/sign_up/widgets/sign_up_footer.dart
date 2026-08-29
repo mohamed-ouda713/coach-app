@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:glow_up/core/constants/app_spacing.dart';
 import 'package:glow_up/core/constants/app_strings.dart';
 import 'package:glow_up/core/theme/app_colors.dart';
-import 'package:glow_up/core/theme/app_colors_dark.dart';
 import 'package:glow_up/core/theme/context_extensions.dart';
-import 'package:glow_up/core/widgets/Buttons/Primary_Buttons/primary_Buttons.dart';
-import 'package:glow_up/core/widgets/Buttons/Text_Buttons/custom_text_link.dart';
+import 'package:glow_up/core/widgets/buttons/primary_button.dart';
+import 'package:glow_up/core/widgets/buttons/custom_text_link.dart';
 import 'package:glow_up/core/widgets/layout/or_divider.dart';
 import 'package:glow_up/routing/app_router.dart';
 import 'package:go_router/go_router.dart';
@@ -30,7 +29,7 @@ class SignupFooter extends StatelessWidget {
           onTap: onSignUpPressed,
           isLoading: isLoading,
           backgroundColor: AppColors.primary,
-          textColor: AppColorsDark.textPrimary,
+          textColor: Theme.of(context).colorScheme.onPrimary,
         ),
         const SizedBox(height: AppSpacing.xl),
 
@@ -39,10 +38,9 @@ class SignupFooter extends StatelessWidget {
 
         // 5️⃣ رابط الانتقال لصفحة الدخول
         CustomTextLink(
-          textButton: AppStrings.loginCta,
-          textButtonColor: context.appColors.info,
-          title: AppStrings.loginNoAccount,
-          textColor: context.appColors.textSecondary,
+          title: AppStrings.loginCta,
+          textColor: context.appColors.link,
+          underline: true,
           onPressed: () {
             if (onPressed != null) {
               onPressed!();

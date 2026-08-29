@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:glow_up/core/constants/app_sizes.dart';
 import 'package:glow_up/core/constants/app_spacing.dart';
 import 'package:glow_up/core/constants/app_strings.dart';
 import 'package:glow_up/core/theme/app_colors.dart';
@@ -20,7 +21,9 @@ class SignupHeader extends StatelessWidget {
 
         // 2️⃣ الهيدر واللوجو
         Positioned(
-          top: MediaQuery.of(context).size.height * 0.08,
+          top:
+              MediaQuery.of(context).size.height *
+              AppSizes.authHeaderTopFraction,
           left: 0,
           right: 0,
           child: Column(
@@ -38,7 +41,7 @@ class SignupHeader extends StatelessWidget {
                 style: AppTextStyles.bodyM.copyWith(
                   color: Theme.of(
                     context,
-                  ).colorScheme.onPrimary.withOpacity(0.85),
+                  ).colorScheme.onPrimary.withValues(alpha: 0.85),
                 ),
               ),
             ],

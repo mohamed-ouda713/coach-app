@@ -3,7 +3,7 @@ import 'package:glow_up/core/constants/app_sizes.dart';
 import 'package:glow_up/core/constants/app_spacing.dart';
 import 'package:glow_up/core/constants/app_strings.dart';
 import 'package:glow_up/core/theme/context_extensions.dart';
-import 'package:glow_up/core/widgets/Buttons/Text_Buttons/Text_Form_Input.dart';
+import 'package:glow_up/core/widgets/inputs/custom_text_form_field.dart';
 import 'package:glow_up/core/widgets/error_widgets/app_error_card.dart';
 import 'package:glow_up/features/auth/helper/app_validators.dart';
 
