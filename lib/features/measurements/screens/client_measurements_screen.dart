@@ -1,5 +1,5 @@
-import 'package:glow_up/core/localization/app_locale.dart';
 import 'package:flutter/material.dart';
+import 'package:glow_up/core/localization/app_locale.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -12,6 +12,7 @@ import '../../../core/constants/app_strings.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/theme/context_extensions.dart';
+import '../../../core/utils/app_logger.dart';
 import '../../../core/widgets/cards/stat_card.dart';
 import '../../../core/widgets/layout/custom_app_bar.dart';
 import '../../../core/widgets/status/app_success_snackbar.dart';
@@ -56,11 +57,17 @@ class _ClientMeasurementsScreenState extends State<ClientMeasurementsScreen> {
   Future<void> _refresh() =>
       context.read<MeasurementsCubit>().loadHistory(widget.subscriberId);
 
-  void _openAddMeasurement() {
-    context.push(
+  Future<void> _openAddMeasurement() async {
+    final added = await context.push<bool>(
       '/subscribers/${widget.subscriberId}/measurements/add',
       extra: widget.subscriberName,
     );
+    if (!mounted || added != true) return;
+
+    await _refresh();
+    if (mounted) {
+      AppSuccessSnackbar.show(context, AppStrings.measurementAddedSuccess);
+    }
   }
 
   Widget _buildBody(BuildContext context, MeasurementsState state) {
@@ -395,6 +402,32 @@ class _MonthlyEntryCardState extends State<_MonthlyEntryCard> {
                         color: AppColors.white,
                       );
                     },
+                    // بدون هاد كان فشل التحميل بيعرض مربع الخطأ الأحمر
+                    // تبع Flutter بمنتصف الشاشة.
+                    errorBuilder: (context, error, stackTrace) {
+                      AppLogger.warn('photo viewer: $label', error);
+                      return Padding(
+                        padding: const EdgeInsets.all(AppSpacing.xxl),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(
+                              Icons.broken_image_outlined,
+                              size: AppSizes.emptyStateIcon,
+                              color: AppColors.white,
+                            ),
+                            const SizedBox(height: AppSpacing.mdLg),
+                            Text(
+                              AppStrings.photoLoadFailed,
+                              textAlign: TextAlign.center,
+                              style: AppTextStyles.bodyM.copyWith(
+                                color: AppColors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
                   ),
                 ),
               ),
@@ -449,7 +482,7 @@ class _MonthlyEntryCardState extends State<_MonthlyEntryCard> {
           return loading;
         }
         if (snapshot.hasError || snapshot.data == null) {
-          debugPrint('DEBUG signed url error: ${snapshot.error}');
+          AppLogger.warn('signed url for $label', snapshot.error ?? 'no data');
           return empty;
         }
 
@@ -468,7 +501,7 @@ class _MonthlyEntryCardState extends State<_MonthlyEntryCard> {
                 return loading;
               },
               errorBuilder: (context, error, stackTrace) {
-                debugPrint('DEBUG photo load error for $url: $error');
+                AppLogger.warn('photo thumbnail: $label', error);
                 return empty;
               },
             ),
