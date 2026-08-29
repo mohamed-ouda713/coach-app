@@ -3,6 +3,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:glow_up/core/errors/exception_mapper.dart';
 import 'package:glow_up/core/errors/exceptions/database_exception.dart';
+import 'package:glow_up/core/utils/app_logger.dart';
 import '../data/subscriber_repository.dart';
 import '../models/subscriber_model.dart';
 import 'subscriber_state.dart';
@@ -11,6 +12,11 @@ class SubscriberCubit extends Cubit<SubscriberState> {
   SubscriberCubit(this._repository) : super(const SubscriberInitial());
 
   final SubscriberRepository _repository;
+
+  /// رقم تسلسلي لكل عملية جلب. البحث بيطلق طلب لكل تعديل بالنص (بعد
+  /// الـ debounce)، ولو رد طلب قديم بعد طلب أحدث كانت النتيجة القديمة
+  /// بتدهس الجديدة. منتجاهل أي رد مش من آخر طلب.
+  int _fetchToken = 0;
 
   Future<void> loadSubscribers() =>
       _fetchAndEmit(_repository.getAllSubscribers);
@@ -26,51 +32,67 @@ class SubscriberCubit extends Cubit<SubscriberState> {
   Future<void> _fetchAndEmit(
     Future<List<SubscriberModel>> Function() fetch,
   ) async {
+    final token = ++_fetchToken;
     final currentList = _currentSubscribers();
     emit(SubscriberActionInProgress(currentList));
     try {
       final subscribers = await fetch();
+      if (isClosed || token != _fetchToken) return;
       emit(SubscriberLoaded(subscribers));
-    } catch (e) {
+    } catch (e, stackTrace) {
+      AppLogger.error('SubscriberCubit.fetch', e, stackTrace);
+      if (isClosed || token != _fetchToken) return;
       emit(SubscriberError(ExceptionMapper.mapToMessage(e)));
     }
   }
 
   Future<void> addSubscriber(SubscriberModel subscriber) async {
     final currentList = _currentSubscribers();
+    final token = ++_fetchToken;
     emit(SubscriberActionInProgress(currentList));
     try {
       final created = await _repository.addSubscriber(subscriber);
+      if (isClosed || token != _fetchToken) return;
       emit(SubscriberActionSuccess([created, ...currentList]));
-    } catch (e) {
+    } catch (e, stackTrace) {
+      AppLogger.error('SubscriberCubit.addSubscriber', e, stackTrace);
+      if (isClosed || token != _fetchToken) return;
       emit(SubscriberError(ExceptionMapper.mapToMessage(e)));
     }
   }
 
   Future<void> updateSubscriber(SubscriberModel subscriber) async {
     final currentList = _currentSubscribers();
+    final token = ++_fetchToken;
     emit(SubscriberActionInProgress(currentList));
     try {
       final updatedSubscriber = await _repository.updateSubscriber(subscriber);
+      if (isClosed || token != _fetchToken) return;
       final updated =
           currentList
               .map((s) => s.id == updatedSubscriber.id ? updatedSubscriber : s)
               .toList();
       emit(SubscriberActionSuccess(updated));
-    } catch (e) {
+    } catch (e, stackTrace) {
+      AppLogger.error('SubscriberCubit.updateSubscriber', e, stackTrace);
+      if (isClosed || token != _fetchToken) return;
       emit(SubscriberError(ExceptionMapper.mapToMessage(e)));
     }
   }
 
   Future<void> deleteSubscriber(String id) async {
     final currentList = _currentSubscribers();
+    final token = ++_fetchToken;
     emit(SubscriberActionInProgress(currentList));
     try {
       await _repository.deleteSubscriber(id);
+      if (isClosed || token != _fetchToken) return;
       emit(
         SubscriberActionSuccess(currentList.where((s) => s.id != id).toList()),
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
+      AppLogger.error('SubscriberCubit.deleteSubscriber', e, stackTrace);
+      if (isClosed || token != _fetchToken) return;
       emit(SubscriberError(ExceptionMapper.mapToMessage(e)));
     }
   }
@@ -88,8 +110,8 @@ class SubscriberCubit extends Cubit<SubscriberState> {
     }
   }
 
-  /// بترجع العميلة من القائمة المحمّلة أصلاً بالذاكرة، أو null لو مش
-  /// موجودة (مثلاً القائمة لسا ما انجلبت، أو انفتحت الشاشة من رابط
+  /// بترجع العميل من القائمة المحمّلة أصلاً بالذاكرة، أو null لو مش
+  /// موجود (مثلاً القائمة لسا ما انجلبت، أو انفتحت الشاشة من رابط
   /// مباشر). بتستخدمها شاشة الملف الشخصي عشان ترسم فورًا بدل ما
   /// تستنى رحلة شبكة لبيانات موجودة عندها.
   SubscriberModel? findLoadedSubscriber(String id) {
