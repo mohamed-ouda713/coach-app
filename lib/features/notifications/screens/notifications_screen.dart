@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:glow_up/core/constants/app_spacing.dart';
 import 'package:glow_up/core/constants/app_strings.dart';
+import 'package:glow_up/core/widgets/error_widgets/app_error_snackbar.dart';
 import 'package:glow_up/features/notifications/cubit/notification_cubit.dart';
 import 'package:glow_up/features/notifications/cubit/notification_state.dart';
 import 'package:glow_up/features/notifications/models/notification_model.dart';
@@ -26,12 +27,33 @@ class NotificationsScreen extends StatelessWidget {
     NotificationModel notification,
   ) {
     if (!notification.isRead) {
-      context.read<NotificationCubit>().markAsRead(notification.id);
+      // بدون await — فتح ملف العميل أهم من انتظار تعليم الإشعار كمقروء،
+      // بس لو فشل التعليم منعرضه بدل ما يضيع بصمت.
+      _markAsRead(context, notification);
     }
 
     final subscriberId = notification.subscriberId;
     if (subscriberId != null && subscriberId.isNotEmpty) {
       context.push(AppRoutes.clientProfilePath(subscriberId));
+    }
+  }
+
+  Future<void> _markAsRead(
+    BuildContext context,
+    NotificationModel notification,
+  ) async {
+    final error = await context.read<NotificationCubit>().markAsRead(
+      notification.id,
+    );
+    if (error != null && context.mounted) {
+      AppErrorSnackbar.show(context, error);
+    }
+  }
+
+  Future<void> _markAllAsRead(BuildContext context) async {
+    final error = await context.read<NotificationCubit>().markAllAsRead();
+    if (error != null && context.mounted) {
+      AppErrorSnackbar.show(context, error);
     }
   }
 
@@ -77,11 +99,7 @@ class NotificationsScreen extends StatelessWidget {
                             child: Align(
                               alignment: Alignment.centerLeft,
                               child: TextButton(
-                                onPressed:
-                                    () =>
-                                        context
-                                            .read<NotificationCubit>()
-                                            .markAllAsRead(),
+                                onPressed: () => _markAllAsRead(context),
                                 child: Text(
                                   AppStrings.notificationsMarkAllRead,
                                 ),
@@ -95,9 +113,8 @@ class NotificationsScreen extends StatelessWidget {
                                 (notification) =>
                                     _onNotificationTap(context, notification),
                             onMarkAsRead:
-                                (notification) => context
-                                    .read<NotificationCubit>()
-                                    .markAsRead(notification.id),
+                                (notification) =>
+                                    _markAsRead(context, notification),
                           ),
                         ),
                       ],
