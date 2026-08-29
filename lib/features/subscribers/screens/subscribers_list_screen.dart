@@ -59,6 +59,26 @@ class _SubscribersListScreenState extends State<SubscribersListScreen> {
         : cubit.searchSubscribers(query);
   }
 
+  /// بتحتفظ بآخر قائمة معروفة عشان ما نمسح الشاشة أثناء تحديث بالخلفية
+  /// أو عند خطأ مؤقت.
+  void _cacheState(SubscriberState state) {
+    switch (state) {
+      case SubscriberLoaded(:final subscribers):
+      case SubscriberActionSuccess(:final subscribers):
+        setState(() {
+          _lastKnownSubscribers = subscribers;
+          _hasLoadedOnce = true;
+        });
+      case SubscriberActionInProgress(:final subscribers):
+        setState(() => _lastKnownSubscribers = subscribers);
+      case SubscriberError():
+        setState(() => _hasLoadedOnce = true);
+      case SubscriberInitial():
+      case SubscriberLoading():
+        break;
+    }
+  }
+
   void _onSearchChanged(String query) {
     _debounce?.cancel();
     _debounce = Timer(const Duration(milliseconds: 350), () {
@@ -71,24 +91,12 @@ class _SubscribersListScreenState extends State<SubscribersListScreen> {
     return ColoredBox(
       color: context.appColors.bgSubtle,
       child: SafeArea(
-        child: BlocBuilder<SubscriberCubit, SubscriberState>(
+        // الكاش بينتحدّث بالـ listener مش بالـ builder: تعديل حالة
+        // الـ State جوّا build بيخالف شرط إن build تكون خالية من الأثر
+        // الجانبي، وهاد بالضبط مصدر الأخطاء يلي ما بتنعاد.
+        child: BlocConsumer<SubscriberCubit, SubscriberState>(
+          listener: (context, state) => _cacheState(state),
           builder: (context, state) {
-            switch (state) {
-              case SubscriberLoaded(:final subscribers):
-                _lastKnownSubscribers = subscribers;
-                _hasLoadedOnce = true;
-              case SubscriberActionInProgress(:final subscribers):
-                _lastKnownSubscribers = subscribers;
-              case SubscriberActionSuccess(:final subscribers):
-                _lastKnownSubscribers = subscribers;
-                _hasLoadedOnce = true;
-              case SubscriberError():
-                _hasLoadedOnce = true;
-              case SubscriberInitial():
-              case SubscriberLoading():
-                break;
-            }
-
             if (!_hasLoadedOnce) {
               return const Center(child: CircularProgressIndicator());
             }
@@ -118,8 +126,8 @@ class _SubscribersListScreenState extends State<SubscribersListScreen> {
     bool isRefreshing = false,
   }) {
     final total = subscribers.length;
-    final active =
-        subscribers.where((s) => s.status == SubscriptionStatus.active).length;
+    // نشط = كل يلي اشتراكه ما انتهى، بما فيهم يلي قربوا ينتهوا.
+    final active = subscribers.where((s) => s.isActive).length;
     final expiring =
         subscribers
             .where((s) => s.status == SubscriptionStatus.expiringSoon)
@@ -174,6 +182,7 @@ class _SubscribersListScreenState extends State<SubscribersListScreen> {
                         AppErrorView(
                           message: AppStrings.noMatchingClients,
                           icon: Icons.people_outline,
+                          tone: AppErrorViewTone.empty,
                         ),
                       ],
                     )
@@ -287,10 +296,9 @@ class _SubscribersListScreenState extends State<SubscribersListScreen> {
   List<SubscriberModel> _applyFilter(List<SubscriberModel> subscribers) {
     return switch (_activeFilter) {
       _StatusFilter.all => subscribers,
-      _StatusFilter.active =>
-        subscribers
-            .where((s) => s.status == SubscriptionStatus.active)
-            .toList(),
+      // "نشط" بيشمل يلي بينتهي قريباً — لسا اشتراكه شغّال. و"ينتهي
+      // قريباً" فلتر أضيق جوّاته، مش بديل عنه.
+      _StatusFilter.active => subscribers.where((s) => s.isActive).toList(),
       _StatusFilter.expiringSoon =>
         subscribers
             .where((s) => s.status == SubscriptionStatus.expiringSoon)
