@@ -18,6 +18,12 @@ class AppStorageException extends AppException {
   factory AppStorageException.fileNotFound() =>
       AppStorageException(ErrorMessages.fileNotFound);
 
+  factory AppStorageException.fileAlreadyExists() =>
+      AppStorageException(ErrorMessages.fileAlreadyExists);
+
+  factory AppStorageException.unsupportedFileType() =>
+      AppStorageException(ErrorMessages.unsupportedFileType);
+
   factory AppStorageException.generic() =>
       AppStorageException(ErrorMessages.storageGeneric);
 }

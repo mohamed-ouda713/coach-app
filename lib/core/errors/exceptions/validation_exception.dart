@@ -3,7 +3,7 @@ import 'package:glow_up/core/errors/error_messages.dart';
 import 'app_exception.dart';
 
 /// استثناء خاص بالتحقق من صحة البيانات المدخلة بالفورمات
-/// (إضافة/تعديل عميلة، تسجيل دخول، إنشاء حساب...).
+/// (إضافة/تعديل عميل، تسجيل دخول، إنشاء حساب...).
 class ValidationException extends AppException {
   const ValidationException(super.message);
 

@@ -42,7 +42,7 @@ class ErrorMessages {
   static String get emailAlreadyInUse =>
       _t('هذا البريد الإلكتروني مستخدم مسبقاً', 'This email is already in use');
   static String get emailNotAvailable => _t(
-    'لا يمكن استخدام هذا البريد الإلكتروني، جرّبي بريداً آخر',
+    'لا يمكن استخدام هذا البريد الإلكتروني، جرّب بريداً آخر',
     'This email cannot be used, please try another one',
   );
   static String get weakPassword => _t(
@@ -65,6 +65,30 @@ class ErrorMessages {
     'حدث خطأ أثناء تسجيل الدخول، حاول مرة أخرى',
     'An error occurred while logging in, please try again',
   );
+  static String get samePassword => _t(
+    'كلمة المرور الجديدة مطابقة للحالية، اختر كلمة مرور مختلفة',
+    'The new password matches the current one, choose a different password',
+  );
+  static String get resetLinkExpired => _t(
+    'انتهت صلاحية رابط الاستعادة، اطلب رابطاً جديداً',
+    'This recovery link has expired, request a new one',
+  );
+  static String get signUpDisabled => _t(
+    'إنشاء الحسابات غير متاح حالياً',
+    'Account sign-up is currently unavailable',
+  );
+  static String get accountDisabled => _t(
+    'تم تعطيل هذا الحساب، تواصل مع الدعم',
+    'This account has been disabled, please contact support',
+  );
+  static String get tooManyAttempts => _t(
+    'محاولات كثيرة خلال وقت قصير، انتظر قليلاً ثم حاول مرة أخرى',
+    'Too many attempts in a short time, please wait a moment and try again',
+  );
+  static String get reauthenticationNeeded => _t(
+    'لأمانك، سجّل الدخول مرة أخرى قبل تنفيذ هذا الإجراء',
+    'For your security, please log in again before doing this',
+  );
 
   // ── قاعدة البيانات (Database) ───────────────────────────
   static String get duplicateEntry =>
@@ -85,6 +109,18 @@ class ErrorMessages {
     'حدث خطأ أثناء التعامل مع البيانات',
     'An error occurred while handling the data',
   );
+  static String get missingRequiredData => _t(
+    'في حقول مطلوبة ناقصة، تحقق من البيانات',
+    'Some required fields are missing, please check your input',
+  );
+  static String get invalidData => _t(
+    'في بيانات بصيغة غير صحيحة، تحقق من الحقول',
+    'Some values are in an invalid format, please check the fields',
+  );
+  static String get serverBusy => _t(
+    'الخادم مشغول حالياً، حاول مرة أخرى بعد قليل',
+    'The server is busy right now, please try again shortly',
+  );
 
   // ── تخزين الصور (Storage) ───────────────────────────────
   static String get fileTooLarge => _t(
@@ -97,6 +133,14 @@ class ErrorMessages {
   static String get storageGeneric => _t(
     'حدث خطأ أثناء رفع أو جلب الصورة',
     'An error occurred while uploading or fetching the image',
+  );
+  static String get fileAlreadyExists => _t(
+    'في صورة بنفس الاسم مرفوعة مسبقاً',
+    'A file with this name already exists',
+  );
+  static String get unsupportedFileType => _t(
+    'نوع الملف غير مدعوم، اختر صورة',
+    'This file type is not supported, please choose an image',
   );
 
   // ── تحقق من الإدخال (Validation) ────────────────────────

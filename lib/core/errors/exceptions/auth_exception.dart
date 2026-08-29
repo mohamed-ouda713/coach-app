@@ -27,6 +27,24 @@ class AppAuthException extends AppException {
   factory AppAuthException.emailRateLimitExceeded() =>
       AppAuthException(ErrorMessages.emailRateLimitExceeded);
 
+  factory AppAuthException.samePassword() =>
+      AppAuthException(ErrorMessages.samePassword);
+
+  factory AppAuthException.resetLinkExpired() =>
+      AppAuthException(ErrorMessages.resetLinkExpired);
+
+  factory AppAuthException.signUpDisabled() =>
+      AppAuthException(ErrorMessages.signUpDisabled);
+
+  factory AppAuthException.accountDisabled() =>
+      AppAuthException(ErrorMessages.accountDisabled);
+
+  factory AppAuthException.tooManyAttempts() =>
+      AppAuthException(ErrorMessages.tooManyAttempts);
+
+  factory AppAuthException.reauthenticationNeeded() =>
+      AppAuthException(ErrorMessages.reauthenticationNeeded);
+
   factory AppAuthException.generic() =>
       AppAuthException(ErrorMessages.authGeneric);
 }
