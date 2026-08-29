@@ -1,5 +1,6 @@
 import 'package:app_badge_plus/app_badge_plus.dart';
-import 'package:flutter/foundation.dart';
+
+import '../../../core/utils/app_logger.dart';
 
 /// بتحدّث الرقم يلي بيبين على أيقونة التطبيق بالشاشة الرئيسية للجهاز
 /// (launcher badge) حسب عدد الإشعارات غير المقروءة.
@@ -15,9 +16,7 @@ abstract class AppBadgeService {
       if (!await AppBadgePlus.isSupported()) return;
       AppBadgePlus.updateBadge(unreadCount);
     } catch (e) {
-      if (kDebugMode) {
-        print('Failed to update app badge: $e');
-      }
+      AppLogger.warn('AppBadgeService.update', e);
     }
   }
 }
