@@ -6,6 +6,8 @@ import 'package:supabase_flutter/supabase_flutter.dart' as supabase;
 import '../../../core/constants/app_strings.dart';
 import '../../../core/constants/supabase_constants.dart';
 import '../../../core/errors/exception_mapper.dart';
+import '../../../core/utils/app_logger.dart';
+import '../../../core/utils/image_compressor.dart';
 import '../data/measurement_repository.dart';
 import '../models/measurement.dart';
 import 'measurements_state.dart';
@@ -22,41 +24,52 @@ class MeasurementsCubit extends Cubit<MeasurementsState> {
       final measurements = await _repository.getMeasurementHistory(
         subscriberId,
       );
-      emit(MeasurementsLoaded(measurements));
-    } catch (e) {
-      emit(MeasurementsError(ExceptionMapper.mapToMessage(e)));
+      if (!isClosed) emit(MeasurementsLoaded(measurements));
+    } catch (e, stackTrace) {
+      AppLogger.error('MeasurementsCubit.loadHistory', e, stackTrace);
+      if (!isClosed) emit(MeasurementsError(ExceptionMapper.mapToMessage(e)));
     }
   }
 
+  /// بترفع الصور أول (بعد ضغطها) وبعدين بتحفظ الصف. لو فشل الحفظ،
+  /// بتمسح الصور يلي انرفعت — قبل هيك كانت بتضل يتيمة بالـ bucket، وأكتر
+  /// حالة بتصير فيها هي إعادة المحاولة على نفس الشهر (خطأ 23505).
   Future<void> saveMeasurement(
     Measurement measurement, {
     File? photoBefore,
     File? photoAfter,
   }) async {
     emit(const MeasurementSaving());
+
+    final uploadedPaths = <String>[];
     try {
       var toSave = measurement;
       final stamp = DateTime.now().millisecondsSinceEpoch;
 
       if (photoBefore != null) {
-        final url = await _repository.uploadPhoto(
+        final path = await _uploadPhoto(
           photoBefore,
           '${measurement.subscriberId}_before_$stamp.jpg',
         );
-        toSave = toSave.copyWith(photoBeforeUrl: url);
+        uploadedPaths.add(path);
+        toSave = toSave.copyWith(photoBeforeUrl: path);
       }
 
       if (photoAfter != null) {
-        final url = await _repository.uploadPhoto(
+        final path = await _uploadPhoto(
           photoAfter,
           '${measurement.subscriberId}_after_$stamp.jpg',
         );
-        toSave = toSave.copyWith(photoAfterUrl: url);
+        uploadedPaths.add(path);
+        toSave = toSave.copyWith(photoAfterUrl: path);
       }
 
       await _repository.addMeasurement(toSave);
-      emit(const MeasurementSaved());
-    } on supabase.PostgrestException catch (e) {
+      if (!isClosed) emit(const MeasurementSaved());
+    } on supabase.PostgrestException catch (e, stackTrace) {
+      AppLogger.error('MeasurementsCubit.saveMeasurement', e, stackTrace);
+      await _repository.deletePhotos(uploadedPaths);
+      if (isClosed) return;
       emit(
         MeasurementsError(
           e.code == '23505'
@@ -64,9 +77,16 @@ class MeasurementsCubit extends Cubit<MeasurementsState> {
               : ExceptionMapper.mapToMessage(e),
         ),
       );
-    } catch (e) {
-      emit(MeasurementsError(ExceptionMapper.mapToMessage(e)));
+    } catch (e, stackTrace) {
+      AppLogger.error('MeasurementsCubit.saveMeasurement', e, stackTrace);
+      await _repository.deletePhotos(uploadedPaths);
+      if (!isClosed) emit(MeasurementsError(ExceptionMapper.mapToMessage(e)));
     }
+  }
+
+  Future<String> _uploadPhoto(File file, String fileName) async {
+    final compressed = await ImageCompressor.compress(file);
+    return _repository.uploadPhoto(compressed, fileName);
   }
 
   Future<String> photoUrl(String storedValue) {
