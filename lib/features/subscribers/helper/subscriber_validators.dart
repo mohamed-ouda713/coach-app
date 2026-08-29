@@ -2,7 +2,7 @@
 
 import 'package:glow_up/core/constants/app_strings.dart';
 
-/// حدود التحقق الخاصة بحقول فورم العميلة (F7 / F9) — بمكان واحد
+/// حدود التحقق الخاصة بحقول فورم العميل (F7 / F9) — بمكان واحد
 /// عشان أي تعديل بالقيم المسموحة يصير بسطر واحد، بدل ما يكون
 /// متفرق كأرقام "سايبة" (magic numbers) جوا الشاشة.
 abstract class SubscriberFormLimits {
@@ -23,7 +23,7 @@ abstract class SubscriberFormLimits {
   static const int noteMaxLength = 60;
 }
 
-/// كل الـ Validators الخاصة بفورم إضافة/تعديل عميلة، بمكان واحد
+/// كل الـ Validators الخاصة بفورم إضافة/تعديل عميل، بمكان واحد
 /// بدل ما تكون مكررة ومبعثرة جوا [SubscriberFormScreen] نفسها.
 abstract class SubscriberValidators {
   SubscriberValidators._();

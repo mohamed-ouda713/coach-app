@@ -1,6 +1,7 @@
 // lib/features/subscribers/screens/client_profile_screen.dart
 
 import 'package:flutter/material.dart';
+import 'package:glow_up/core/constants/app_sizes.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
@@ -15,8 +16,8 @@ import 'package:glow_up/core/widgets/error_widgets/app_error_view.dart';
 import 'package:glow_up/core/widgets/layout/custom_app_bar.dart';
 import 'package:glow_up/core/widgets/media/app_avatar.dart';
 import 'package:glow_up/core/widgets/status/badges.dart';
-import 'package:glow_up/core/widgets/Buttons/Primary_Buttons/primary_Buttons.dart';
-import 'package:glow_up/core/widgets/Buttons/Text_Buttons/custom_text_link.dart';
+import 'package:glow_up/core/widgets/buttons/primary_button.dart';
+import 'package:glow_up/core/widgets/buttons/custom_text_link.dart';
 
 import '../cubit/subscriber_cubit.dart';
 import '../cubit/subscriber_detail_cubit.dart';
@@ -127,7 +128,7 @@ class _ProfileHeroCard extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: context.appColors.bgSubtle.withValues(alpha: 0.05),
-            blurRadius: 12,
+            blurRadius: AppSizes.cardShadowBlur,
             offset: const Offset(0, 2),
           ),
         ],
@@ -220,7 +221,7 @@ class _SubscriptionCard extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: context.appColors.bgSubtle.withValues(alpha: 0.05),
-            blurRadius: 12,
+            blurRadius: AppSizes.cardShadowBlur,
             offset: const Offset(0, 2),
           ),
         ],

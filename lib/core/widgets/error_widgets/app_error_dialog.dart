@@ -60,7 +60,7 @@ class AppErrorDialog extends StatelessWidget {
     final Color headerBgColor =
         isDestructive
             ? appColors.dangerBg
-            : colorScheme.primary.withOpacity(0.12);
+            : colorScheme.primary.withValues(alpha: 0.12);
 
     final hasCancel = cancelLabel != null;
 

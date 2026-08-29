@@ -1,4 +1,4 @@
-// lib/core/widgets/Buttons/Text_Buttons/Text_Form_Input.dart
+// lib/core/widgets/inputs/custom_text_form_field.dart
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -27,6 +27,7 @@ class CustomTextFormField extends StatefulWidget {
     this.autovalidateMode,
     this.textAlign = TextAlign.right,
     this.inputFormatters,
+    this.textDirection,
   });
 
   final String title;
@@ -44,6 +45,33 @@ class CustomTextFormField extends StatefulWidget {
   final AutovalidateMode? autovalidateMode;
   final TextAlign textAlign;
   final List<TextInputFormatter>? inputFormatters;
+
+  /// اتجاه النص جوّا الحقل. لو تُرك null بينتحدد تلقائيًا من
+  /// [keyboardType] — شوف [_effectiveTextDirection].
+  final TextDirection? textDirection;
+
+  /// الإيميل والأرقام والروابط دايمًا لاتيني، حتى بواجهة عربية. بدون
+  /// فرض LTR بيتعامل معهم Flutter كنص RTL: المؤشر بيوقف عالجهة الغلط
+  /// و `@`/`.` بيقفزوا لمطارح غريبة أثناء الكتابة.
+  TextDirection? get _effectiveTextDirection {
+    if (textDirection != null) return textDirection;
+    if (obscureText) return TextDirection.ltr;
+    final type = keyboardType;
+    if (type == null) return null;
+    // المقارنة بالـ index مش بالكائن نفسه: `TextInputType.numberWithOptions`
+    // بتبني نسخة جديدة مش مطابقة لـ `TextInputType.number` بالمساواة، بس
+    // بتشاركها نفس الـ index — وهي المستخدمة بكل حقول الأرقام بالتطبيق.
+    return _ltrKeyboardIndices.contains(type.index) ? TextDirection.ltr : null;
+  }
+
+  static final Set<int> _ltrKeyboardIndices = {
+    TextInputType.emailAddress.index,
+    TextInputType.url.index,
+    TextInputType.phone.index,
+    TextInputType.number.index,
+    TextInputType.datetime.index,
+    TextInputType.visiblePassword.index,
+  };
 
   @override
   State<CustomTextFormField> createState() => _CustomTextFormFieldState();
@@ -116,6 +144,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
           validator: widget.validator,
           autovalidateMode: widget.autovalidateMode,
           textAlign: widget.textAlign,
+          textDirection: widget._effectiveTextDirection,
           inputFormatters: widget.inputFormatters,
           decoration: InputDecoration(
             helperText: widget.helperText,

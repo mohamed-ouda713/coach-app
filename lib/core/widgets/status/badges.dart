@@ -45,7 +45,7 @@ class _Badge extends StatelessWidget {
   }
 }
 
-/// شارة صغيرة ملوّنة توضح حالة اشتراك المشتركة (نشط / ينتهي قريباً / منتهي).
+/// شارة صغيرة ملوّنة توضح حالة اشتراك المشترك (نشط / ينتهي قريباً / منتهي).
 class StatusBadge extends StatelessWidget {
   const StatusBadge({super.key, required this.status});
 
@@ -78,7 +78,7 @@ class StatusBadge extends StatelessWidget {
   }
 }
 
-/// شارة صغيرة ملوّنة توضح برنامج المشتركة (جيم / منزل).
+/// شارة صغيرة ملوّنة توضح برنامج المشترك (جيم / منزل).
 class ProgramBadge extends StatelessWidget {
   const ProgramBadge({super.key, required this.program});
 
@@ -105,7 +105,7 @@ class ProgramBadge extends StatelessWidget {
   }
 }
 
-/// شارة صغيرة ملوّنة توضح هدف المشتركة (خسارة وزن / زيادة كتلة / لياقة عامة / تعافي).
+/// شارة صغيرة ملوّنة توضح هدف المشترك (خسارة وزن / زيادة كتلة / لياقة عامة / تعافي).
 class GoalBadge extends StatelessWidget {
   const GoalBadge({super.key, required this.goal});
 

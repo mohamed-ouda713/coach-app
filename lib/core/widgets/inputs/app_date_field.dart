@@ -1,6 +1,8 @@
 // lib/core/widgets/inputs/app_date_field.dart
 
 import 'package:flutter/material.dart';
+import '../../constants/app_borders.dart';
+import '../../constants/app_sizes.dart';
 import 'package:glow_up/core/constants/app_radius.dart';
 import 'package:glow_up/core/constants/app_spacing.dart';
 import 'package:glow_up/core/theme/app_text_styles.dart';
@@ -46,7 +48,7 @@ class AppDateField extends StatelessWidget {
           onTap: onTap,
           borderRadius: BorderRadius.circular(AppRadius.md),
           child: Container(
-            height: 48,
+            height: AppSizes.inputHeightSm,
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.mdLg),
             decoration: BoxDecoration(
               color:
@@ -56,14 +58,14 @@ class AppDateField extends StatelessWidget {
               borderRadius: BorderRadius.circular(AppRadius.md),
               border: Border.all(
                 color: isHighlighted ? primary : appColors.border,
-                width: 1.5,
+                width: AppBorders.regular,
               ),
             ),
             child: Row(
               children: [
                 Icon(
                   Icons.calendar_today_outlined,
-                  size: 14,
+                  size: AppSizes.iconXs,
                   color: isHighlighted ? primary : appColors.textTertiary,
                 ),
                 const SizedBox(width: AppSpacing.smMd),
@@ -72,7 +74,15 @@ class AppDateField extends StatelessWidget {
                   style: AppTextStyles.bodyS.copyWith(
                     fontWeight:
                         isHighlighted ? FontWeight.w600 : FontWeight.w400,
-                    color: isHighlighted ? primary : appColors.textTertiary,
+                    // تاريخ متعبّى بياخد لون النص الأساسي زي باقي الحقول.
+                    // كان بياخد textTertiary دايمًا، فالقيمة المكتوبة كانت
+                    // تبين باهتة زي الـ placeholder ومحدا يفرق بينهم.
+                    color:
+                        isHighlighted
+                            ? primary
+                            : hasValue
+                            ? Theme.of(context).colorScheme.onSurface
+                            : appColors.textTertiary,
                   ),
                 ),
               ],

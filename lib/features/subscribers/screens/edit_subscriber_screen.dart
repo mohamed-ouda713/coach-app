@@ -7,7 +7,7 @@ import '../cubit/subscriber_detail_cubit.dart';
 import '../cubit/subscriber_detail_state.dart';
 import 'subscriber_form_screen.dart';
 
-/// بتجيب العميلة بنفسها بالـ id عبر SubscriberDetailCubit محلي (نفس نمط
+/// بتجيب العميل بنفسها بالـ id عبر SubscriberDetailCubit محلي (نفس نمط
 /// ClientProfileScreen)، وتمررها جاهزة لـ SubscriberFormScreen بوضع التعديل.
 class EditSubscriberScreen extends StatelessWidget {
   const EditSubscriberScreen({super.key, required this.subscriberId});
