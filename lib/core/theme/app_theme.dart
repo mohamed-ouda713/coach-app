@@ -91,10 +91,19 @@ class AppTheme {
         filled: true,
         fillColor: bgCard,
         contentPadding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.sm,
+          horizontal: AppSpacing.mdLg,
           vertical: AppSpacing.xl,
         ),
-        suffixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
+        // خانة ثابتة لكل أيقونة عشان تتوسّط فيها بدل ما تلزق بالحافة.
+        // كانت minWidth: 0 فالأيقونة كانت تقعد ملاصقة لإطار الحقل.
+        prefixIconConstraints: const BoxConstraints(
+          minWidth: AppSizes.inputIconSlot,
+          minHeight: AppSizes.inputIconSlot,
+        ),
+        suffixIconConstraints: const BoxConstraints(
+          minWidth: AppSizes.inputIconSlot,
+          minHeight: AppSizes.inputIconSlot,
+        ),
         hintStyle: AppTextStyles.bodyM.copyWith(color: textSecondary),
         helperMaxLines: 2,
         helperStyle: AppTextStyles.bodyS.copyWith(color: textSecondary),

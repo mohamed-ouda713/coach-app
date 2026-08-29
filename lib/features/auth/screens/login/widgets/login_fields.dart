@@ -4,8 +4,8 @@ import 'package:glow_up/core/constants/app_spacing.dart';
 import 'package:glow_up/core/constants/app_strings.dart';
 import 'package:glow_up/core/theme/app_text_styles.dart';
 import 'package:glow_up/core/theme/context_extensions.dart';
-import 'package:glow_up/core/widgets/Buttons/Text_Buttons/Text_Form_Input.dart';
-import 'package:glow_up/core/widgets/Buttons/Text_Buttons/custom_text_link.dart';
+import 'package:glow_up/core/widgets/inputs/custom_text_form_field.dart';
+import 'package:glow_up/core/widgets/buttons/custom_text_link.dart';
 import 'package:glow_up/core/widgets/error_widgets/app_error_card.dart';
 import 'package:glow_up/features/auth/helper/app_validators.dart';
 import 'package:glow_up/routing/app_router.dart';
@@ -26,6 +26,12 @@ class LoginFields extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      // بدون هاد كان الـ Column بياخد المحاذاة الافتراضية (center)،
+      // فالسطر التمهيدي بيطلع بالنص بينما العنوان فوقه محاذي لليمين
+      // (لأنه بـ Column تانية crossAxisAlignment.start). stretch بتعطي
+      // كل عنصر عرض كامل، فالنص بينحاذي طبيعي حسب اتجاه اللغة والحقول
+      // بتضل بعرضها الكامل.
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         const SizedBox(height: AppSpacing.xs),
         Text(
@@ -75,9 +81,9 @@ class LoginFields extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             CustomTextLink(
-              textButton: '',
               title: AppStrings.loginForgotPassword,
-              textColor: context.appColors.info,
+              textColor: context.appColors.link,
+              underline: true,
               onPressed: () => context.push(AppRoutes.forgotPassword),
             ),
           ],

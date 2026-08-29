@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:glow_up/core/theme/context_extensions.dart';
+import 'package:glow_up/core/widgets/buttons/custom_text_link.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
@@ -57,16 +59,20 @@ class PasswordResetSentScreen extends StatelessWidget {
                     AppStrings.forgotPasswordDidNotReceiveEmail,
                     style: AppTextStyles.bodyS,
                   ),
-                  TextButton(
+                  CustomTextLink(
+                    title: AppStrings.forgotPasswordResend,
+                    textColor: context.appColors.link,
+                    underline: true,
                     onPressed:
                         () => context.read<AuthCubit>().resetPassword(email),
-                    child: Text(AppStrings.forgotPasswordResend),
                   ),
                 ],
               ),
-              TextButton(
+              CustomTextLink(
+                title: AppStrings.forgotPasswordBackToLogin,
+                textColor: context.appColors.link,
+                underline: true,
                 onPressed: () => context.go(AppRoutes.login),
-                child: Text(AppStrings.forgotPasswordBackToLogin),
               ),
             ],
           ),

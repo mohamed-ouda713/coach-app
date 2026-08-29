@@ -28,6 +28,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     required this.infoBg,
     required this.primaryOnSoftBg,
     required this.onPrimarySoftBg,
+    required this.link,
   });
 
   final Color textSecondary;
@@ -59,6 +60,14 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
   /// retry button: white in dark mode, AppColors.primaryDark in light mode.
   final Color onPrimarySoftBg;
 
+  /// لون الروابط النصية (نسيت كلمة المرور، إنشاء حساب، تسجيل الدخول).
+  ///
+  /// مش [AppColors.primary] مباشرة: الأزرق الفاتح تباينه على خلفية بيضا
+  /// 2.77:1 وهو تحت الحد المقروء (4.5:1). فمنستخدم درجة أغمق بالوضع
+  /// الفاتح (5.93:1) والدرجة الأساسية بالوضع الداكن (6.44:1) — نفس لون
+  /// الهوية بالحالتين، بس بتباين مقروء.
+  final Color link;
+
   static const light = AppColorsExtension(
     textSecondary: AppColorsLight.textSecondary,
     textTertiary: AppColorsLight.textTertiary,
@@ -75,6 +84,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     infoBg: AppColorsLight.infoBg,
     primaryOnSoftBg: AppColors.primaryDark,
     onPrimarySoftBg: AppColors.primaryDark,
+    link: AppColors.primaryDarker,
   );
 
   static const dark = AppColorsExtension(
@@ -93,6 +103,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     infoBg: AppColorsDark.infoBg,
     primaryOnSoftBg: AppColors.primary,
     onPrimarySoftBg: Colors.white,
+    link: AppColors.primary,
   );
 
   @override
@@ -112,6 +123,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     Color? infoBg,
     Color? primaryOnSoftBg,
     Color? onPrimarySoftBg,
+    Color? link,
   }) {
     return AppColorsExtension(
       textSecondary: textSecondary ?? this.textSecondary,
@@ -129,6 +141,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       infoBg: infoBg ?? this.infoBg,
       primaryOnSoftBg: primaryOnSoftBg ?? this.primaryOnSoftBg,
       onPrimarySoftBg: onPrimarySoftBg ?? this.onPrimarySoftBg,
+      link: link ?? this.link,
     );
   }
 
@@ -151,6 +164,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       infoBg: Color.lerp(infoBg, other.infoBg, t)!,
       primaryOnSoftBg: Color.lerp(primaryOnSoftBg, other.primaryOnSoftBg, t)!,
       onPrimarySoftBg: Color.lerp(onPrimarySoftBg, other.onPrimarySoftBg, t)!,
+      link: Color.lerp(link, other.link, t)!,
     );
   }
 }
