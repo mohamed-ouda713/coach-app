@@ -6,7 +6,7 @@ import 'package:glow_up/core/constants/app_spacing.dart';
 import 'package:glow_up/core/constants/app_strings.dart';
 import 'package:glow_up/core/theme/app_text_styles.dart';
 import 'package:glow_up/core/theme/context_extensions.dart';
-import 'package:glow_up/core/widgets/Buttons/Primary_Buttons/custom_icon_button.dart';
+import 'package:glow_up/core/widgets/buttons/custom_icon_button.dart';
 import 'package:glow_up/core/widgets/status/badges.dart';
 import '../../helper/finance_formatters.dart';
 import '../../models/partner_model.dart';
@@ -125,7 +125,7 @@ class _WithdrawButton extends StatelessWidget {
             color:
                 isEnabled
                     ? appColors.textSecondary
-                    : appColors.textSecondary.withOpacity(0.4),
+                    : appColors.textSecondary.withValues(alpha: 0.4),
           ),
         ),
       ),

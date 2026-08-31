@@ -1,7 +1,7 @@
-import 'package:glow_up/core/localization/app_locale.dart';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:glow_up/core/localization/app_locale.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
@@ -132,9 +132,26 @@ class _AddMeasurementScreenState extends State<AddMeasurementScreen> {
       body: BlocConsumer<MeasurementsCubit, MeasurementsState>(
         listener: (context, state) {
           if (state is MeasurementSaved) {
-            final subscriberId = widget.subscriberId ?? _selectedSubscriber!.id;
+            // المسار بيسمح يجي subscriberId بلا اسم (extra اختياري)، فما
+            // منعمل `!` على العميل المختار — بنرجع لاسم فاضي بدل ما
+            // ينهار التطبيق بعد ما ينحفظ القياس بنجاح.
+            final subscriberId = widget.subscriberId ?? _selectedSubscriber?.id;
+            if (subscriberId == null) return;
+
+            // لما نكون جايين من شاشة القياسات (فتحت الشاشة وهي عارفة
+            // العميل)، منرجعلها بـ pop مع نتيجة عشان تعيد الجلب.
+            //
+            // قبل هيك كان دايمًا pushReplacement، فالنتيجة كانت نسخة
+            // تانية من شاشة القياسات فوق النسخة القديمة: بتبيّن البيانات
+            // الجديدة، بس أول ما ترجع لورا بتطلع النسخة القديمة يلي
+            // جلبت قبل الإضافة — فاضية.
+            if (widget.subscriberId != null && context.canPop()) {
+              context.pop(true);
+              return;
+            }
+
             final subscriberName =
-                widget.subscriberName ?? _selectedSubscriber!.fullName;
+                widget.subscriberName ?? _selectedSubscriber?.fullName ?? '';
             context.pushReplacement(
               '/subscribers/$subscriberId/measurements?added=1',
               extra: subscriberName,

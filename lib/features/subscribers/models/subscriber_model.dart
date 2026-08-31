@@ -4,6 +4,10 @@ import 'package:equatable/equatable.dart';
 import 'package:glow_up/core/constants/app_enums.dart';
 import 'package:glow_up/core/constants/supabase_constants.dart';
 
+/// قيمة حارس لـ [SubscriberModel.copyWith] — بتميّز "ما مرّرت الحقل"
+/// عن "مرّرته بقيمة null عشان ينمسح".
+const Object _unset = Object();
+
 class SubscriberModel extends Equatable {
   const SubscriberModel({
     required this.id,
@@ -38,14 +42,34 @@ class SubscriberModel extends Equatable {
   final DateTime createdAt;
 
   /// بتتحسب دايمًا وقت العرض — مش عمود مخزّن بقاعدة البيانات.
+  ///
+  /// المقارنة بالأيام التقويمية مش بالساعات: `subscription_end_date`
+  /// عمود تاريخ بلا وقت، فبينقرأ كمنتصف الليل. لو طرحنا الوقت الحالي
+  /// منه، اشتراك بينتهي اليوم بيطلع بالسالب وبيبان "منتهي" من الصبح.
   SubscriptionStatus get status {
     final now = DateTime.now();
-    final daysLeft = subscriptionEndDate.difference(now).inDays;
+    final today = DateTime(now.year, now.month, now.day);
+    final endDay = DateTime(
+      subscriptionEndDate.year,
+      subscriptionEndDate.month,
+      subscriptionEndDate.day,
+    );
+    final daysLeft = endDay.difference(today).inDays;
 
     if (daysLeft < 0) return SubscriptionStatus.expired;
-    if (daysLeft <= 3) return SubscriptionStatus.expiringSoon;
+    if (daysLeft <= SubscriptionThresholds.expiringSoonDays) {
+      return SubscriptionStatus.expiringSoon;
+    }
     return SubscriptionStatus.active;
   }
+
+  /// الاشتراك لسا شغّال (لا فرق إذا كان قريب من الانتهاء).
+  ///
+  /// [status] بترجع حالة وحدة، و`expiringSoon` بتخفي إنه الاشتراك
+  /// لسا نشط — فعميل بينتهي اشتراكه بعد يومين كان بينحسب "غير نشط"
+  /// بعدّاد الشاشة الرئيسية وبينشال من فلتر "نشط". "ينتهي قريباً"
+  /// تحذير على اشتراك شغّال، مش حالة بديلة عنه.
+  bool get isActive => status != SubscriptionStatus.expired;
 
   factory SubscriberModel.fromJson(Map<String, dynamic> json) {
     return SubscriberModel(
@@ -96,34 +120,41 @@ class SubscriberModel extends Equatable {
     };
   }
 
+  /// الحقول الاختيارية (age/weight/height/note/lastProgramUpdate) بتقبل
+  /// المسح الصريح: `copyWith(note: null)` بالنمط العادي بيحافظ على القيمة
+  /// القديمة بدل ما يمسحها، فمنستخدم قيمة حارس بدل `null` عشان نميّز
+  /// "ما مرّرت شي" عن "امسح هالحقل".
   SubscriberModel copyWith({
     String? fullName,
-    int? age,
-    double? weight,
-    double? height,
+    Object? age = _unset,
+    Object? weight = _unset,
+    Object? height = _unset,
     FitnessGoal? goal,
     ProgramType? program,
     DateTime? subscriptionStartDate,
     DateTime? subscriptionEndDate,
     double? subscriptionFee,
-    DateTime? lastProgramUpdate,
-    String? note,
+    Object? lastProgramUpdate = _unset,
+    Object? note = _unset,
   }) {
     return SubscriberModel(
       id: id,
       trainerId: trainerId,
       fullName: fullName ?? this.fullName,
-      age: age ?? this.age,
-      weight: weight ?? this.weight,
-      height: height ?? this.height,
+      age: identical(age, _unset) ? this.age : age as int?,
+      weight: identical(weight, _unset) ? this.weight : weight as double?,
+      height: identical(height, _unset) ? this.height : height as double?,
       goal: goal ?? this.goal,
       program: program ?? this.program,
       subscriptionStartDate:
           subscriptionStartDate ?? this.subscriptionStartDate,
       subscriptionEndDate: subscriptionEndDate ?? this.subscriptionEndDate,
       subscriptionFee: subscriptionFee ?? this.subscriptionFee,
-      lastProgramUpdate: lastProgramUpdate ?? this.lastProgramUpdate,
-      note: note ?? this.note,
+      lastProgramUpdate:
+          identical(lastProgramUpdate, _unset)
+              ? this.lastProgramUpdate
+              : lastProgramUpdate as DateTime?,
+      note: identical(note, _unset) ? this.note : note as String?,
       createdAt: createdAt,
     );
   }

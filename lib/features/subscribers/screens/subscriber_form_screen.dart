@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:glow_up/core/constants/app_borders.dart';
+import 'package:glow_up/core/constants/app_sizes.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:glow_up/routing/app_router.dart';
@@ -12,8 +14,8 @@ import 'package:glow_up/core/constants/app_spacing.dart';
 import 'package:glow_up/core/constants/app_strings.dart';
 import 'package:glow_up/core/theme/app_text_styles.dart';
 import 'package:glow_up/core/theme/context_extensions.dart';
-import 'package:glow_up/core/widgets/Buttons/Primary_Buttons/custom_icon_button.dart';
-import 'package:glow_up/core/widgets/Buttons/Text_Buttons/Text_Form_Input.dart';
+import 'package:glow_up/core/widgets/buttons/custom_icon_button.dart';
+import 'package:glow_up/core/widgets/inputs/custom_text_form_field.dart';
 import 'package:glow_up/core/widgets/error_widgets/app_error_dialog.dart';
 import 'package:glow_up/core/widgets/error_widgets/app_error_snackbar.dart';
 import 'package:glow_up/core/widgets/layout/custom_app_bar.dart';
@@ -239,7 +241,7 @@ class _SubscriberFormScreenState extends State<SubscriberFormScreen> {
         actions: [
           CustomIconButton(
             icon: Icons.close,
-            color: theme.colorScheme.primaryContainer.withOpacity(0.08),
+            color: theme.colorScheme.primaryContainer.withValues(alpha: 0.08),
             iconColor: context.appColors.textSecondary,
             onPressed: () => Navigator.of(context).pop(),
           ),
@@ -260,7 +262,7 @@ class _SubscriberFormScreenState extends State<SubscriberFormScreen> {
               CustomTextFormField(
                 title: AppStrings.addClientFullNameLabel,
                 hintText: AppStrings.addClientFullNameHint,
-                prefixIcon: const Icon(Icons.person, size: 16),
+                prefixIcon: const Icon(Icons.person, size: AppSizes.iconMd),
                 controller: _nameController,
                 inputFormatters: [
                   LengthLimitingTextInputFormatter(
@@ -541,24 +543,29 @@ class _DateField extends StatelessWidget {
           onTap: onTap,
           borderRadius: BorderRadius.circular(AppRadius.md),
           child: Container(
-            height: 48,
+            height: AppSizes.inputHeightSm,
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.mdLg),
             decoration: BoxDecoration(
-              color: highlighted ? appColors.primarySoftBg : Colors.white,
+              // مش Colors.white: بالوضع الداكن كان بيطلع مربع أبيض
+              // ناشز جوّا فورم غامق.
+              color:
+                  highlighted
+                      ? appColors.primarySoftBg
+                      : Theme.of(context).colorScheme.surface,
               borderRadius: BorderRadius.circular(AppRadius.md),
               border: Border.all(
                 color:
                     highlighted
                         ? Theme.of(context).colorScheme.primary
                         : appColors.border,
-                width: 1.5,
+                width: AppBorders.regular,
               ),
             ),
             child: Row(
               children: [
                 Icon(
                   Icons.calendar_today_outlined,
-                  size: 14,
+                  size: AppSizes.iconXs,
                   color:
                       highlighted
                           ? Theme.of(context).colorScheme.primary
@@ -608,7 +615,7 @@ class _DeleteButton extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.delete_outline, size: 16, color: danger),
+            Icon(Icons.delete_outline, size: AppSizes.iconMd, color: danger),
             const SizedBox(width: AppSpacing.sm),
             Text(
               AppStrings.editClientDeleteClient,

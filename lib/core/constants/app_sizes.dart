@@ -35,6 +35,33 @@ class AppSizes {
   static const double iconDisplay = 34;
 
   static const double photoThumb = 96;
+  static const double emptyStateIcon = 56;
+
+  /// الحد الأدنى لمساحة اللمس — 44 نقطة (إرشادات Apple)، وأندرويد
+  /// بيوصي بـ 48 بس الحشوة حوالين النص بتغطي الفرق عمليًا.
+  static const double minTapTarget = 44;
+
+  /// عرض الخانة يلي بتقعد فيها أيقونة الحقل (prefix/suffix).
+  ///
+  /// الافتراضي بـ InputDecoration بيلزق الأيقونة بحافة الإطار. منحجز
+  /// لها خانة بعرض ثابت فبتوسّط جوّاتها وبيصير حواليها مسافة متساوية
+  /// من الطرفين بدل ما تكون ملزوقة بالحافة.
+  static const double inputIconSlot = 48;
+
+  /// ارتفاع الشريط العلوي بتبويب المالية (عنوان + الشهر تحته).
+  static const double financeAppBarHeight = 78;
+
+  /// عرض الخلفية المميّزة للتبويب النشط بالشريط السفلي.
+  static const double navItemWidth = 48;
+
+  /// نصف قطر ظل الكروت (بطاقة العميل، أقسام الملف الشخصي).
+  static const double cardShadowBlur = 12;
+
+  /// شاشات الـ auth بتوضّع محتواها كنسبة من ارتفاع الشاشة: الهيدر عند
+  /// 8% والبطاقة عند 32%. مربوطين ببعض — لو غيّرتي وحدة راجعي التانية،
+  /// لأن البطاقة لازم تضل تحت نهاية محتوى الهيدر.
+  static const double authHeaderTopFraction = 0.08;
+  static const double authCardTopFraction = 0.32;
 
   // أفاتارات
   static const double avatarSm = 46;

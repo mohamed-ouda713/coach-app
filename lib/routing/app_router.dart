@@ -4,8 +4,9 @@ import 'package:glow_up/core/screens/home_page.dart';
 import 'package:glow_up/core/screens/profile_screen.dart';
 import 'package:glow_up/core/screens/splash_screen.dart';
 import 'package:glow_up/features/auth/screens/login/login_screen.dart';
-import 'package:glow_up/features/auth/screens/signup/signup_screen.dart';
+import 'package:glow_up/features/auth/screens/sign_up/sign_up_screen.dart';
 import 'package:glow_up/features/notifications/screens/notifications_screen.dart';
+import 'package:glow_up/features/notifications/services/notification_service.dart';
 import 'package:glow_up/features/subscribers/cubit/subscriber_cubit.dart';
 import 'package:glow_up/features/subscribers/data/subscriber_repository.dart';
 import 'package:glow_up/features/subscribers/screens/add_subscriber_screen.dart';
@@ -85,9 +86,12 @@ String? _redirect(
   final isAuthenticated = authState is AuthAuthenticated;
   final isOnAuthRoute = _authRoutes.contains(state.matchedLocation);
 
-  if (!isAuthenticated && (isOnSplash || !isOnAuthRoute))
+  if (!isAuthenticated && (isOnSplash || !isOnAuthRoute)) {
     return AppRoutes.login;
-  if (isAuthenticated && (isOnSplash || isOnAuthRoute)) return AppRoutes.home;
+  }
+  if (isAuthenticated && (isOnSplash || isOnAuthRoute)) {
+    return AppRoutes.home;
+  }
 
   return null;
 }
@@ -95,7 +99,7 @@ String? _redirect(
 /// بتاخد AuthCubit عشان تراقب حالة الجلسة وتعيد فحص redirect تلقائيًا
 /// كل ما تتغير (دخول/خروج/انتهاء صلاحية التوكن).
 GoRouter buildAppRouter(AuthCubit authCubit) {
-  return GoRouter(
+  final router = GoRouter(
     initialLocation: AppRoutes.splash,
     refreshListenable: GoRouterRefreshStream(authCubit.stream),
     redirect: (context, state) => _redirect(context, state, authCubit),
@@ -159,10 +163,10 @@ GoRouter buildAppRouter(AuthCubit authCubit) {
       ),
 
       // كل مسارات فيتشر Subscribers، وأي شاشة تانية بتحتاج SubscriberCubit
-      // (متل اختيار عميلة لتسجيل قياس)، مغلّفة بـ SubscriberCubit واحد
+      // (متل اختيار عميل لتسجيل قياس)، مغلّفة بـ SubscriberCubit واحد
       // مشترك بينها — بيتخلق أول مرة تُفتح فيها أي شاشة منهم، وينحذف
       // تلقائيًا لما نطلع منهم كلهم (بدل Cubit عالمي بـ main.dart عايش
-      // طول عمر التطبيق حتى لو المدربة ما فتحت تبويب العميلات أبدًا).
+      // طول عمر التطبيق حتى لو المدرب ما فتح تبويب العملاء أبدًا).
       ShellRoute(
         builder: (context, state, child) {
           return BlocProvider(
@@ -212,4 +216,22 @@ GoRouter buildAppRouter(AuthCubit authCubit) {
       ),
     ],
   );
+
+  // ضغط الإشعار (سواء التطبيق بالخلفية أو مسكّر بالكامل) بيفتح ملف
+  // العميل المرتبطة فيه. الـ edge function بتبعت `subscriberId` مع كل
+  // رسالة — قبل هيك كانت بتنقرأ بالقائمة الداخلية بس، والضغط على الـ
+  // push كان بيفتح الشاشة الرئيسية ويوقف.
+  NotificationService.setTapHandler((subscriberId) {
+    router.push(AppRoutes.clientProfilePath(subscriberId));
+  });
+
+  // بعد أول إطار: قبله الراوتر لسا مش مربوط بـ MaterialApp.router.
+  WidgetsBinding.instance.addPostFrameCallback((_) async {
+    final subscriberId = await NotificationService.initialSubscriberId();
+    if (subscriberId != null) {
+      router.push(AppRoutes.clientProfilePath(subscriberId));
+    }
+  });
+
+  return router;
 }

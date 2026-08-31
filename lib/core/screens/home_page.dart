@@ -1,9 +1,10 @@
 // lib/core/screens/home_page.dart
 
 import 'package:flutter/material.dart';
+import 'package:glow_up/core/constants/app_sizes.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:glow_up/core/constants/app_strings.dart';
-import 'package:glow_up/core/widgets/Buttons/Text_Buttons/custom_text_link.dart';
+import 'package:glow_up/core/widgets/buttons/custom_text_link.dart';
 import 'package:glow_up/core/widgets/layout/bottom_nav_bar.dart';
 import 'package:glow_up/core/widgets/layout/custom_app_bar.dart';
 import 'package:glow_up/core/widgets/layout/home_top_bar.dart';
@@ -38,8 +39,8 @@ class _HomePageState extends State<HomePage> {
   static const _financesTabIndex = 3;
 
   /// التبويبات كلها بتتبنى مرة وحدة جوا IndexedStack (مش بتنعاد بناها
-  /// كل ما تتنقلي بينها) — فمنجدّد بيانات الإشعارات/المالية يدويًا كل
-  /// ما توصل المستخدمة لتبويبهم، بدل ما تعتمد فقط على initState (يلي
+  /// كل ما تتنقّل بينها) — فمنجدّد بيانات الإشعارات/المالية يدويًا كل
+  /// ما يوصل المستخدم لتبويبهم، بدل ما تعتمد فقط على initState (يلي
   /// بينفّذ مرة وحدة بعمر الشاشة كله).
   void _onTabSelected(BuildContext context, int index) {
     setState(() => _currentIndex = index);
@@ -53,7 +54,7 @@ class _HomePageState extends State<HomePage> {
   PreferredSizeWidget _buildAppBar() {
     if (_currentIndex == _financesTabIndex) {
       return PreferredSize(
-        preferredSize: const Size.fromHeight(78),
+        preferredSize: const Size.fromHeight(AppSizes.financeAppBarHeight),
         child: BlocBuilder<FinancialCubit, FinancialState>(
           builder: (context, state) {
             final month =
@@ -63,7 +64,7 @@ class _HomePageState extends State<HomePage> {
             return CustomAppBar(
               title: AppStrings.navFinances,
               subtitle: FinanceFormatters.monthYear(month),
-              height: 78,
+              height: AppSizes.financeAppBarHeight,
               leading: CustomTextLink(
                 textButton: '',
                 title: AppStrings.actionAdd,

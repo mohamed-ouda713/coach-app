@@ -1,4 +1,10 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import {
+  currentCycleDueDate,
+  daysBetween,
+  isoDate,
+  toUtcDay,
+} from './date_utils.ts'
 import JWT from 'https://esm.sh/google-auth-library@9.0.0'
 
 // لازم تطابق NotificationTypeValues بـ lib/core/constants/supabase_constants.dart
@@ -13,8 +19,6 @@ const TABLE_MEASUREMENTS = 'measurements'
 
 const FCM_SCOPE = 'https://www.googleapis.com/auth/firebase.messaging'
 const FCM_ENDPOINT = 'https://fcm.googleapis.com/v1/projects'
-
-const MS_PER_DAY = 86_400_000
 
 /// بعد كم يوم من موعد القياس المفروض منبعت تذكير (Feature 6).
 const OVERDUE_MEASUREMENT_REMINDER_DAYS = [1, 3]
@@ -61,34 +65,6 @@ interface PendingNotification {
   onlyIfNoneSince?: Date
 }
 
-/// بترجع تاريخ (UTC) بدون وقت — عشان كل المقارنات تصير على مستوى اليوم.
-function toUtcDay(value: string | Date): Date {
-  const date = typeof value === 'string' ? new Date(value) : value
-  return new Date(
-    Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()),
-  )
-}
-
-function isoDate(date: Date): string {
-  return date.toISOString().split('T')[0]
-}
-
-function daysBetween(from: Date, to: Date): number {
-  return Math.floor((to.getTime() - from.getTime()) / MS_PER_DAY)
-}
-
-/// موعد القياس المفروض لهاد الشهر = نفس يوم بدء الاشتراك، ومحدود بآخر
-/// يوم بالشهر (اشتراك بدأ يوم 31 وشهر فيه 30 يوم → الموعد يوم 30).
-function measurementDueDate(
-  subscriptionStart: Date,
-  year: number,
-  month: number,
-): Date {
-  const startDay = subscriptionStart.getUTCDate()
-  const lastDayOfMonth = new Date(Date.UTC(year, month + 1, 0)).getUTCDate()
-  return new Date(Date.UTC(year, month, Math.min(startDay, lastDayOfMonth)))
-}
-
 Deno.serve(async (_req) => {
   try {
     const serviceAccountSecret = Deno.env.get('FCM_SERVICE_ACCOUNT')
@@ -127,9 +103,13 @@ Deno.serve(async (_req) => {
       return jsonResponse({ success: true, processed: 0, failures: [] })
     }
 
-    // ── 2. مين سجّل قياس هالشهر؟ استعلام واحد للكل ────────────────
-    const monthStart = new Date(
-      Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), 1),
+    // ── 2. مين سجّل قياس بالدورة الحالية؟ استعلام واحد للكل ───────
+    //
+    // منجيب الشهر الحالي **والسابق**: دورة مشترك بلّش آخر الشهر بتمتد
+    // لأول أيام الشهر اللي بعده، فلازم نعرف قياسات الشهرين عشان نحكم
+    // صح على الدورة المفتوحة.
+    const previousMonthStart = new Date(
+      Date.UTC(today.getUTCFullYear(), today.getUTCMonth() - 1, 1),
     )
     const nextMonthStart = new Date(
       Date.UTC(today.getUTCFullYear(), today.getUTCMonth() + 1, 1),
@@ -138,17 +118,28 @@ Deno.serve(async (_req) => {
     const { data: monthMeasurements, error: measurementsError } =
       await supabaseClient
         .from(TABLE_MEASUREMENTS)
-        .select('subscriber_id')
-        .gte('measurement_month', isoDate(monthStart))
+        .select('subscriber_id, measurement_month')
+        .gte('measurement_month', isoDate(previousMonthStart))
         .lt('measurement_month', isoDate(nextMonthStart))
 
     if (measurementsError) throw measurementsError
 
-    const measuredThisMonth = new Set(
-      (monthMeasurements ?? []).map((row: { subscriber_id: string }) =>
-        String(row.subscriber_id)
-      ),
-    )
+    /// مفتاح الشهر (YYYY-MM) لكل مشترك سجّل فيه قياس.
+    const monthKey = (date: Date) =>
+      `${date.getUTCFullYear()}-${date.getUTCMonth()}`
+
+    const measuredMonths = new Map<string, Set<string>>()
+    for (
+      const row of (monthMeasurements ?? []) as {
+        subscriber_id: string
+        measurement_month: string
+      }[]
+    ) {
+      const id = String(row.subscriber_id)
+      const months = measuredMonths.get(id) ?? new Set<string>()
+      months.add(monthKey(toUtcDay(row.measurement_month)))
+      measuredMonths.set(id, months)
+    }
 
     // ── 3. بناء قائمة الإشعارات المستحقة اليوم ────────────────────
     const pending: PendingNotification[] = []
@@ -174,13 +165,13 @@ Deno.serve(async (_req) => {
       const isActive = daysBetween(today, endDate) >= 0
       if (!isActive) continue
 
-      // ب) قياسات متأخرة — بعد يوم وبعد 3 أيام من موعد الشهر
-      if (!measuredThisMonth.has(String(sub.id))) {
-        const dueDate = measurementDueDate(
-          startDate,
-          today.getUTCFullYear(),
-          today.getUTCMonth(),
-        )
+      // ب) قياسات متأخرة — بعد يوم وبعد 3 أيام من موعد الدورة الحالية
+      const dueDate = currentCycleDueDate(startDate, today)
+      const measuredThisCycle = measuredMonths
+        .get(String(sub.id))
+        ?.has(monthKey(dueDate)) ?? false
+
+      if (!measuredThisCycle) {
         const daysOverdue = daysBetween(dueDate, today)
         // ما منذكّر قبل ما يبلّش الاشتراك أصلاً
         const subscriptionStarted = daysBetween(startDate, today) >= 0
@@ -274,6 +265,17 @@ Deno.serve(async (_req) => {
           trainer_id: item.trainerId,
           subscriber_id: item.subscriberId,
           type: item.type,
+          // NOTE: `title` is intentionally NOT inserted yet — the column does
+          // not exist on the notifications table (verified: Postgres 42703).
+          // Adding it here before the column exists makes the WHOLE insert
+          // fail, so no notifications get saved at all.
+          //
+          // After running
+          //   supabase/migrations/20260828000000_add_notifications_title.sql
+          // uncomment the line below so the stored title matches the push
+          // title instead of falling back to a different string in the app.
+          //
+          // title: item.title,
           message: item.message,
           is_read: false,
         })),

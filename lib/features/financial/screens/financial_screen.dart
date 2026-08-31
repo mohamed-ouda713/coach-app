@@ -1,6 +1,7 @@
 // lib/features/financial/screens/financial_screen.dart
 
 import 'package:flutter/material.dart';
+import 'package:glow_up/core/constants/app_sizes.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:glow_up/core/constants/app_radius.dart';
@@ -8,7 +9,7 @@ import 'package:glow_up/core/constants/app_spacing.dart';
 import 'package:glow_up/core/constants/app_strings.dart';
 import 'package:glow_up/core/theme/app_text_styles.dart';
 import 'package:glow_up/core/theme/context_extensions.dart';
-import 'package:glow_up/core/widgets/Buttons/Primary_Buttons/custom_icon_button.dart';
+import 'package:glow_up/core/widgets/buttons/custom_icon_button.dart';
 import 'package:glow_up/core/widgets/error_widgets/app_error_view.dart';
 
 import '../cubit/financial_cubit.dart';
@@ -224,7 +225,11 @@ class _PartnersCard extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.add, size: 16, color: colorScheme.primary),
+                    Icon(
+                      Icons.add,
+                      size: AppSizes.iconMd,
+                      color: colorScheme.primary,
+                    ),
                     const SizedBox(width: AppSpacing.xs),
                     Text(
                       AppStrings.financeAddNewPartner,

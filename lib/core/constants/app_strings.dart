@@ -27,6 +27,8 @@ class AppStrings {
       _t('الإشعارات', 'Notifications');
   static String get logoutCta => _t('تسجيل الخروج', 'Log out');
   static String get comingSoon => _t('قريباً', 'Coming soon');
+  static String get photoLoadFailed =>
+      _t('تعذّر تحميل الصورة', 'Could not load this photo');
   static String get checkingSession =>
       _t('جاري التحقق من الجلسة...', 'Checking session...');
 
@@ -109,16 +111,16 @@ class AppStrings {
   static String get measurementsStatBelly => _t('$unitCm بطن', 'Belly $unitCm');
   static String get measurementsMonthlyLog => _t('السجل الشهري', 'Monthly log');
   static String get measurementsPickClientHint => _t(
-    'اختاري العميلة التي تودين مشاهدة أو تسجيل القياسات الخاصة فيها',
+    'اختر العميل الذي تريد مشاهدة أو تسجيل القياسات الخاصة به',
     'Choose the client whose measurements you want to view or record',
   );
-  static String get measurementsPickClientLabel => _t('العميلة', 'Client');
+  static String get measurementsPickClientLabel => _t('العميل', 'Client');
   static String get measurementsPickClientRequired =>
-      _t('يرجى اختيار العميلة', 'Please select a client');
+      _t('يرجى اختيار العميل', 'Please select a client');
   static String get measurementsValueInvalid =>
       _t('قيمة غير منطقية', 'Invalid value');
   static String get measurementsDuplicateMonth => _t(
-    'يوجد قياس مسجّل لهذه العميلة بنفس الشهر — اختاري شهراً آخر',
+    'يوجد قياس مسجّل لهذا العميل بنفس الشهر — اختر شهراً آخر',
     'A measurement already exists for this client in the same month — pick another month',
   );
   static String get measurementAddedSuccess =>
@@ -184,11 +186,11 @@ class AppStrings {
     "{name}'s subscription ends in {days} days",
   );
   static String get notificationMissingMeasurementTemplate => _t(
-    '{name} لم تسجل قياساتها هذا الشهر',
+    '{name} لم يسجل قياساته هذا الشهر',
     '{name} has not recorded measurements this month',
   );
   static String get notificationNeedsNewProgramTemplate =>
-      _t('{name} تحتاج برنامجاً جديداً', '{name} needs a new program');
+      _t('{name} يحتاج برنامجاً جديداً', '{name} needs a new program');
   static String get notificationGreatProgressTemplate =>
       _t('{name}: تقدم ممتاز هذا الشهر', '{name}: great progress this month');
   static String get timeAgoHour => _t('منذ ساعة', 'An hour ago');
@@ -210,7 +212,7 @@ class AppStrings {
   // ── F6 — تسجيل الدخول ──────────────────────────────────────
   static String get loginWelcomeBack => _t('مرحباً بعودتك', 'Welcome back');
   static String get loginSignInToContinue =>
-      _t('سجّلي دخولك للمتابعة', 'Sign in to continue');
+      _t('سجّل دخولك للمتابعة', 'Sign in to continue');
   static String get loginEmailLabel => _t('البريد الإلكتروني', 'Email');
   static String get loginPasswordLabel => _t('كلمة المرور', 'Password');
   static String get loginForgotPassword =>
@@ -218,13 +220,15 @@ class AppStrings {
   static String get loginCta => _t('تسجيل الدخول', 'Log in');
   static String get loginNoAccount =>
       _t('ليس لديك حساب؟', "Don't have an account?");
-  static String get loginContactUs => _t('تواصلي معنا', 'Contact us');
 
-  // ── F7 — إضافة عميلة جديدة ─────────────────────────────────
-  static String get addClientScreenTitle => _t('عميلة جديدة', 'New client');
+  /// رابط الانتقال لشاشة إنشاء الحساب من شاشة الدخول.
+  static String get signUpLink => _t('إنشاء حساب', 'Create account');
+
+  // ── F7 — إضافة عميل جديد ─────────────────────────────────
+  static String get addClientScreenTitle => _t('عميل جديد', 'New client');
   static String get addClientFullNameLabel => _t('الاسم الكامل', 'Full name');
   static String get addClientFullNameHint =>
-      _t('اسم العميلة...', 'Client name...');
+      _t('اسم العميل...', 'Client name...');
   static String get addClientPhysicalDataSection =>
       _t('البيانات الجسمانية', 'Physical data');
   static String get addClientGoalSection => _t('الهدف', 'Goal');
@@ -251,8 +255,7 @@ class AppStrings {
       _t('تعديل ملف العميل', 'Edit client profile');
   static String get editClientSaveChangesCta =>
       _t('حفظ التعديلات', 'Save changes');
-  static String get editClientDeleteClient =>
-      _t('حذف العميلة', 'Delete client');
+  static String get editClientDeleteClient => _t('حذف العميل', 'Delete client');
 
   // ── F10 — إنشاء حساب جديد ──────────────────────────────────
   static String get signUpWelcomeLetsStart =>
@@ -260,7 +263,7 @@ class AppStrings {
   static String get signUpScreenTitle =>
       _t('إنشاء حساب جديد', 'Create new account');
   static String get signUpEnterDataToStart =>
-      _t('أدخلي بياناتك للبدء', 'Enter your details to start');
+      _t('أدخل بياناتك للبدء', 'Enter your details to start');
   static String get createAccountCta => _t('إنشاء الحساب', 'Create account');
   static String get signUpAlreadyHaveAccount =>
       _t('لديك حساب بالفعل؟', 'Already have an account?');
@@ -309,7 +312,7 @@ class AppStrings {
   static String get forgotPasswordTitle =>
       _t('نسيت كلمة المرور؟', 'Forgot password?');
   static String get forgotPasswordEnterEmailInstructions => _t(
-    'أدخلي بريدك الإلكتروني وسنرسل لك رابط الاستعادة',
+    'أدخل بريدك الإلكتروني وسنرسل لك رابط الاستعادة',
     'Enter your email and we will send you a recovery link',
   );
   static String get forgotPasswordSendResetLinkCta =>
@@ -334,7 +337,7 @@ class AppStrings {
   // ── تعيين كلمة مرور جديدة (تكملة F11 / F12) ────────────────
   static String get resetPasswordTitle => _t('كلمة مرور جديدة', 'New password');
   static String get resetPasswordInstructions => _t(
-    'أدخلي كلمة المرور الجديدة الخاصة بحسابك',
+    'أدخل كلمة المرور الجديدة الخاصة بحسابك',
     'Enter the new password for your account',
   );
   static String get resetPasswordNewPasswordLabel =>
@@ -346,10 +349,10 @@ class AppStrings {
   static String get resetPasswordSubmitCta =>
       _t('حفظ كلمة المرور', 'Save password');
 
-  // ── Subscribers — فورم إضافة/تعديل عميلة (F7 / F9) ─────────
+  // ── Subscribers — فورم إضافة/تعديل عميل (F7 / F9) ─────────
   // نصوص التحقق (Validation) الخاصة بحقول الفورم
   static String get subscriberNameRequired =>
-      _t('يرجى إدخال اسم العميلة', "Please enter the client's name");
+      _t('يرجى إدخال اسم العميل', "Please enter the client's name");
   static String get subscriberNameTooShort => _t(
     'الاسم يجب أن يحتوي على 3 حروف على الأقل',
     'Name must be at least 3 characters',
@@ -382,11 +385,11 @@ class AppStrings {
 
   // رسائل نجاح/تأكيد
   static String get addSubscriberSuccessMessage =>
-      _t('تمت إضافة العميلة بنجاح', 'Client added successfully');
+      _t('تمت إضافة العميل بنجاح', 'Client added successfully');
   static String get editSubscriberSuccessMessage =>
       _t('تم حفظ التعديلات بنجاح', 'Changes saved successfully');
   static String get deleteSubscriberConfirmMessage => _t(
-    'هل أنتِ متأكدة من حذف هذه العميلة؟ لا يمكن التراجع عن هذا الإجراء.',
+    'هل أنت متأكد من حذف هذا العميل؟ لا يمكن التراجع عن هذا الإجراء.',
     'Are you sure you want to delete this client? This action cannot be undone.',
   );
 
@@ -394,7 +397,7 @@ class AppStrings {
   static String get noMatchingClients =>
       _t('لا يوجد عملاء مطابقين', 'No matching clients');
   static String get loadSubscriberError =>
-      _t('تعذر تحميل بيانات العميلة', "Couldn't load the client's data");
+      _t('تعذر تحميل بيانات العميل', "Couldn't load the client's data");
 
   // نصوص فورم "مصروف جديد"
   static String get financeAddExpenseTitle => _t('مصروف جديد', 'New expense');
@@ -437,7 +440,7 @@ class AppStrings {
   static String get financeWithdrawConfirmTitle =>
       _t('تأكيد السحب', 'Confirm withdrawal');
   static String get financeWithdrawConfirmMessageTemplate => _t(
-    'هل أنتِ متأكدة من سحب رصيد {name} بالكامل ({amount} ريال)؟',
+    'هل أنت متأكد من سحب رصيد {name} بالكامل ({amount} ريال)؟',
     "Are you sure you want to withdraw {name}'s full balance ({amount} SAR)?",
   );
   static String get financeWithdrawSuccessMessage =>

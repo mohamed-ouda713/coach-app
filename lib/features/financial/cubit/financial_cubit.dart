@@ -1,8 +1,9 @@
 // lib/features/financial/cubit/financial_cubit.dart
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:glow_up/core/errors/error_messages.dart';
 import 'package:glow_up/core/errors/exception_mapper.dart';
+import 'package:glow_up/core/utils/app_logger.dart';
 import '../data/financial_repository.dart';
 import '../models/partner_model.dart';
 import '../models/transaction_model.dart';
@@ -43,7 +44,7 @@ class FinancialCubit extends Cubit<FinancialState> {
         ),
       );
     } catch (e, stackTrace) {
-      _logError('loadMonth', e, stackTrace);
+      AppLogger.error('FinancialCubit.loadMonth', e, stackTrace);
       if (!isClosed) emit(FinancialError(ExceptionMapper.mapToMessage(e)));
     }
   }
@@ -112,7 +113,13 @@ class FinancialCubit extends Cubit<FinancialState> {
     required String logTag,
   }) async {
     final current = state;
-    if (current is! FinancialLoaded) return null;
+    if (current is! FinancialLoaded) {
+      // ما في بيانات محمّلة نبني عليها — الرجوع بـ null هون كان بيعني
+      // "نجحت" عند الشاشة، فبتسكّر الحوار وبتعرض رسالة نجاح بدون ما
+      // ينكتب إشي فعليًا.
+      AppLogger.error('FinancialCubit.$logTag', 'called before month loaded');
+      return ErrorMessages.tryAgainLater;
+    }
 
     emit(current.copyWith(isMutating: true));
     try {
@@ -120,17 +127,12 @@ class FinancialCubit extends Cubit<FinancialState> {
       if (!isClosed) emit(updated);
       return null;
     } catch (e, stackTrace) {
-      _logError(logTag, e, stackTrace);
+      AppLogger.error('FinancialCubit.$logTag', e, stackTrace);
       if (!isClosed && state is FinancialLoaded) {
         emit((state as FinancialLoaded).copyWith(isMutating: false));
       }
       return ExceptionMapper.mapToMessage(e);
     }
-  }
-
-  void _logError(String tag, Object error, StackTrace stackTrace) {
-    debugPrint('FinancialCubit $tag Error: $error');
-    debugPrint(stackTrace.toString());
   }
 
   List<PartnerModel> _replacePartner(

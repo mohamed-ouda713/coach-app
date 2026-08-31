@@ -18,10 +18,8 @@ dependencies:
   image_picker: ^1.2.1
   # ضغط الصور قبل الرفع لـ Supabase Storage — UC-06
   flutter_image_compress: ^2.3.0
-  # صلاحيات الكاميرا/الغاليري — UC-06 (Permission Denied case)
-  permission_handler: ^12.0.0
-  # عرض صور before/after من روابط Supabase بكفاءة (كاش)
-  cached_network_image: ^3.4.1
+  # مجلد مؤقت لحفظ الصورة المضغوطة قبل رفعها
+  path_provider: ^2.1.4
   # إشعارات Push — UC-09, UC-10, UC-11
   firebase_core: ^4.11.0
   firebase_messaging: ^16.3.0
@@ -29,8 +27,12 @@ dependencies:
   # ملاحظة: مثبتة على 19.5.0 عمداً لأن أي نسخة ≥20.0.0 بتتطلب Dart SDK ≥3.8
   # بينما مشروعك حالياً على Dart 3.7.2 (environment: sdk: ^3.7.2)
   flutter_local_notifications: ^19.5.0
-  # فحص حالة الاتصال بالإنترنت — Error Cases بكل الـ UCs
+  # فحص حالة الاتصال بالإنترنت — بيستخدمها ConnectivityService عشان
+  # ExceptionMapper تفرّق بين "ما في نت" و"الخادم مش راد"
   connectivity_plus: ^6.1.0
+  # مستوردة مباشرة بـ ExceptionMapper عشان نمسك http.ClientException
+  # (هيك بيوصل فشل الشبكة من postgrest و storage)
+  http: ^1.2.0
   # شكل الـ loading shimmer بشاشة UC-01
   shimmer: ^3.0.0
   # حفظ بيانات محلية (توكن الجلسة، role المستخدم...)
@@ -47,7 +49,7 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^5.0.0
   flutter_launcher_icons: ^0.14.4
-  flutter_native_splash: ^2.4.8
+  flutter_native_splash: ^2.4.7
 flutter_launcher_icons:
   android: true
   ios: true

@@ -68,9 +68,13 @@ class NotificationsList extends StatelessWidget {
         if (next is _SectionHeader) {
           return const SizedBox(height: AppSpacing.lgAlt);
         }
+        // height بتحدد المساحة الكلية يلي بياخدها الفاصل، والخط بينرسم
+        // بنصّها. كانت AppBorders.thin (١ نقطة) يعني الإشعارات كانت
+        // ملتصقة ببعض بلا أي تنفّس.
         return Divider(
           color: context.appColors.border,
-          height: AppBorders.thin,
+          height: AppSpacing.xl,
+          thickness: AppBorders.thin,
         );
       },
       itemBuilder: (context, index) {

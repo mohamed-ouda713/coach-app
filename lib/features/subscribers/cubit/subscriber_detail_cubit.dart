@@ -5,11 +5,11 @@ import 'package:glow_up/core/errors/exception_mapper.dart';
 import 'subscriber_cubit.dart';
 import 'subscriber_detail_state.dart';
 
-/// Cubit مخصص لحالة "عميلة واحدة" (شاشة الملف الشخصي وشاشة التعديل).
+/// Cubit مخصص لحالة "عميل واحدة" (شاشة الملف الشخصي وشاشة التعديل).
 ///
 /// مقصود إنه يكون منفصل عن [SubscriberCubit] رغم إنه بيعتمد عليه —
-/// [SubscriberCubit] عنده state واحد مشترك لقائمة العميلات بالكامل
-/// (تستخدمه SubscribersListScreen)، فلو خلينا جلب عميلة واحدة يصدر
+/// [SubscriberCubit] عنده state واحد مشترك لقائمة العملاء بالكامل
+/// (تستخدمه SubscribersListScreen)، فلو خلينا جلب عميل واحدة يصدر
 /// state من نفس الـ Cubit، كان رح يتضارب مع state القائمة لأنه نفس
 /// الـ instance مشترك عالمياً. هيك، كل شاشة تفاصيل بتاخد نسخة محلية
 /// من هاد الـ Cubit (عبر BlocProvider محلي) وعندها دورة حياة/state
@@ -20,7 +20,7 @@ class SubscriberDetailCubit extends Cubit<SubscriberDetailState> {
 
   final SubscriberCubit _subscriberCubit;
 
-  /// بترسم فورًا من القائمة المحمّلة بالذاكرة لو العميلة موجودة فيها،
+  /// بترسم فورًا من القائمة المحمّلة بالذاكرة لو العميل موجودة فيها،
   /// وبعدين بتجدّد من السيرفر بالخلفية. قبل هيك كانت كل مرة تنفتح فيها
   /// الشاشة تعرض spinner وتستنى رحلة شبكة كاملة لبيانات معروضة أصلاً
   /// بالقائمة يلي إجت منها.

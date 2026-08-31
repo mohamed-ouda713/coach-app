@@ -91,7 +91,7 @@ class HomeTopBar extends StatelessWidget implements PreferredSizeWidget {
                   icon: Icons.notifications,
                   tooltip: AppStrings.homeNotificationsTooltip,
                   backgroundColor: context.appColors.bgSubtle,
-                  iconColor: colorScheme.onSurface.withOpacity(0.5),
+                  iconColor: colorScheme.onSurface.withValues(alpha: 0.5),
                   onTap: onNotificationsTap,
                   badgeCount: unreadNotificationsCount,
                 ),

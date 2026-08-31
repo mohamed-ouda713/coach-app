@@ -18,6 +18,15 @@ class DatabaseException extends AppException {
   factory DatabaseException.permissionDenied() =>
       DatabaseException(ErrorMessages.permissionDenied);
 
+  factory DatabaseException.missingRequiredData() =>
+      DatabaseException(ErrorMessages.missingRequiredData);
+
+  factory DatabaseException.invalidData() =>
+      DatabaseException(ErrorMessages.invalidData);
+
+  factory DatabaseException.serverBusy() =>
+      DatabaseException(ErrorMessages.serverBusy);
+
   factory DatabaseException.generic() =>
       DatabaseException(ErrorMessages.databaseGeneric);
 }

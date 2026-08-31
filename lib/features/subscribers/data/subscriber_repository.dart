@@ -92,7 +92,7 @@ class SubscriberRepository {
   }
 
   /// بترجّع نص البحث كما هو، بس بعد ما تعمل escape لرموز LIKE
-  /// الخاصة (%, _, \) — عشان لو المستخدمة كتبت واحد منهم بالصدفة
+  /// الخاصة (%, _, \) — عشان لو المستخدم كتب واحد منهم بالصدفة
   /// بالاسم يلي بتدوّر عليه، ينحسب كنص حرفي مش كـ wildcard.
   String _escapeLikePattern(String query) {
     return query.replaceAllMapped(

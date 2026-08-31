@@ -7,7 +7,7 @@ import '../../theme/context_extensions.dart';
 enum StatCardSize { small, large }
 
 /// بطاقة رقم/إحصائية — نسخة صغيرة (شرائح الإحصاء بأعلى قائمة العملاء)
-/// ونسخة كبيرة (بطاقة العمر/الوزن/الطول بملف العميلة).
+/// ونسخة كبيرة (بطاقة العمر/الوزن/الطول بملف العميل).
 class StatCard extends StatelessWidget {
   const StatCard({
     super.key,

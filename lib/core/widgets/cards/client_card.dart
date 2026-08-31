@@ -9,7 +9,7 @@ import '../../theme/context_extensions.dart';
 import '../media/app_avatar.dart';
 import '../status/badges.dart';
 
-/// بطاقة عرض عميلة بالقائمة (F1) — أفاتار + اسم + شارة هدف + شارة حالة + سهم.
+/// بطاقة عرض عميل بالقائمة (F1) — أفاتار + اسم + شارة هدف + شارة حالة + سهم.
 class ClientCard extends StatelessWidget {
   const ClientCard({
     super.key,
@@ -50,7 +50,7 @@ class ClientCard extends StatelessWidget {
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.05),
-              blurRadius: 12,
+              blurRadius: AppSizes.cardShadowBlur,
               offset: const Offset(0, 2),
             ),
           ],

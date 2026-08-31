@@ -13,7 +13,6 @@ class NotificationModel {
   final String message;
   final bool isRead;
   final DateTime createdAt;
-  final Map<String, dynamic> data;
 
   NotificationModel({
     required this.id,
@@ -24,7 +23,6 @@ class NotificationModel {
     required this.message,
     required this.isRead,
     required this.createdAt,
-    this.data = const {},
   });
 
   NotificationType? get notificationType {
@@ -104,7 +102,6 @@ class NotificationModel {
       message: json[SupabaseColumns.message]?.toString() ?? '',
       isRead: json[SupabaseColumns.isRead] as bool? ?? false,
       createdAt: DateTime.parse(json[SupabaseColumns.createdAt] as String),
-      data: Map<String, dynamic>.from(json['data'] ?? const {}),
     );
   }
 }

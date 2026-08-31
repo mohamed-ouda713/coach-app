@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:glow_up/core/constants/app_sizes.dart';
 import 'package:glow_up/core/theme/app_colors.dart';
-import 'package:glow_up/core/widgets/Buttons/Text_Buttons/Text_Form_Input.dart';
+import 'package:glow_up/core/widgets/inputs/custom_text_form_field.dart';
 
 import '../../../core/constants/app_spacing.dart';
 import '../../../core/constants/app_strings.dart';

@@ -1,7 +1,9 @@
+import 'package:equatable/equatable.dart';
+
 import '../../../core/constants/supabase_constants.dart';
 
-/// قياس شهري واحد لعميلة (Feature 4) — مطابق لجدول measurements بقاعدة البيانات.
-class Measurement {
+/// قياس شهري واحد لعميل (Feature 4) — مطابق لجدول measurements بقاعدة البيانات.
+class Measurement extends Equatable {
   const Measurement({
     this.id,
     required this.subscriberId,
@@ -60,7 +62,10 @@ class Measurement {
   Map<String, dynamic> toJson() {
     return {
       SupabaseColumns.subscriberId: subscriberId,
-      SupabaseColumns.measurementMonth: measurementMonth.toIso8601String(),
+      // عمود تاريخ بلا وقت — منرسله بنفس صيغة SubscriberModel عشان ما
+      // يعتمد التحويل على منطقة زمنية الجهاز.
+      SupabaseColumns.measurementMonth:
+          measurementMonth.toIso8601String().split('T').first,
       SupabaseColumns.weight: weight,
       SupabaseColumns.waistSize: waistSize,
       SupabaseColumns.abdomenSize: abdomenSize,
@@ -68,4 +73,17 @@ class Measurement {
       SupabaseColumns.photoAfterUrl: photoAfterUrl,
     };
   }
+
+  @override
+  List<Object?> get props => [
+    id,
+    subscriberId,
+    measurementMonth,
+    weight,
+    waistSize,
+    abdomenSize,
+    photoBeforeUrl,
+    photoAfterUrl,
+    createdAt,
+  ];
 }

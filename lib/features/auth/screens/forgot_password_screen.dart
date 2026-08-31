@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:glow_up/core/theme/context_extensions.dart';
+import 'package:glow_up/core/widgets/buttons/custom_text_link.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:glow_up/core/constants/app_sizes.dart';
 import 'package:glow_up/core/theme/app_colors.dart';
-import 'package:glow_up/core/widgets/Buttons/Text_Buttons/Text_Form_Input.dart';
+import 'package:glow_up/core/widgets/inputs/custom_text_form_field.dart';
 import 'package:glow_up/features/auth/helper/app_validators.dart';
 import 'package:go_router/go_router.dart';
 
@@ -88,9 +90,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           : Text(AppStrings.forgotPasswordSendResetLinkCta),
                 ),
                 const SizedBox(height: AppSpacing.md),
-                TextButton(
+                CustomTextLink(
+                  title: AppStrings.forgotPasswordBackToLogin,
+                  textColor: context.appColors.link,
+                  underline: true,
                   onPressed: () => context.pop(),
-                  child: Text(AppStrings.forgotPasswordBackToLogin),
                 ),
               ],
             ),

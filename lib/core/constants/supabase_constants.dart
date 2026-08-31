@@ -68,11 +68,6 @@ class SupabaseBuckets {
   static const String profileAvatars = 'profile_avatars';
 }
 
-/// أسماء الـ RPC Functions (لسا مفيش عنا حاليًا)
-class SupabaseFunctions {
-  SupabaseFunctions._();
-}
-
 /// قيم عمود `type` بجدول notifications — لازم تطابق يلي بتكتبه
 /// الـ edge function (supabase/functions/send-notifications).
 class NotificationTypeValues {
