@@ -1,0 +1,18 @@
+default_platform(:android)
+
+platform :android do
+  desc "Build Production flavor and deploy to Firebase App Distribution"
+  lane :firebase_distribution do
+    # 1. تنظيف وبناء الـ APK بنكهة Production
+    sh "flutter clean"
+    sh "flutter build apk --flavor Production -t lib/main_production.dart"
+
+    # 2. الرفع إلى Firebase App Distribution
+    firebase_app_distribution(
+      app: "1:906068235960:android:d1147ec79d9dbb65b7c64d",
+      firebase_cli_token: ENV["FIREBASE_CLI_TOKEN"],
+      android_artifact_path: "../build/app/outputs/flutter-apk/app-production-release.apk",
+      android_artifact_type: "APK"
+    )
+  end
+end

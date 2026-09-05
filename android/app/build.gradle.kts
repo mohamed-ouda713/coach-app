@@ -34,6 +34,15 @@ android {
         versionName = flutter.versionName
     }
 
+    // --- إضافة الـ Flavors هنا ---
+    flavorDimensions += "default"
+
+    productFlavors {
+        create("Production") {
+            dimension = "default"
+        }
+    }
+
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
